@@ -83,7 +83,9 @@ export default function Colection() {
                 if (!state.collectionNFT[i].items[id]) {
                     //go to 404 page
                 }
+                console.log("========================>", state.collectionNFT[i]);
                 setItemData(state.collectionNFT[i].items[id]);
+                console.log(id);
                 break;
             }
         }
@@ -223,7 +225,7 @@ export default function Colection() {
                                                     ""
                                                     ? null
                                                     : itemData.marketdata
-                                                        .price + " ICICB"}
+                                                        .price + " Crypto-Coco"}
                                             </h3>
                                             <hr />
                                         </span>
@@ -357,7 +359,7 @@ export default function Colection() {
                                                                                     index
                                                                                     ]
                                                                                 }{" "}
-                                                                                ICICB
+                                                                                Crypto-Coco
                                                                             </b>
                                                                             <span>
                                                                                 by{" "}

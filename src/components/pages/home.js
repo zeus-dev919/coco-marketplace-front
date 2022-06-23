@@ -29,14 +29,14 @@ const GlobalStyles = createGlobalStyle`
     box-shadow: 0 4px 20px 0 rgba(10,10,10, .8);
   }
   header#myHeader.navbar .search #quick_search{
-    color: #fff;
+    color: #d05e3c;
     background: rgba(255, 255, 255, .1);
   }
   header#myHeader.navbar.white .btn, .navbar.white a, .navbar.sticky.white a{
-    color: #fff;
+    color: #d05e3c;
   }
   header#myHeader .dropdown-toggle::after{
-    color: #fff;
+    color: #d05e3c;
   }
   header#myHeader .logo .d-block{
     display: none !important;
@@ -75,7 +75,6 @@ export default function Homethree() {
             <GlobalStyles />
             <section
                 className="jumbotron no-bg"
-                style={{ backgroundImage: `url(${"./img/background.jpg"})` }}
             >
                 <div className="container">
                     <div className="row align-items-center">
@@ -90,7 +89,7 @@ export default function Homethree() {
                             >
                                 <h6 className="">
                                     <span className="text-uppercase color">
-                                        ICICB NFT Marketplace
+                                        Crypto-Coco NFT Marketplace
                                     </span>
                                 </h6>
                             </Reveal>
@@ -115,7 +114,7 @@ export default function Homethree() {
                             >
                                 <p className=" lead">
                                     The NFT marketplace will be linked to the
-                                    entire ICICB blockchain, allowing users to
+                                    entire Crypto-Coco blockchain, allowing users to
                                     trade NFTs at hyper-fast speeds and
                                     unbeatable prices that’ll put every other
                                     blockchain to shame. Since the marketplace

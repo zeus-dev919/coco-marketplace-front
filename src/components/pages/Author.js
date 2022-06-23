@@ -17,7 +17,7 @@ const GlobalStyles = createGlobalStyle`
 export default function Collection() {
     const navigate = useNavigate();
     const wallet = useWallet();
-    const [state, {}] = useBlockchainContext();
+    const [state, { }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [openMenu1, setOpenMenu1] = useState(false);
 

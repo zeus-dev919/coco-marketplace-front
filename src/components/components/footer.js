@@ -77,7 +77,7 @@ const footer = () => (
                     <div className="col-md-12">
                         <div className="de-flex">
                             <div className="de-flex-col">
-                                powered by ICICB-GROUP.COM
+                                powered by Crypto-Coco-GROUP.COM
                             </div>
                             <div className="de-flex-col">
                                 <div className="social-icons">

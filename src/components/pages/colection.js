@@ -114,7 +114,7 @@ export default function Collection() {
                                         <div className="collection_info">
                                             <p className="text-center">
                                                 by{" "}
-                                                <b className="color">ICICB</b>
+                                                <b className="color">Crypto-Coco</b>
                                             </p>
                                             <div className="spacer-10"></div>
                                             <span>
@@ -140,7 +140,7 @@ export default function Collection() {
                                                             )}
                                                         K
                                                     </h3>
-                                                    <p>floor price(ICICB)</p>
+                                                    <p>floor price(Crypto-Coco)</p>
                                                 </div>
                                             </span>
                                         </div>

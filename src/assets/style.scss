@@ -2,7 +2,7 @@
 $white: #d05e3c;
 $gray: #bbb;
 $black: #111;
-$general: #ecbdb0;
+$general: #ff8766;
 $black_soft: #333;
 $black_col: #2e333c;
 $black_more: #0f0f0f;
@@ -338,7 +338,7 @@ section {
 hr {
     display: block;
     clear: both;
-    border-top: solid 1px #ddd;
+    border-top: solid 1px #ff693b;
     margin: 40px 0 40px 0;
 }
 
@@ -3319,6 +3319,10 @@ i.font60 {
     }
 }
 
+.feature-font {
+    color: white;
+}
+
 .author_list_pp img {
     width: 100%;
     border-radius: 100% !important;
@@ -3805,7 +3809,7 @@ i.font60 {
     gap: 20px;
 
     >div {
-        background-color: #424242;
+        background-color: white;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -4022,15 +4026,15 @@ i.font60 {
             font-size: 14px;
             text-align: center;
             min-width: 80px;
-            background: rgba(255, 255, 255, 0.025);
-            border-top: solid 1px rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+            border-top: solid 1px rgba(0, 0, 0, 0.2);
             border-radius: 3px;
             -moz-border-radius: 3px;
             -webkit-border-radius: 3px;
 
             i {
                 margin-right: 5px;
-                color: rgba(255, 255, 255, 0.5);
+                color: rgba(0, 0, 0, 0.5);
             }
         }
     }

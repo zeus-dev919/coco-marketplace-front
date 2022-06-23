@@ -113,19 +113,19 @@ export default function BuyModal(props) {
                     <Modal.Body>
                         <span className="spacer-single"></span>
                         <h4 className="text-center">
-                            You need {correctItem.marketdata.price} ICICB +{" "}
+                            You need {correctItem.marketdata.price} Crypto-Coco +{" "}
                             <Link to="">gas fees</Link>
                         </h4>
                         <span className="spacer-10"></span>
                         <p className="text-center">
-                            Buy any NFT with ICICB token. It can take up to a
+                            Buy any NFT with Crypto-Coco token. It can take up to a
                             minute for your balance update.
                         </p>
                         <span className="spacer-single"></span>
                         <div>
                             <span style={{ justifyContent: "space-between" }}>
                                 <h5>Wallet Address</h5>
-                                <p>Balance: {mybalance} ICICB</p>
+                                <p>Balance: {mybalance} Crypto-Coco</p>
                             </span>
                             <div
                                 className="text_copy noselect"
@@ -178,7 +178,7 @@ export default function BuyModal(props) {
                                         width: "25px",
                                     }}
                                 />
-                                <span>ICICB</span>
+                                <span>Crypto-Coco</span>
                             </div>
                             <input
                                 type="number"
@@ -195,7 +195,7 @@ export default function BuyModal(props) {
                         </div>
                         <p style={{ float: "right" }}>
                             {"Available Price: "}
-                            {mybalance + " ICICB"}
+                            {mybalance + " Crypto-Coco"}
                         </p>
                         <div className="spacer-30"></div>
 

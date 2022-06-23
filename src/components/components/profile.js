@@ -14,8 +14,8 @@ const Outer = styled.div`
 `;
 
 export default function Responsive() {
-    const msg = "ICICBMARKET";
-    const [state, {}] = useBlockchainContext();
+    const msg = "Crypto-CocoMARKET";
+    const [state, { }] = useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
     const [newEmail, setNewEmail] = useState("");

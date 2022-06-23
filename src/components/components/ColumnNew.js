@@ -7,7 +7,7 @@ import BuyModal from "./BuyModal";
 export default function Responsive() {
     const navigate = useNavigate();
     const [height, setHeight] = useState(0);
-    const [state, {}] = useBlockchainContext();
+    const [state, { }] = useBlockchainContext();
     const [filter, setFilter] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);
     const [modalShow, setModalShow] = useState(false);
@@ -91,12 +91,12 @@ export default function Responsive() {
                                     className="lazy"
                                     src={
                                         state.usersInfo[nft.owner]?.image ===
-                                        undefined
+                                            undefined
                                             ? state.collectionNFT[0]?.metadata
-                                                  .image
+                                                .image
                                             : state.usersInfo[nft.owner]
-                                                  .image ||
-                                              "../img/author/author-1.jpg"
+                                                .image ||
+                                            "../img/author/author-1.jpg"
                                     }
                                     alt=""
                                 />
@@ -126,7 +126,7 @@ export default function Responsive() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : nft.marketdata.price + " ICICB"}
+                                    : nft.marketdata.price + " Crypto-Coco"}
                                 <span>
                                     {nft.marketdata.bidders.length} bids
                                 </span>

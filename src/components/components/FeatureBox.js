@@ -45,9 +45,9 @@ const featurebox = () => (
                         duration={600}
                         triggerOnce
                     >
-                        <p className="">
+                        <p className="feature-font">
                             Once you’ve set up your wallet of choice, connect it
-                            to ICICB by clicking the wallet in the top right
+                            to Crypto-Coco by clicking the wallet in the top right
                             corner.
                         </p>
                     </Reveal>
@@ -84,7 +84,7 @@ const featurebox = () => (
                         duration={600}
                         triggerOnce
                     >
-                        <p className="">
+                        <p className="feature-font">
                             Click My Collections and set up your collection. Add
                             social links, a description, profile & banner
                             images, and set a secondary sales fee.
@@ -123,7 +123,7 @@ const featurebox = () => (
                         duration={600}
                         triggerOnce
                     >
-                        <p>
+                        <p className="feature-font">
                             Upload your NFTs (image, video, audio, or 3D art),
                             add a title and description.
                         </p>
@@ -161,7 +161,7 @@ const featurebox = () => (
                         duration={600}
                         triggerOnce
                     >
-                        <p className="">
+                        <p className="feature-font">
                             Choose between auctions, fixed-price listings, and
                             declining-price listings. You choose how you want to
                             sell your NFTs, and we help you sell them!

@@ -70,7 +70,8 @@ export default function Responsive(props) {
                                         <p
                                             className="form-control"
                                             style={{
-                                                backgroundColor: "#424242",
+                                                backgroundColor: "#ffc0c0",
+                                                boxShadow: "0 0 5 0 #d05e3c",
                                                 display: "flex",
                                                 alignItems: "center",
                                                 gap: "10px",
@@ -100,7 +101,7 @@ export default function Responsive(props) {
                                                         width: "25px",
                                                     }}
                                                 />
-                                                <span>ICICB</span>
+                                                <span>Crypto-Coco</span>
                                             </div>
                                             <input
                                                 type="number"
@@ -154,7 +155,7 @@ export default function Responsive(props) {
                                             className="btn-main"
                                             disabled={
                                                 price === "" ||
-                                                !moment(date).isValid()
+                                                    !moment(date).isValid()
                                                     ? true
                                                     : false
                                             }
@@ -182,13 +183,13 @@ export default function Responsive(props) {
                                                         ].owner
                                                     ]?.image === undefined
                                                         ? state.collectionNFT[0]
-                                                              ?.metadata.image
+                                                            ?.metadata.image
                                                         : state.usersInfo[
-                                                              correctCollection
-                                                                  .items[id]
-                                                                  .owner
-                                                          ].image ||
-                                                          "../../img/author/author-1.jpg"
+                                                            correctCollection
+                                                                .items[id]
+                                                                .owner
+                                                        ].image ||
+                                                        "../../img/author/author-1.jpg"
                                                 }
                                                 alt=""
                                             />
@@ -217,25 +218,25 @@ export default function Responsive(props) {
                                                         ?.metadata?.name
                                                         .length > 15
                                                         ? correctCollection.items[
-                                                              id
-                                                          ]?.metadata?.name.slice(
-                                                              0,
-                                                              15
-                                                          ) + "..."
+                                                            id
+                                                        ]?.metadata?.name.slice(
+                                                            0,
+                                                            15
+                                                        ) + "..."
                                                         : correctCollection
-                                                              .items[id]
-                                                              ?.metadata?.name}
+                                                            .items[id]
+                                                            ?.metadata?.name}
                                                 </p>
                                             </div>
                                             <div>
                                                 <p>
                                                     {price === ""
-                                                        ? "0  ICICB"
+                                                        ? "0  Crypto-Coco"
                                                         : price?.length > 15
-                                                        ? price.slice(0, 15) +
-                                                          "..." +
-                                                          "  ICICB"
-                                                        : price + "  ICICB"}
+                                                            ? price.slice(0, 15) +
+                                                            "..." +
+                                                            "  Crypto-Coco"
+                                                            : price + "  Crypto-Coco"}
                                                 </p>
                                             </div>
                                         </div>

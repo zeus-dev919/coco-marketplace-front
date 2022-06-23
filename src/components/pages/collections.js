@@ -61,7 +61,7 @@ export default function Collections() {
                                         {item.metadata.name}
                                     </h4>
                                     <p className="text-center">
-                                        by <b className="color">ICICB</b>
+                                        by <b className="color">Crypto-Coco</b>
                                     </p>
                                     <div className="spacer-10"></div>
                                     <p className="card-text text-center">

@@ -229,7 +229,7 @@ export default function Createpage() {
 
                                 <h5>External link</h5>
                                 <p>
-                                    ICICB will include a link to this URL on
+                                    Crypto-Coco will include a link to this URL on
                                     this item's detail page, so that users can
                                     click to learn more about it. You are
                                     welcome to link to your own webpage with
@@ -269,7 +269,7 @@ export default function Createpage() {
                                     appear.
                                 </p>
                                 <select className="form-control">
-                                    <option>ICICB Art</option>
+                                    <option>Crypto-Coco Art</option>
                                 </select>
 
                                 <div className="spacer-30"></div>

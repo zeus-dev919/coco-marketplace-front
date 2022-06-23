@@ -58,7 +58,7 @@ const settings = {
 
 export default function CarouselCollection() {
     const navigate = useNavigate();
-    const [state, {}] = useBlockchainContext();
+    const [state, { }] = useBlockchainContext();
 
     const NFTItem = (props) => {
         const { desc, title, coverImage, image, id, address } = props;
