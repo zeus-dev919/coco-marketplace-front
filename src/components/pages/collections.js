@@ -6,12 +6,12 @@ import { useBlockchainContext } from "../../context";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
-    background: #212428;
+    background: #ecbdb0;
   }
 `;
 
 export default function Collections() {
-    const [state, {}] = useBlockchainContext();
+    const [state, { }] = useBlockchainContext();
     const navigate = useNavigate();
 
     const handle = (address) => {

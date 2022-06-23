@@ -24,7 +24,7 @@ const fadeInUp = keyframes`
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.sticky.white {
-    background: #212428;
+    background: #ecbdb0;
     border-bottom: 0;
     box-shadow: 0 4px 20px 0 rgba(10,10,10, .8);
   }

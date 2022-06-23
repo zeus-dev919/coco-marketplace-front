@@ -8,13 +8,13 @@ import { useBlockchainContext } from "../../context";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
-    background: #212428;
+    background: #ecbdb0;
   }
 `;
 
 export default function Collection() {
     const { collection } = useParams();
-    const [state, {}] = useBlockchainContext();
+    const [state, { }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [openMenu1, setOpenMenu1] = useState(false);
     const [correctItem, setCorrectItem] = useState(null);
@@ -136,8 +136,8 @@ export default function Collection() {
                                                         {isNaN(avgAmount)
                                                             ? 0
                                                             : avgAmount.toFixed(
-                                                                  2
-                                                              )}
+                                                                2
+                                                            )}
                                                         K
                                                     </h3>
                                                     <p>floor price(ICICB)</p>

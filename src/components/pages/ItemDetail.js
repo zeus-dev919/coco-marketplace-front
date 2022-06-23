@@ -11,7 +11,7 @@ import { NotificationManager } from "react-notifications";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
-    background: #212428;
+    background: #ecbdb0;
   }
 `;
 
@@ -63,13 +63,13 @@ export default function Colection() {
             ) {
                 // on market
                 itemData.marketdata.owner?.toLowerCase() ===
-                state.userInfo.address?.toLowerCase()
+                    state.userInfo.address?.toLowerCase()
                     ? setPageFlag(2)
                     : setPageFlag(4);
             } else {
                 //on user
                 itemData.owner?.toLowerCase() ===
-                state.userInfo.address?.toLowerCase()
+                    state.userInfo.address?.toLowerCase()
                     ? setPageFlag(1)
                     : setPageFlag(3);
             }
@@ -185,7 +185,7 @@ export default function Colection() {
                                 <div className="item_info">
                                     {/* end time */}
                                     {itemData.marketdata.endTime ===
-                                    "" ? null : (
+                                        "" ? null : (
                                         <span>
                                             <p>
                                                 Sale ends{" "}
@@ -220,10 +220,10 @@ export default function Colection() {
                                             <div className="spacer-10"></div>
                                             <h3 style={{ color: "#a48b57" }}>
                                                 {itemData.marketdata.price ===
-                                                ""
+                                                    ""
                                                     ? null
                                                     : itemData.marketdata
-                                                          .price + " ICICB"}
+                                                        .price + " ICICB"}
                                             </h3>
                                             <hr />
                                         </span>
@@ -258,14 +258,14 @@ export default function Colection() {
                                                             itemData.creator
                                                         ]?.image === undefined
                                                             ? state
-                                                                  .collectionNFT[0]
-                                                                  .metadata
-                                                                  .image
+                                                                .collectionNFT[0]
+                                                                .metadata
+                                                                .image
                                                             : state.usersInfo[
-                                                                  itemData
-                                                                      .creator
-                                                              ].image ||
-                                                              "../../img/author/author-1.jpg"
+                                                                itemData
+                                                                    .creator
+                                                            ].image ||
+                                                            "../../img/author/author-1.jpg"
                                                     }
                                                     alt=""
                                                 />
@@ -354,7 +354,7 @@ export default function Colection() {
                                                                                     itemData
                                                                                         .marketdata
                                                                                         .bidPrices[
-                                                                                        index
+                                                                                    index
                                                                                     ]
                                                                                 }{" "}
                                                                                 ICICB
@@ -371,16 +371,16 @@ export default function Colection() {
                                                                                     .marketdata
                                                                                     .bidTime
                                                                                     ? moment(
-                                                                                          Number(
-                                                                                              itemData
-                                                                                                  .marketdata
-                                                                                                  .bidTime[
-                                                                                                  index
-                                                                                              ]
-                                                                                          )
-                                                                                      ).format(
-                                                                                          "lll"
-                                                                                      )
+                                                                                        Number(
+                                                                                            itemData
+                                                                                                .marketdata
+                                                                                                .bidTime[
+                                                                                            index
+                                                                                            ]
+                                                                                        )
+                                                                                    ).format(
+                                                                                        "lll"
+                                                                                    )
                                                                                     : ""}
                                                                             </span>
                                                                         </div>

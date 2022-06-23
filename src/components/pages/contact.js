@@ -5,11 +5,11 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
-    background: #212428;
+    background: #ecbdb0;
   }
 `;
 
-const contact= function() {
+const contact = function () {
 
   function sendEmail(e) {
 
@@ -20,37 +20,37 @@ const contact= function() {
 
     emailjs.sendForm('gmail', 'template_csfdEZiA', e.target, 'user_zu7p2b3lDibMCDutH5hif')
       .then((result) => {
-          console.log(result.text);
-          success.classList.add('show');
-          button.classList.add('show');
-          failed.classList.remove('show');
+        console.log(result.text);
+        success.classList.add('show');
+        button.classList.add('show');
+        failed.classList.remove('show');
       }, (error) => {
-          console.log(error.text);
-          failed.classList.add('show');
+        console.log(error.text);
+        failed.classList.add('show');
       });
   }
 
   return (
-  <div>
-  <GlobalStyles />
+    <div>
+      <GlobalStyles />
 
-  <section className='jumbotron breadcumb no-bg'>
-    <div className='mainbreadcumb'>
-      <div className='container'>
-        <div className='row'>
-          <div className="col-md-12 text-center">
-              <h1>Contact Us</h1>
-              <p>Anim pariatur cliche reprehenderit</p>
+      <section className='jumbotron breadcumb no-bg'>
+        <div className='mainbreadcumb'>
+          <div className='container'>
+            <div className='row'>
+              <div className="col-md-12 text-center">
+                <h1>Contact Us</h1>
+                <p>Anim pariatur cliche reprehenderit</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
       <section className='container'>
         <div className='row'>
           <div className='col-lg-8 mb-3'>
-          <h3>Do you have any question?</h3>
+            <h3>Do you have any question?</h3>
             <div className="form-side">
               <form className="formcontact" onSubmit={sendEmail}>
                 <input type="text" className="form-control" name="user_name" placeholder="Your Name" required />
@@ -65,8 +65,8 @@ const contact= function() {
           </div>
 
           <div className='col-md-4'>
-           
-           <div className="padding40 box-rounded mb30">
+
+            <div className="padding40 box-rounded mb30">
               <h3>US Office</h3>
               <address className="s1">
                 <span><i className="id-color fa fa-map-marker fa-lg"></i>08 W 36th St, New York, NY 10001</span>
