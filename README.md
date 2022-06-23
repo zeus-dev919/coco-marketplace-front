@@ -1,3 +1,3 @@
-# ICICB Marketplace Frontend
+# Crypto-Coco Marketplace Frontend
 
-This is ICICB marketplace frontend.
+This is Crypto-Coco marketplace frontend.
