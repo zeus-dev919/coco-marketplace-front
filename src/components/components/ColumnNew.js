@@ -33,7 +33,7 @@ export default function Responsive() {
             setModalShow(true);
         } else if (isClickLikeButton) {
             if (state.userInfo.address === undefined) {
-                navigate("/wallet");
+                navigate("/signPage");
                 return;
             }
             Action.nft_like({
@@ -52,7 +52,7 @@ export default function Responsive() {
             return;
         } else {
             if (state.userInfo.address === undefined) {
-                navigate("/wallet");
+                navigate("/signPage");
                 return;
             }
             navigate(`/ItemDetail/${item.collectionAddress}/${item.tokenID}`);
@@ -90,13 +90,13 @@ export default function Responsive() {
                                 <img
                                     className="lazy"
                                     src={
-                                        state.usersInfo[nft.owner]?.image ===
-                                            undefined
-                                            ? state.collectionNFT[0]?.metadata
-                                                .image
-                                            : state.usersInfo[nft.owner]
-                                                .image ||
-                                            "../img/author/author-1.jpg"
+                                        // state.usersInfo[nft.owner]?.image ===
+                                        //     undefined
+                                        //     ? state.collectionNFT[0]?.metadata
+                                        //         .image
+                                        //     : state.usersInfo[nft.owner]
+                                        //         .image ||
+                                        "../img/author/author-1.jpg"
                                     }
                                     alt=""
                                 />

@@ -39,10 +39,9 @@ const nft_like = async (data) => {
 // User Manage
 const user_create = async (account) => {
     try {
-        var res = await axios.post("/api/user-login", { account: account });
-
-        if (!res.data.success) {
-            NotificationManager.error("Community Error");
+        var res = await axios.post("/api/user-create", { account: account });
+        if (!res.data.status) {
+            NotificationManager.error(res.data.error);
             return false;
         }
 
@@ -53,6 +52,20 @@ const user_create = async (account) => {
         return false;
     }
 };
+
+const user_login = async (account) => {
+    try {
+        var res = await axios.post("/api/user-login", { account: account });
+        if (res.data.status) {
+            return res.data;
+        } else {
+            return false;
+        }
+    } catch (err) {
+        NotificationManager.error("Server Error");
+        return false;
+    }
+}
 
 const user_update = async (formData) => {
     try {
@@ -78,6 +91,7 @@ const Action = {
     nft_like,
     user_create,
     user_update,
+    user_login,
 };
 
 export default Action;

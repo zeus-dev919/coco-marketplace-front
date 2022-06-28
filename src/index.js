@@ -14,6 +14,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import "./assets/animated.css";
 import "./assets/style.scss";
 
+
 import App from "./components/app";
 import Provider from "./context";
 

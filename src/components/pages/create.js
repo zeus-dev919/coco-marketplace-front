@@ -21,8 +21,8 @@ export default function Createpage() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (wallet.status !== "connected") {
-            navigate("/wallet");
+        if (!localStorage.getItem("user")) {
+            navigate("/signPage");
         }
     }, [wallet.status]);
 

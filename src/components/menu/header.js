@@ -8,6 +8,7 @@ import { Link } from "@reach/router";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useWallet } from "use-wallet";
 import { useBlockchainContext } from "../../context";
+import SignIn from "../components/signin";
 
 setDefaultBreakpoints([{ xs: 0 }, { l: 1199 }, { xl: 1200 }]);
 
@@ -31,13 +32,20 @@ export default function Header() {
     const [openMenu1, setOpenMenu1] = useState(false);
     const [openMenu2, setOpenMenu2] = useState(false);
     const [openMenu3, setOpenMenu3] = useState(false);
+    const [userInfo, setUserInfo] = useState(false);
+
+    useEffect(() => {
+        if (localStorage.getItem("user")) {
+            setUserInfo(true);
+        }
+    })
 
     var styledAddress = wallet.account
         ? wallet.account.slice(0, 4) + "..." + wallet.account.slice(-4)
         : "Connect Wallet";
 
     const handleConnect = () => {
-        navigate("/wallet");
+        navigate("/signPage");
     };
 
     const disconnect = () => {
@@ -77,6 +85,11 @@ export default function Header() {
     const ref3 = useOnclickOutside(() => {
         closeMenu3();
     });
+    const logout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        setUserInfo(!userInfo);
+    }
 
     const [showmenu, btn_icon] = useState(false);
 
@@ -181,94 +194,6 @@ export default function Header() {
                                             )}
                                         </div>
                                     </div>
-                                    {/* <div className="navbar-item">
-                                        <div ref={ref2}>
-                                            <div
-                                                className="dropdown-custom dropdown-toggle btn"
-                                                onClick={handleBtnClick2}
-                                            >
-                                                Stats
-                                            </div>
-                                            {openMenu2 && (
-                                                <div className="item-dropdown">
-                                                    <div
-                                                        className="dropdown"
-                                                        onClick={closeMenu2}
-                                                    >
-                                                        <NavLink
-                                                            to="/rangking"
-                                                            onClick={() =>
-                                                                btn_icon(
-                                                                    !showmenu
-                                                                )
-                                                            }
-                                                        >
-                                                            Rangking
-                                                        </NavLink>
-                                                        <NavLink
-                                                            to="/activity"
-                                                            onClick={() =>
-                                                                btn_icon(
-                                                                    !showmenu
-                                                                )
-                                                            }
-                                                        >
-                                                            Activity
-                                                        </NavLink>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="navbar-item">
-                                        <div ref={ref3}>
-                                            <div
-                                                className="dropdown-custom dropdown-toggle btn"
-                                                onClick={handleBtnClick3}
-                                            >
-                                                Resources
-                                            </div>
-                                            {openMenu3 && (
-                                                <div className="item-dropdown">
-                                                    <div
-                                                        className="dropdown"
-                                                        onClick={closeMenu3}
-                                                    >
-                                                        <NavLink
-                                                            to="/news"
-                                                            onClick={() =>
-                                                                btn_icon(
-                                                                    !showmenu
-                                                                )
-                                                            }
-                                                        >
-                                                            News
-                                                        </NavLink>
-                                                        <NavLink
-                                                            to="/helpcenter"
-                                                            onClick={() =>
-                                                                btn_icon(
-                                                                    !showmenu
-                                                                )
-                                                            }
-                                                        >
-                                                            Help Center
-                                                        </NavLink>
-                                                        <NavLink
-                                                            to="/contact"
-                                                            onClick={() =>
-                                                                btn_icon(
-                                                                    !showmenu
-                                                                )
-                                                            }
-                                                        >
-                                                            Contact Us
-                                                        </NavLink>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div> */}
                                     <div className="navbar-item">
                                         <NavLink
                                             to="/Author"
@@ -319,65 +244,6 @@ export default function Header() {
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* <div className="navbar-item">
-                                    <div ref={ref2}>
-                                        <div
-                                            className="dropdown-custom dropdown-toggle btn"
-                                            onMouseEnter={handleBtnClick2}
-                                            onMouseLeave={closeMenu2}
-                                        >
-                                            Stats
-                                            <span className="lines"></span>
-                                            {openMenu2 && (
-                                                <div className="item-dropdown">
-                                                    <div
-                                                        className="dropdown"
-                                                        onClick={closeMenu2}
-                                                    >
-                                                        <NavLink to="/rangking">
-                                                            Rangking
-                                                        </NavLink>
-                                                        <NavLink to="/activity">
-                                                            Activity
-                                                        </NavLink>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="navbar-item">
-                                    <div ref={ref3}>
-                                        <div
-                                            className="dropdown-custom dropdown-toggle btn"
-                                            onMouseEnter={handleBtnClick3}
-                                            onMouseLeave={closeMenu3}
-                                        >
-                                            Resources
-                                            <span className="lines"></span>
-                                            {openMenu3 && (
-                                                <div className="item-dropdown">
-                                                    <div
-                                                        className="dropdown"
-                                                        onClick={closeMenu3}
-                                                    >
-                                                        <NavLink to="/news">
-                                                            News
-                                                        </NavLink>
-                                                        <NavLink to="/helpcenter">
-                                                            Help Center
-                                                        </NavLink>
-                                                        <NavLink to="/contact">
-                                                            Contact Us
-                                                        </NavLink>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div> */}
                                 <div className="navbar-item">
                                     <NavLink to="/Author">
                                         Profile
@@ -396,16 +262,15 @@ export default function Header() {
                     </BreakpointProvider>
 
                     <div className="mainside">
-                        {wallet.status !== "connected" ? (
-                            <button
+                        {!userInfo ? (
+                            <Link to="/signPage"
                                 className="btn-main"
-                                onClick={handleConnect}
                             >
-                                Connect Wallet
-                            </button>
+                                Log In
+                            </Link>
                         ) : (
-                            <button className="btn-main" onClick={disconnect}>
-                                {styledAddress}
+                            <button className="btn-main" onClick={logout}>
+                                Log Out
                             </button>
                         )}
                     </div>

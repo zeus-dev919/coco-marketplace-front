@@ -64,7 +64,7 @@ export default function ColumnOne(props) {
 
         if (isClickLikeButton) {
             if (state.userInfo.address === undefined) {
-                navigate("/wallet");
+                navigate("/signPage");
                 return;
             }
             Action.nft_like({

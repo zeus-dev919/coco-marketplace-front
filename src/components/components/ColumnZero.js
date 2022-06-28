@@ -72,14 +72,14 @@ export default function ColumnZero(props) {
 
         if (isClickBuyButton) {
             if (state.userInfo.address === undefined) {
-                navigate("/wallet");
+                navigate("/signPage");
                 return;
             }
             setCurrentItem(item);
             setModalShow(true);
         } else if (isClickLikeButton) {
             if (state.userInfo.address === undefined) {
-                navigate("/wallet");
+                navigate("/signPage");
                 return;
             }
             Action.nft_like({

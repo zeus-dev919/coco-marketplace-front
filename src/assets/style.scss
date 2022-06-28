@@ -2203,6 +2203,78 @@ footer {
     }
 }
 
+.sign {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    height: 100%;
+    max-width: 600px;
+
+    .signin {
+        margin: 30% auto;
+        border: 1px solid white;
+        box-shadow: 1px 1px 4px #d05f3b;
+        border-radius: 20px;
+        max-height: calc(100% - 64px);
+        padding: 30px;
+
+        .signin-header {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .signin-body {
+            width: 400px;
+
+            input {
+                width: 100%;
+                margin: 15px 0;
+                padding: 10px;
+                border: none;
+                border-bottom: 1px solid #eb5757;
+                color: #eb5757;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 30px white inset !important;
+            }
+
+            label {
+                color: red;
+            }
+        }
+
+        .signin-button {
+            cursor: pointer;
+            box-shadow: 1px 1px 3px #eb5757;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+@media (max-width:600px) {
+    .sign {
+        max-width: 100%;
+
+        .signin {
+            .signin-body {
+                width: 100%;
+            }
+        }
+    }
+}
+
+
 .formcontact {
     display: block;
     width: 100%;
@@ -3309,7 +3381,7 @@ i.font60 {
     margin-left: 10px;
     margin-top: -3px;
     border-radius: 100% !important;
-    z-index: 1;
+    z-index: 0;
     transition: 0.3s;
 
     &:hover img {
@@ -3419,7 +3491,7 @@ i.font60 {
         margin-left: 10px;
         margin-top: -3px;
         cursor: pointer;
-        z-index: 10;
+        z-index: -10;
 
         &:hover {
             img {

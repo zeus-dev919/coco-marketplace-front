@@ -9,7 +9,7 @@ import Helpcenter from "./pages/helpcenter";
 import Collection from "./pages/colection";
 import ItemDetail from "./pages/ItemDetail";
 import Author from "./pages/Author";
-import Wallet from "./pages/wallet";
+import Sign from "./pages/Sign";
 import Create from "./pages/create";
 import Auction from "./pages/Auction";
 import Contact from "./pages/contact";
@@ -56,7 +56,7 @@ const app = () => (
                 <Collections path="/Collections" />
                 <ItemDetail exact path="/ItemDetail/:collection/:id" />
                 <Author path="/Author" />
-                <Wallet path="/wallet" />
+                <Sign path="/signPage" />
                 <Create path="/create" />
                 <Auction path="/Auction/:collection/:id" />
                 <Contact path="/contact" />

@@ -22,10 +22,10 @@ export default function Collection() {
     const [openMenu1, setOpenMenu1] = useState(false);
 
     useEffect(() => {
-        if (wallet.status !== "connected") {
-            navigate("/wallet");
+        if (!localStorage.getItem("user")) {
+            navigate("/signPage");
         }
-    }, [wallet.status]);
+    }, []);
 
     const handleBtnClick = () => {
         setOpenMenu(!openMenu);

@@ -111,7 +111,7 @@ export default function Colection() {
 
     const handleBid = () => {
         if (state.userInfo.address === undefined) {
-            navigate("/wallet");
+            navigate("/signPage");
             return;
         }
         setBuyFlag(2);
@@ -120,7 +120,7 @@ export default function Colection() {
 
     const handleBuy = () => {
         if (state.userInfo.address === undefined) {
-            navigate("/wallet");
+            navigate("/signPage");
             return;
         }
         setBuyFlag(1);

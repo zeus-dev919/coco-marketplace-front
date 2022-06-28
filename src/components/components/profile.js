@@ -22,6 +22,7 @@ export default function Responsive() {
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
     const [loading, setLoadItem] = useState(false);
+    const [publicKey, setPublicKey] = useState("");
     const fileRef = useRef(null);
 
     useEffect(() => {
@@ -32,10 +33,11 @@ export default function Responsive() {
             null,
             null
         );
+        setPublicKey(localStorage.getItem("public"));
     }, []);
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(state.userInfo.address);
+        navigator.clipboard.writeText(publicKey);
         NotificationManager.success("address copied");
     };
 
@@ -141,7 +143,7 @@ export default function Responsive() {
                         style={{ color: "grey", textAlign: "left" }}
                         onClick={handleCopy}
                     >
-                        <span>{state.userInfo.address}</span>
+                        <span>{publicKey}</span>
                         <span style={{ padding: "0 10px" }}>
                             <i className="bg-color-2 i-boxed icon_pencil-edit"></i>
                         </span>
