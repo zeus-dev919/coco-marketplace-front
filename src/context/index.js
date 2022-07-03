@@ -10,7 +10,7 @@ import { useWallet } from "use-wallet";
 import { useQuery } from "@apollo/client";
 import { NotificationManager } from "react-notifications";
 
-import { icicbToken, getNFTContract, marketplaceContract } from "../contracts";
+import { testToken, getNFTContract, marketplaceContract } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
 import {
     GET_ALLNFTS,
@@ -42,6 +42,9 @@ const INIT_STATE = {
     usersInfo: {},
     balance: 0,
     addresses: addresses,
+    auth:{
+        isAuth:false
+    }
 };
 
 export default function Provider({ children }) {
@@ -84,10 +87,7 @@ export default function Provider({ children }) {
     });
 
     useEffect(() => {
-        if (nftsLoading) {
-            return;
-        }
-        if (nftsError) {
+        if (nftsLoading||nftsError) {
             return;
         }
         dispatch({
@@ -97,10 +97,7 @@ export default function Provider({ children }) {
     }, [nftsData]);
 
     useEffect(() => {
-        if (nftsCollectionLoading) {
-            return;
-        }
-        if (nftsCollectionError) {
+        if (nftsCollectionLoading||nftsCollectionError) {
             return;
         }
         dispatch({
@@ -110,10 +107,7 @@ export default function Provider({ children }) {
     }, [nftsCollectionData]);
 
     useEffect(() => {
-        if (userDataLoading) {
-            return;
-        }
-        if (userDataError) {
+        if (userDataLoading||userDataError) {
             return;
         }
 
@@ -131,10 +125,7 @@ export default function Provider({ children }) {
     }, [userData, userDataLoading, wallet.status]);
 
     useEffect(() => {
-        if (usersLoading) {
-            return;
-        }
-        if (usersError) {
+        if (usersLoading||usersError) {
             return;
         }
         let bump = {};
@@ -151,9 +142,6 @@ export default function Provider({ children }) {
     }, [usersData, usersLoading]);
 
     /* ------------ Wallet Section ------------- */
-    useEffect(() => {
-        checkConnection();
-    }, []);
 
     useEffect(() => {
         const getSigner = async () => {
@@ -187,41 +175,12 @@ export default function Provider({ children }) {
         getSigner();
     }, [wallet.status]);
 
-    const checkConnection = async () => {
-        let { ethereum } = window;
-        if (ethereum !== undefined) {
-            const chainId = 4002;
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const accounts = await provider.listAccounts();
-            if (accounts.length !== 0 && Number(chainId) === 4002) {
-                handleConnect(localStorage.getItem("walletFlag"));
-            }
-            ethereum.on("chainChanged", (newChainId) =>
-                handleChainChanged(newChainId)
-            );
-        }
-    };
-
-    const handleChainChanged = (chainId) => {
-        let { ethereum } = window;
-        ethereum.on("connect", () => {
-            if (Number(chainId) === 4002) {
-                handleConnect(localStorage.getItem("walletFlag"));
-            }
-        });
-    };
-
-    const handleConnect = (value) => {
-        wallet.connect(value);
-        localStorage.setItem("walletFlag", value);
-    };
-
     /* ------------ NFT Section ------------- */
     // coin check
     const checkBalance = async () => {
         try {
             if (wallet.status === "connected") {
-                const balance = await icicbToken.balanceOf(wallet.account);
+                const balance = await testToken.balanceOf(wallet.account);
                 return fromBigNum(balance, 18);
             } else {
                 return 0;
@@ -304,7 +263,7 @@ export default function Provider({ children }) {
         try {
             const { nftAddress, assetId, price } = props;
 
-            const signedTokenContract = icicbToken.connect(state.signer);
+            const signedTokenContract = testToken.connect(state.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
@@ -332,7 +291,7 @@ export default function Provider({ children }) {
         try {
             const { nftAddress, assetId, price, expiresAt } = props;
 
-            const signedTokenContract = icicbToken.connect(state.signer);
+            const signedTokenContract = testToken.connect(state.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
@@ -385,7 +344,6 @@ export default function Provider({ children }) {
                     state,
                     {
                         dispatch,
-                        handleConnect,
                         checkBalance,
                         mintNFT,
                         onsaleNFT,

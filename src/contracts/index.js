@@ -9,13 +9,13 @@ const supportChainId = 4002;
 // setMulticallAddress(supportChainId, multicallAddress);
 
 const RPCS = {
-    // 1: "http://13.59.118.124/eth",
+    1: "http://13.59.118.124/eth",
     4002: "https://rpc.testnet.fantom.network",
     // 1337: "http://localhost:7545",
     // 31337: "http://localhost:8545/",
 };
 const providers = {
-    1: new ethers.providers.JsonRpcProvider(RPCS[1]),
+    // 1: new ethers.providers.JsonRpcProvider(RPCS[1]),
     4002: new ethers.providers.JsonRpcProvider(RPCS[4002]),
     // 1337: new ethers.providers.JsonRpcProvider(RPCS[1337]),
     // 31337: new ethers.providers.JsonRpcProvider(RPCS[31337]),
@@ -23,7 +23,7 @@ const providers = {
 
 const provider = providers[supportChainId];
 
-const icicbToken = new ethers.Contract(Addresses.ERC20, Abis.ERC20, provider);
+const testToken = new ethers.Contract(Addresses.TestToken, Abis.TestToken, provider);
 
 const marketplaceContract = new ethers.Contract(
     Addresses.Marketplace,
@@ -39,6 +39,6 @@ export {
     supportChainId,
     provider,
     marketplaceContract,
-    icicbToken,
+    testToken,
     getNFTContract,
 };

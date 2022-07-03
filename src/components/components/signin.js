@@ -2,12 +2,15 @@ import { navigate } from "@reach/router";
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
 import Action from "../../service";
+import { useBlockchainContext } from "../../context";
 import decode from "jwt-decode";
+import axios from "axios";
 
 const SignIn = (props) => {
     const { auth } = props;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const [state, { dispatch }] = useBlockchainContext();
 
     const userName = (val) => {
         setName(val);
@@ -23,15 +26,28 @@ const SignIn = (props) => {
             name: name,
             password: password
         }
-        const upload = await Action.user_login(user);
-        if (!upload) {
+        const response = await Action.user_login(user);
+        if (!response) {
             NotificationManager.error("Not find Account!");
+
+            dispatch({
+                type: "auth",
+                payload: {
+                    isAuth: false
+                }
+            })
         } else {
-            var data = decode(upload.data);
-            console.log(data);
-            localStorage.setItem("user", data.user);
-            localStorage.setItem("public", data.publicKey);
-            localStorage.setItem("private", data.privateKey);
+            var data = decode(response.data);
+            dispatch({
+                type: "auth",
+                payload: {
+                    isAuth: true,
+                    user: data.user,
+                    address: data.publicKey,
+                    privateKey: data.privateKey
+                }
+            })
+            axios.defaults.headers.common['Authorization'] = response.data;
             NotificationManager.success("Signed In successfully!");
             navigate("/");
         }
@@ -46,7 +62,7 @@ const SignIn = (props) => {
                 <input placeholder="Please enter your Password" type="password" onChange={(e) => { passWord(e.target.value) }}></input>
             </div>
             <div className="signin-button" onClick={() => signIn()}>Sign In</div>
-            <div>If you don't have any account <span style={{ color: "black", cursor: "pointer" }} onClick={toSignUp}>Sign Up</span></div>
+            <div>If you don"'"t have any account <span style={{ color: "black", cursor: "pointer" }} onClick={toSignUp}>Sign Up</span></div>
         </div >
     );
 }

@@ -19,7 +19,7 @@ import App from "./components/app";
 import Provider from "./context";
 
 const client = new ApolloClient({
-    uri: "http://192.168.115.178:5000/graphql/",
+    uri: "http://192.168.115.163:5000/graphql/",
     cache: new InMemoryCache(),
 });
 
@@ -28,11 +28,7 @@ ReactDOM.render(
         <ApolloProvider client={client}>
             <UseWalletProvider
                 chainId={4002}
-                connectors={{
-                    walletconnect: {
-                        rpcUrl: "https://rpc.testnet.fantom.network/",
-                    },
-                }}
+                connectors={{}}
             >
                 <Provider>
                     <App />
