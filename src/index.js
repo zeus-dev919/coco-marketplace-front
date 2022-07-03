@@ -19,7 +19,7 @@ import App from "./components/app";
 import Provider from "./context";
 
 const client = new ApolloClient({
-    uri: "http://192.168.115.178:5000/graphql/",
+    uri: "http://192.168.115.168:5000/graphql/",
     cache: new InMemoryCache(),
 });
 
