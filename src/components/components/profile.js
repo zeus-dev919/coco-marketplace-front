@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NotificationManager } from "react-notifications";
 import { useBlockchainContext } from "../../context";
 import Action from "../../service";
+import axios from "axios";
 
 const Outer = styled.div`
     display: flex;
@@ -47,30 +48,25 @@ export default function Responsive() {
 
     const handleSave = async () => {
         setLoadItem(true);
-        const signature = await state.signer.signMessage(msg);
+        try {
+            if (!selectedFile) {
+                throw new Error("Please choose image");
+            }
+            var formData = new FormData();
+            formData.append("newimage", selectedFile);
+            formData.append("previousImage", state.userInfo.image);
+            formData.append("name", newName);
+            formData.append("bio", newBio);
+            formData.append("email", newEmail);
 
-        if (!selectedFile) {
-            NotificationManager.error("Please choose image");
-            return;
+            var res = await axios.post("/api/user-update", formData);
+            init("", "", "", null, null);
+            NotificationManager.success("Update success");
+        } catch (err) {
+            console.log(err.message);
+            NotificationManager.error(err.message);
+            setLoadItem(false);
         }
-        var formData = new FormData();
-        formData.append("newimage", selectedFile);
-        formData.append("previousImage", state.userInfo.image);
-        formData.append("name", newName);
-        formData.append("bio", newBio);
-        formData.append("email", newEmail);
-        formData.append("msg", msg);
-        formData.append("signature", signature);
-
-        Action.user_update(formData)
-            .then((res) => {
-                if (res) {
-                    init("", "", "", null, null);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
         setLoadItem(false);
     };
 

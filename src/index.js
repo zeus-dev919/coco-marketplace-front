@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-import { UseWalletProvider } from "use-wallet";
 import { NotificationContainer } from "react-notifications";
 
 import "@1stquad/react-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css";
@@ -19,22 +18,17 @@ import App from "./components/app";
 import Provider from "./context";
 
 const client = new ApolloClient({
-    uri: "http://192.168.115.178:5000/graphql/",
+    uri: "http://192.168.115.163:5000/graphql/",
     cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
     <React.StrictMode>
         <ApolloProvider client={client}>
-            <UseWalletProvider
-                chainId={4002}
-                connectors={{}}
-            >
-                <Provider>
-                    <App />
-                    <NotificationContainer />
-                </Provider>
-            </UseWalletProvider>
+            <Provider>
+                <App />
+                <NotificationContainer />
+            </Provider>
         </ApolloProvider>
     </React.StrictMode>,
     document.getElementById("root")

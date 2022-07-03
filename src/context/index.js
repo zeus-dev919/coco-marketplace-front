@@ -6,11 +6,10 @@ import React, {
     useEffect,
 } from "react";
 import { ethers } from "ethers";
-import { useWallet } from "use-wallet";
 import { useQuery } from "@apollo/client";
 import { NotificationManager } from "react-notifications";
 
-import { testToken, getNFTContract, marketplaceContract } from "../contracts";
+import { testToken, getNFTContract, marketplaceContract, provider } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
 import {
     GET_ALLNFTS,
@@ -36,19 +35,21 @@ function reducer(state, { type, payload }) {
 const INIT_STATE = {
     allNFT: [],
     collectionNFT: [],
-    signer: {},
-    provider: {},
+    provider: provider,
     userInfo: {},
     usersInfo: {},
     balance: 0,
     addresses: addresses,
-    auth:{
-        isAuth:false
+    auth: {
+        isAuth: false,
+        user: "",
+        address: "",
+        signer: {},
+        privateKey: ""
     }
 };
 
 export default function Provider({ children }) {
-    const wallet = useWallet();
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
 
     const {
@@ -73,7 +74,7 @@ export default function Provider({ children }) {
         error: userDataError,
     } = useQuery(GET_USERDATA, {
         variables: {
-            account: wallet.account,
+            account: state.auth.address,
         },
         pollInterval: 500,
     });
@@ -87,7 +88,7 @@ export default function Provider({ children }) {
     });
 
     useEffect(() => {
-        if (nftsLoading||nftsError) {
+        if (nftsLoading || nftsError) {
             return;
         }
         dispatch({
@@ -97,7 +98,7 @@ export default function Provider({ children }) {
     }, [nftsData]);
 
     useEffect(() => {
-        if (nftsCollectionLoading||nftsCollectionError) {
+        if (nftsCollectionLoading || nftsCollectionError) {
             return;
         }
         dispatch({
@@ -107,11 +108,11 @@ export default function Provider({ children }) {
     }, [nftsCollectionData]);
 
     useEffect(() => {
-        if (userDataLoading||userDataError) {
+        if (userDataLoading || userDataError) {
             return;
         }
 
-        if (wallet.status === "connected") {
+        if (state.auth.isAuth) {
             dispatch({
                 type: "userInfo",
                 payload: userData.getUserInfo,
@@ -122,10 +123,10 @@ export default function Provider({ children }) {
                 payload: {},
             });
         }
-    }, [userData, userDataLoading, wallet.status]);
+    }, [userData, userDataLoading]);
 
     useEffect(() => {
-        if (usersLoading||usersError) {
+        if (usersLoading || usersError) {
             return;
         }
         let bump = {};
@@ -141,46 +142,13 @@ export default function Provider({ children }) {
         });
     }, [usersData, usersLoading]);
 
-    /* ------------ Wallet Section ------------- */
-
-    useEffect(() => {
-        const getSigner = async () => {
-            if (wallet.status === "error") {
-                NotificationManager.error("connect Fantom Testnet");
-            }
-
-            if (wallet.status === "connected") {
-                NotificationManager.success("Welcome back");
-                const provider = new ethers.providers.Web3Provider(
-                    wallet.ethereum
-                );
-                const signer = provider.getSigner();
-                dispatch({
-                    type: "signer",
-                    payload: signer,
-                });
-
-                dispatch({
-                    type: "provider",
-                    payload: provider,
-                });
-            } else {
-                dispatch({
-                    type: "userInfo",
-                    payload: {},
-                });
-            }
-        };
-
-        getSigner();
-    }, [wallet.status]);
 
     /* ------------ NFT Section ------------- */
     // coin check
     const checkBalance = async () => {
         try {
-            if (wallet.status === "connected") {
-                const balance = await testToken.balanceOf(wallet.account);
+            if (state.auth.isAuth) {
+                const balance = await testToken.balanceOf(state.auth.address);
                 return fromBigNum(balance, 18);
             } else {
                 return 0;
@@ -196,7 +164,7 @@ export default function Provider({ children }) {
         try {
             const NFTContract1 = getNFTContract(addresses.NFT.NFT1);
 
-            const signedNFTContract1 = NFTContract1.connect(state.signer);
+            const signedNFTContract1 = NFTContract1.connect(state.auth.signer);
             const tx = await signedNFTContract1.mint(url);
             await tx.wait();
 
@@ -213,7 +181,7 @@ export default function Provider({ children }) {
             const { nftAddress, assetId, price, expiresAt } = props;
 
             const NFTContract = getNFTContract(nftAddress);
-            const signedNFTContract1 = NFTContract.connect(state.signer);
+            const signedNFTContract1 = NFTContract.connect(state.auth.signer);
             const tx = await signedNFTContract1.approve(
                 addresses.Marketplace,
                 toBigNum(assetId, 0)
@@ -221,7 +189,7 @@ export default function Provider({ children }) {
             await tx.wait();
 
             const signedMarketplaceContract = marketplaceContract.connect(
-                state.signer
+                state.auth.signer
             );
             const tx1 = await signedMarketplaceContract.createOrder(
                 nftAddress,
@@ -243,7 +211,7 @@ export default function Provider({ children }) {
             const { nftAddress, assetId } = props;
 
             const signedMarketplaceContract = marketplaceContract.connect(
-                state.signer
+                state.auth.signer
             );
             const tx = await signedMarketplaceContract.cancelOrder(
                 nftAddress,
@@ -263,7 +231,7 @@ export default function Provider({ children }) {
         try {
             const { nftAddress, assetId, price } = props;
 
-            const signedTokenContract = testToken.connect(state.signer);
+            const signedTokenContract = testToken.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
@@ -271,7 +239,7 @@ export default function Provider({ children }) {
             await tx1.wait();
 
             const signedMarketplaceContract = marketplaceContract.connect(
-                state.signer
+                state.auth.signer
             );
             const tx = await signedMarketplaceContract.Buy(
                 nftAddress,
@@ -291,7 +259,7 @@ export default function Provider({ children }) {
         try {
             const { nftAddress, assetId, price, expiresAt } = props;
 
-            const signedTokenContract = testToken.connect(state.signer);
+            const signedTokenContract = testToken.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
@@ -299,7 +267,7 @@ export default function Provider({ children }) {
             await tx1.wait();
 
             const signedMarketplaceContract = marketplaceContract.connect(
-                state.signer
+                state.auth.signer
             );
             const tx = await signedMarketplaceContract.PlaceBid(
                 nftAddress,
@@ -321,7 +289,7 @@ export default function Provider({ children }) {
             const { address, id, price } = props;
 
             const signedMarketplaceContract = marketplaceContract.connect(
-                state.signer
+                state.auth.signer
             );
             const tx = await signedMarketplaceContract.acceptBid(
                 address,

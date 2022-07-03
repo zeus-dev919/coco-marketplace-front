@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "@reach/router";
-import { useWallet } from "use-wallet";
 
 import MyNFT from "../components/mynfts";
 import Profile from "../components/profile";
@@ -16,7 +15,6 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const navigate = useNavigate();
-    const wallet = useWallet();
     const [state, { }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [openMenu1, setOpenMenu1] = useState(false);

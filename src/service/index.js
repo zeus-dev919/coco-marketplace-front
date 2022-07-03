@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
-axios.defaults.baseURL = "http://192.168.115.178:5000";
+axios.defaults.baseURL = "http://192.168.115.163:5000";
 
 // NFT manage
 const nft_mint = async (formData) => {
@@ -67,30 +67,12 @@ const user_login = async (account) => {
     }
 }
 
-const user_update = async (formData) => {
-    try {
-        var res = await axios.post("/api/user-update", formData);
-
-        if (!res.data.success) {
-            NotificationManager.error("Community Error");
-            return false;
-        }
-
-        NotificationManager.success("Successfully updated");
-
-        return true;
-    } catch (err) {
-        NotificationManager.error("Server Error");
-        return false;
-    }
-};
 
 // Export Functions
 const Action = {
     nft_mint,
     nft_like,
     user_create,
-    user_update,
     user_login,
 };
 

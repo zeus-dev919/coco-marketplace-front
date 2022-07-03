@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "@reach/router";
-import { useWallet } from "use-wallet";
 import { NotificationManager } from "react-notifications";
 
 import Footer from "../components/footer";
@@ -9,7 +8,6 @@ import { useBlockchainContext } from "../../context";
 
 export default function Createpage() {
     const navigate = useNavigate();
-    const wallet = useWallet();
     const [state, { mintNFT }] = useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
@@ -21,10 +19,10 @@ export default function Createpage() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!localStorage.getItem("user")) {
+        if (!state.auth.isAuth) {
             navigate("/signPage");
         }
-    }, [wallet.status]);
+    }, [state.auth.isAuth]);
 
     const handleSubmit = async () => {
         try {

@@ -6,7 +6,6 @@ import Breakpoint, {
 import { useNavigate } from "@reach/router";
 import { Link } from "@reach/router";
 import useOnclickOutside from "react-cool-onclickoutside";
-import { useWallet } from "use-wallet";
 import { useBlockchainContext } from "../../context";
 import SignIn from "../components/signin";
 
@@ -26,37 +25,11 @@ const NavLink = (props) => (
 );
 
 export default function Header() {
-    const wallet = useWallet();
     const navigate = useNavigate();
     const [state, { dispatch }] = useBlockchainContext();
     const [openMenu1, setOpenMenu1] = useState(false);
     const [openMenu2, setOpenMenu2] = useState(false);
     const [openMenu3, setOpenMenu3] = useState(false);
-    const [userInfo, setUserInfo] = useState(false);
-
-    useEffect(() => {
-        if (localStorage.getItem("user")) {
-            setUserInfo(true);
-        }
-    })
-
-    var styledAddress = wallet.account
-        ? wallet.account.slice(0, 4) + "..." + wallet.account.slice(-4)
-        : "Connect Wallet";
-
-    const handleConnect = () => {
-        navigate("/signPage");
-    };
-
-    const disconnect = () => {
-        if (wallet.status === "connected") {
-            wallet.reset();
-            dispatch({
-                type: "userInfo",
-                payload: {},
-            });
-        }
-    };
 
     const handleBtnClick1 = () => {
         setOpenMenu1(!openMenu1);
@@ -265,7 +238,7 @@ export default function Header() {
                     </BreakpointProvider>
 
                     <div className="mainside">
-                        {!userInfo ? (
+                        {!state.auth.isAuth ? (
                             <Link to="/signPage"
                                 className="btn-main"
                             >
