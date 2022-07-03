@@ -45,6 +45,8 @@ const SignIn = (props) => {
                 payload: {
                     isAuth: true,
                     user: data.user,
+                    email: data.email,
+                    bio: data.bio,
                     address: data.address,
                     privateKey: data.privateKey,
                     signer: userWallet
