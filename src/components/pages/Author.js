@@ -22,10 +22,10 @@ export default function Collection() {
     const [openMenu1, setOpenMenu1] = useState(false);
 
     useEffect(() => {
-        if (!localStorage.getItem("user")) {
+        if (!state.auth.isAuth) {
             navigate("/signPage");
         }
-    }, []);
+    }, [state.auth]);
 
     const handleBtnClick = () => {
         setOpenMenu(!openMenu);

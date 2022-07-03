@@ -43,7 +43,7 @@ const SignIn = (props) => {
                 payload: {
                     isAuth: true,
                     user: data.user,
-                    address: data.publicKey,
+                    address: data.address,
                     privateKey: data.privateKey
                 }
             })

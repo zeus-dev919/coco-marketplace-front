@@ -86,9 +86,12 @@ export default function Header() {
         closeMenu3();
     });
     const logout = () => {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        setUserInfo(!userInfo);
+        dispatch({
+            type: "auth",
+            payload: {
+                isAuth: false
+            }
+        })
     }
 
     const [showmenu, btn_icon] = useState(false);
