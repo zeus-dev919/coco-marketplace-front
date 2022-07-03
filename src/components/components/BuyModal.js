@@ -22,22 +22,23 @@ export default function BuyModal(props) {
         };
 
         b();
+        if (correctItem) {
+            if (
+                mybalance > Number(correctItem.marketdata.price) &&
+                price > 0 &&
+                price !== "" &&
+                moment(date).isValid()
+            ) {
+                setBidBtnFlag(false);
+            } else {
+                setBidBtnFlag(true);
+            }
 
-        if (
-            mybalance > Number(correctItem.marketdata.price) &&
-            price > 0 &&
-            price !== "" &&
-            moment(date).isValid()
-        ) {
-            setBidBtnFlag(false);
-        } else {
-            setBidBtnFlag(true);
-        }
-
-        if (mybalance > Number(correctItem.marketdata.price)) {
-            setBuyBtnFlag(false);
-        } else {
-            setBuyBtnFlag(true);
+            if (mybalance > Number(correctItem.marketdata.price)) {
+                setBuyBtnFlag(false);
+            } else {
+                setBuyBtnFlag(true);
+            }
         }
     }, [mybalance, date, price]);
 
@@ -51,14 +52,14 @@ export default function BuyModal(props) {
     };
 
     const buyHandle = () => {
-        if (mybalance < Number(correctItem.marketdata.price)) {
+        if (mybalance < Number(correctItem?.marketdata.price)) {
             return;
         }
 
         buyNFT({
-            nftAddress: correctItem.collectionAddress,
-            assetId: correctItem.tokenID,
-            price: correctItem.marketdata.price,
+            nftAddress: correctItem?.collectionAddress,
+            assetId: correctItem?.tokenID,
+            price: correctItem?.marketdata.price,
         })
             .then((res) => {
                 if (res) NotificationManager.success("Successfully Buy NFT");
@@ -70,22 +71,22 @@ export default function BuyModal(props) {
 
     const bidHandle = () => {
         if (
-            mybalance < Number(correctItem.marketdata.price) ||
-            mybalance < Number(correctItem.marketdata.bidPrice)
+            mybalance < Number(correctItem?.marketdata.price) ||
+            mybalance < Number(correctItem?.marketdata.bidPrice)
         ) {
             return;
         }
         if (!moment(date).isValid()) {
             return;
         }
-        if (mybalance < Number(correctItem.marketdata.bidPrice)) {
+        if (mybalance < Number(correctItem?.marketdata.bidPrice)) {
             NotificationManager.error("Please increase bid price");
             return;
         }
 
         bidNFT({
-            nftAddress: correctItem.collectionAddress,
-            assetId: correctItem.tokenID,
+            nftAddress: correctItem?.collectionAddress,
+            assetId: correctItem?.tokenID,
             price: price,
             expiresAt: moment(date).valueOf(),
         })
@@ -113,7 +114,7 @@ export default function BuyModal(props) {
                     <Modal.Body>
                         <span className="spacer-single"></span>
                         <h4 className="text-center">
-                            You need {correctItem.marketdata.price} Crypto-Coco +{" "}
+                            You need {correctItem?.marketdata.price} Crypto-Coco +{" "}
                             <Link to="">gas fees</Link>
                         </h4>
                         <span className="spacer-10"></span>

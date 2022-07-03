@@ -50,14 +50,12 @@ export default function Collection() {
     }, [correctItem]);
 
     const handleBtnClick = () => {
-        setOpenMenu(!openMenu);
-        setOpenMenu1(false);
+        setOpenMenu(true);
         document.getElementById("Mainbtn").classList.add("active");
         document.getElementById("Mainbtn1").classList.remove("active");
     };
 
     const handleBtnClick1 = () => {
-        setOpenMenu1(!openMenu1);
         setOpenMenu(false);
         document.getElementById("Mainbtn1").classList.add("active");
         document.getElementById("Mainbtn").classList.remove("active");
@@ -170,13 +168,11 @@ export default function Collection() {
                             </div>
                         </div>
 
-                        {openMenu && (
+                        {openMenu ? (
                             <div id="zero1" className="onStep fadeIn">
                                 <ColumnZero correctItem={correctItem} />
                             </div>
-                        )}
-
-                        {openMenu1 && (
+                        ) : (
                             <div id="zero2" className="onStep fadeIn">
                                 <CoulmnOne correctItem={correctItem} />
                             </div>

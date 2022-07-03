@@ -44,7 +44,7 @@ const SignIn = (props) => {
                 type: "auth",
                 payload: {
                     isAuth: true,
-                    user: data.user,
+                    name: data.name,
                     email: data.email,
                     bio: data.bio,
                     address: data.address,
@@ -52,12 +52,6 @@ const SignIn = (props) => {
                     signer: userWallet
                 }
             })
-            console.log(
-                true,
-                data.user,
-                data.address,
-                data.privateKey,
-                userWallet);
             axios.defaults.headers.common['Authorization'] = response.data;
             NotificationManager.success("Signed In successfully!");
             navigate("/");

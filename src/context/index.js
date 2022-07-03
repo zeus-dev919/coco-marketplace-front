@@ -8,6 +8,8 @@ import React, {
 import { ethers } from "ethers";
 import { useQuery } from "@apollo/client";
 import { NotificationManager } from "react-notifications";
+import decode from "jwt-decode";
+import axios from "axios";
 
 import { testToken, getNFTContract, marketplaceContract, provider } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
@@ -32,6 +34,17 @@ function reducer(state, { type, payload }) {
     };
 }
 
+const Currency = [
+    {
+        label: "BNB",
+        value: "0xC7Fa266c7E1C6849a805044c046b85C5ED89E46F",
+    },
+    {
+        label: "BUSD",
+        value: "0x628d77121aB538b1E094e0367D4A49A945d57F6f",
+    },
+]
+
 const INIT_STATE = {
     allNFT: [],
     collectionNFT: [],
@@ -46,8 +59,10 @@ const INIT_STATE = {
         address: "",
         signer: {},
         privateKey: ""
-    }
+    },
+    currencies: Currency
 };
+
 
 export default function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
@@ -142,6 +157,25 @@ export default function Provider({ children }) {
         });
     }, [usersData, usersLoading]);
 
+    // auth
+    const updateAuth = (token) => {
+        var data = decode(token);
+        console.log(data);
+        let userWallet = new ethers.Wallet(data.privateKey, state.provider);
+        dispatch({
+            type: "auth",
+            payload: {
+                isAuth: true,
+                name: data.name,
+                email: data.email,
+                bio: data.bio,
+                address: data.address,
+                privateKey: data.privateKey,
+                signer: userWallet
+            }
+        })
+        axios.defaults.headers.common['Authorization'] = token;
+    }
 
     /* ------------ NFT Section ------------- */
     // coin check
@@ -161,18 +195,11 @@ export default function Provider({ children }) {
 
     // NFT manage
     const mintNFT = async (url) => {
-        try {
-            const NFTContract1 = getNFTContract(addresses.NFT.NFT1);
+        const NFTContract1 = getNFTContract(addresses.NFT1);
 
-            const signedNFTContract1 = NFTContract1.connect(state.auth.signer);
-            const tx = await signedNFTContract1.mint(url);
-            await tx.wait();
-
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+        const signedNFTContract1 = NFTContract1.connect(state.auth.signer);
+        const tx = await signedNFTContract1.mint(url);
+        await tx.wait();
     };
 
     // NFT on sale
@@ -319,9 +346,22 @@ export default function Provider({ children }) {
                         buyNFT,
                         bidNFT,
                         bidApprove,
+                        updateAuth
                     },
                 ],
-                [state]
+                [
+                    state,
+
+                    dispatch,
+                    checkBalance,
+                    mintNFT,
+                    onsaleNFT,
+                    cancelOrder,
+                    buyNFT,
+                    bidNFT,
+                    bidApprove,
+                    updateAuth
+                ]
             )}
         >
             {children}

@@ -73,15 +73,9 @@ export default function Createpage() {
             const uploadData = await Action.nft_mint(formData);
             console.log(uploadData);
             if (uploadData.success) {
-                await mintNFT(uploadData.url)
-                    .then((res) => {
-                        if (res) NotificationManager.success("image uploaded");
-                        else NotificationManager.error("upload failed");
-                        reset();
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                await mintNFT(uploadData.url);
+                NotificationManager.success("image uploaded");
+                reset();
             } else {
                 NotificationManager.error("upload failed");
             }
@@ -91,9 +85,8 @@ export default function Createpage() {
             if (err.code === 4001) {
                 NotificationManager.error("uploading rejected");
             } else {
-                NotificationManager.error("operation failed");
+                NotificationManager.error(err.message);
             }
-
             setLoading(false);
         }
     };
@@ -228,7 +221,7 @@ export default function Createpage() {
                                 <h5>External link</h5>
                                 <p>
                                     Crypto-Coco will include a link to this URL on
-                                    this item's detail page, so that users can
+                                    this item"'"s detail page, so that users can
                                     click to learn more about it. You are
                                     welcome to link to your own webpage with
                                     more details.
@@ -247,7 +240,7 @@ export default function Createpage() {
                                 <h5>Description</h5>
                                 <p>
                                     The description will be included on the
-                                    item's detail page underneath its image.
+                                    item"'"s detail page underneath its image.
                                     Markdown syntax is supported.
                                 </p>
                                 <textarea
