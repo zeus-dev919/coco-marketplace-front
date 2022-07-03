@@ -2227,6 +2227,22 @@ footer {
     }
 }
 
+.userInfo_input {
+    padding: 8px;
+    margin-bottom: 20px;
+    border: none;
+    border: solid 1px $color;
+    background: none;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    height: auto;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    color: $white;
+}
+
 .sign {
     display: flex;
     justify-content: center;

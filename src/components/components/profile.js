@@ -137,13 +137,6 @@ export default function Responsive() {
 
                     <div className="spacer-20"></div>
 
-                    <div style={{ display: "flex" }}>
-                        <div className="profile-btn" style={{ marginRight: "10px" }} onClick={editOnclick}>Edit</div>
-                        <div className="profile-btn" onClick={showPrivateKey}>Export Private</div>
-                    </div>
-
-                    <div className="spacer-20"></div>
-
                     {edit ? (<>
                         <h5>Username</h5>
                         <input
@@ -192,33 +185,74 @@ export default function Responsive() {
                             disabled={loading}
                         />
 
-                        <div className="spacer-30"></div></>) : ""}
+                        <div className="spacer-30"></div></>) : (
+                        <>
+                            <h5>Username</h5>
+                            <div className="userInfo_input">{state.auth.user}</div>
+
+                            <div className="spacer-10"></div>
+
+                            <h5>Bio</h5>
+                            <div className="userInfo_input">{state.auth.bio}</div>
+
+                            <div className="spacer-10"></div>
+
+                            <h5>Email Address</h5>
+                            <div className="userInfo_input">{state.auth.email}</div>
+
+                            <div className="spacer-10"></div>
+
+                        </>
+                    )}
+                    <div style={{ display: "flex" }}>
+                        <div className="profile-btn" style={{ marginRight: "10px" }} onClick={editOnclick}>Edit</div>
+                        <div className="profile-btn" onClick={showPrivateKey}>Export Private</div>
+                    </div>
+
+                    <div className="spacer-20"></div>
                 </div>
             </div>
             <div className="col-1"></div>
-            <div className="d-item col-lg-4 col-md-5 col-sm-5 col-xs-12">
-                <div className="nft__item">
-                    <div className="nft__item_wrap">
-                        <Outer>
-                            <img
-                                src={image || "./img/author/author-1.jpg"}
-                                className="lazy nft__item_preview noselect"
-                                alt=""
-                                onClick={handleSelect}
-                            />
-                            <input
-                                ref={fileRef}
-                                id="fileUpload"
-                                type="file"
-                                multiple
-                                accept="image/*, video/*"
-                                onChange={handleImgChange}
-                                className="fileUpload"
-                            />
-                        </Outer>
+            {edit ? (
+                <>
+                    <div className="d-item col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                        <div className="nft__item">
+                            <div className="nft__item_wrap">
+                                <Outer>
+                                    <img
+                                        src={image || "./img/author/author-1.jpg"}
+                                        className="lazy nft__item_preview noselect"
+                                        alt=""
+                                        onClick={handleSelect}
+                                    />
+                                    <input
+                                        ref={fileRef}
+                                        id="fileUpload"
+                                        type="file"
+                                        multiple
+                                        accept="image/*, video/*"
+                                        onChange={handleImgChange}
+                                        className="fileUpload"
+                                    />
+                                </Outer>
+                            </div>
+                        </div>
+                    </div></>
+            ) : (
+                <div className="col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                    <div className="nft__item">
+                        <div className="nft__item_wrap">
+                            <Outer>
+                                <img
+                                    src={image || "./img/author/author-1.jpg"}
+                                    className="lazy nft__item_preview noselect"
+                                    alt=""
+                                />
+                            </Outer>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

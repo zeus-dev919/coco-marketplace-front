@@ -44,6 +44,8 @@ const SignIn = (props) => {
                     isAuth: true,
                     user: data.user,
                     address: data.address,
+                    email: data.email,
+                    bio: data.bio,
                     privateKey: data.privateKey
                 }
             })
