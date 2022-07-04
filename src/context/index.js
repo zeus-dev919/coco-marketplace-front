@@ -103,6 +103,7 @@ export default function Provider({ children }) {
     });
 
     useEffect(() => {
+        console.log(nftsLoading, nftsError);
         if (nftsLoading || nftsError) {
             return;
         }
@@ -110,7 +111,7 @@ export default function Provider({ children }) {
             type: "allNFT",
             payload: nftsData.getAllNFTs,
         });
-    }, [nftsData]);
+    }, [nftsData, nftsLoading, nftsError]);
 
     useEffect(() => {
         if (nftsCollectionLoading || nftsCollectionError) {
@@ -205,7 +206,7 @@ export default function Provider({ children }) {
     // NFT on sale
     const onsaleNFT = async (props) => {
         try {
-            const { nftAddress, assetId, price, expiresAt } = props;
+            const { nftAddress, assetId, currency, price, expiresAt } = props;
 
             const NFTContract = getNFTContract(nftAddress);
             const signedNFTContract1 = NFTContract.connect(state.auth.signer);
@@ -218,9 +219,19 @@ export default function Provider({ children }) {
             const signedMarketplaceContract = marketplaceContract.connect(
                 state.auth.signer
             );
+            console.log(
+                nftAddress,
+                state.auth.address,
+                assetId,
+                currency,
+                toBigNum(price, 18),
+                expiresAt
+            );
             const tx1 = await signedMarketplaceContract.createOrder(
                 nftAddress,
+                state.auth.address,
                 assetId,
+                currency,
                 toBigNum(price, 18),
                 expiresAt
             );

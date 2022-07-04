@@ -3,6 +3,7 @@ import { useNavigate } from "@reach/router";
 import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";
+import {fromBigNum} from "../../utils"
 
 export default function Responsive() {
     const navigate = useNavigate();
@@ -126,7 +127,7 @@ export default function Responsive() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : nft.marketdata.price + " Crypto-Coco"}
+                                    : fromBigNum(nft.marketdata.price,18) + " Crypto-Coco"}
                                 <span>
                                     {nft.marketdata.bidders.length} bids
                                 </span>
