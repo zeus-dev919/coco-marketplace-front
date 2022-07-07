@@ -8,7 +8,7 @@ export default function Responsive(props) {
     const { id, collection } = props;
     const [state, { onsaleNFT }] = useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
-    const [currency, setCurrency] = useState("");
+    const [currency, setCurrency] = useState(state.currencies[0].value);
     const [price, setPrice] = useState("");
     const [date, setDate] = useState(new Date());
     const [loading, setLoading] = useState(false);
@@ -35,6 +35,7 @@ export default function Responsive(props) {
             onsaleNFT({
                 nftAddress: collection,
                 assetId: correctCollection.items[id].tokenID,
+                currency: currency,
                 price: price,
                 expiresAt: moment(date).valueOf(),
             })
@@ -88,10 +89,10 @@ export default function Responsive(props) {
                                         </p>
                                         <div className="spacer-single"></div>
                                         <h5>currency</h5>
-                                        <select className="form-control">
-                                        {state.currencies.map((currency)=>(
-                                            <option value = {currency.value}>currency.label</option>
-                                        ))}
+                                        <select className="form-control" onChange={(e) => { setCurrency(e.target.value) }}>
+                                            {state.currencies.map((currency) => (
+                                                <option value={currency.value}>{currency.label}</option>
+                                            ))}
                                         </select>
                                         <div className="spacer-single"></div>
                                         <h5>Price</h5>
