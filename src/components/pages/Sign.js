@@ -10,7 +10,7 @@ const Sign = () => {
   return (
     <div>
       <section className='container sign'>
-        {authPage ? <SignIn auth={() => setAutoPage()} /> : <SignUp auth={setAutoPage} />}
+        {authPage ? <SignIn auth={setAutoPage} /> : <SignUp auth={setAutoPage} />}
       </section>
       <Footer />
     </div>

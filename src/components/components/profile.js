@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { NotificationManager } from "react-notifications";
 import { useBlockchainContext } from "../../context";
-import Action from "../../service";
+import axios from "axios";
 
 const Outer = styled.div`
     display: flex;
@@ -14,8 +14,7 @@ const Outer = styled.div`
 `;
 
 export default function Responsive() {
-    const msg = "Crypto-CocoMARKET";
-    const [state, { }] = useBlockchainContext();
+    const [state, { dispatch, updateAuth }] = useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -29,7 +28,7 @@ export default function Responsive() {
     useEffect(() => {
         init(
             state.userInfo.name,
-            state.userInfo.bio,
+            state.userInfo.bio ? state.userInfo.bio : "",
             state.userInfo.email,
             null,
             null
@@ -47,30 +46,26 @@ export default function Responsive() {
 
     const handleSave = async () => {
         setLoadItem(true);
-        const signature = await state.signer.signMessage(msg);
+        try {
+            if (!selectedFile) {
+                throw new Error("Please choose image");
+            }
+            var formData = new FormData();
+            formData.append("newimage", selectedFile);
+            formData.append("previousImage", state.userInfo.image);
+            formData.append("name", newName);
+            formData.append("bio", newBio);
+            formData.append("email", newEmail);
 
-        if (!selectedFile) {
-            NotificationManager.error("Please choose image");
-            return;
+            var res = await axios.post("/api/user-update", formData);
+            updateAuth(res.data.data);
+
+            NotificationManager.success("Update success");
+        } catch (err) {
+            console.log(err.message);
+            NotificationManager.error(err.message);
+            setLoadItem(false);
         }
-        var formData = new FormData();
-        formData.append("newimage", selectedFile);
-        formData.append("previousImage", state.userInfo.image);
-        formData.append("name", newName);
-        formData.append("bio", newBio);
-        formData.append("email", newEmail);
-        formData.append("msg", msg);
-        formData.append("signature", signature);
-
-        Action.user_update(formData)
-            .then((res) => {
-                if (res) {
-                    init("", "", "", null, null);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
         setLoadItem(false);
     };
 
@@ -188,17 +183,17 @@ export default function Responsive() {
                         <div className="spacer-30"></div></>) : (
                         <>
                             <h5>Username</h5>
-                            <div className="userInfo_input">{state.auth.user}</div>
+                            <div className="userInfo_input">{state.auth?.name}</div>
 
                             <div className="spacer-10"></div>
-
-                            <h5>Bio</h5>
-                            <div className="userInfo_input">{state.auth.bio}</div>
-
+                            {state.auth?.bio ? (<div>
+                                <h5>Bio</h5>
+                                <div className="userInfo_input">{state.auth?.bio}</div>
+                            </div>) : ""}
                             <div className="spacer-10"></div>
 
                             <h5>Email Address</h5>
-                            <div className="userInfo_input">{state.auth.email}</div>
+                            <div className="userInfo_input">{state.auth?.email}</div>
 
                             <div className="spacer-10"></div>
 
@@ -213,9 +208,34 @@ export default function Responsive() {
                 </div>
             </div>
             <div className="col-1"></div>
-            {edit ? (
-                <>
-                    <div className="d-item col-lg-4 col-md-5 col-sm-5 col-xs-12">
+            {
+                edit ? (
+                    <>
+                        <div className="d-item col-lg-4 col-md-5 col-sm-5 col-xs-12">
+                            <div className="nft__item">
+                                <div className="nft__item_wrap">
+                                    <Outer>
+                                        <img
+                                            src={image || "./img/author/author-1.jpg"}
+                                            className="lazy nft__item_preview noselect"
+                                            alt=""
+                                            onClick={handleSelect}
+                                        />
+                                        <input
+                                            ref={fileRef}
+                                            id="fileUpload"
+                                            type="file"
+                                            multiple
+                                            accept="image/*, video/*"
+                                            onChange={handleImgChange}
+                                            className="fileUpload"
+                                        />
+                                    </Outer>
+                                </div>
+                            </div>
+                        </div></>
+                ) : (
+                    <div className="col-lg-4 col-md-5 col-sm-5 col-xs-12">
                         <div className="nft__item">
                             <div className="nft__item_wrap">
                                 <Outer>
@@ -223,36 +243,13 @@ export default function Responsive() {
                                         src={image || "./img/author/author-1.jpg"}
                                         className="lazy nft__item_preview noselect"
                                         alt=""
-                                        onClick={handleSelect}
-                                    />
-                                    <input
-                                        ref={fileRef}
-                                        id="fileUpload"
-                                        type="file"
-                                        multiple
-                                        accept="image/*, video/*"
-                                        onChange={handleImgChange}
-                                        className="fileUpload"
                                     />
                                 </Outer>
                             </div>
                         </div>
-                    </div></>
-            ) : (
-                <div className="col-lg-4 col-md-5 col-sm-5 col-xs-12">
-                    <div className="nft__item">
-                        <div className="nft__item_wrap">
-                            <Outer>
-                                <img
-                                    src={image || "./img/author/author-1.jpg"}
-                                    className="lazy nft__item_preview noselect"
-                                    alt=""
-                                />
-                            </Outer>
-                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

@@ -5,6 +5,7 @@ import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 import decode from "jwt-decode";
 import axios from "axios";
+import { ethers } from "ethers";
 
 const SignIn = (props) => {
     const { auth } = props;
@@ -38,15 +39,17 @@ const SignIn = (props) => {
             })
         } else {
             var data = decode(response.data);
+            let userWallet = new ethers.Wallet(data.privateKey, state.provider);
             dispatch({
                 type: "auth",
                 payload: {
                     isAuth: true,
-                    user: data.user,
-                    address: data.address,
+                    name: data.name,
                     email: data.email,
                     bio: data.bio,
-                    privateKey: data.privateKey
+                    address: data.address,
+                    privateKey: data.privateKey,
+                    signer: userWallet
                 }
             })
             axios.defaults.headers.common['Authorization'] = response.data;

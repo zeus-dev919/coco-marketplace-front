@@ -175,7 +175,7 @@ export default function Colection() {
                             <div className="col-md-6 text-center">
                                 <img
                                     src={
-                                        itemData.metadata.image ||
+                                        itemData?.metadata?.image ||
                                         "../../img/collections/coll-item-3.jpg"
                                     }
                                     className="img-fluid img-rounded mb-sm-30"
@@ -186,15 +186,14 @@ export default function Colection() {
                             <div className="col-md-6">
                                 <div className="item_info">
                                     {/* end time */}
-                                    {itemData.marketdata.endTime ===
+                                    {itemData?.marketdata?.endTime ===
                                         "" ? null : (
                                         <span>
                                             <p>
                                                 Sale ends{" "}
                                                 {moment(
                                                     Number(
-                                                        itemData.marketdata
-                                                            .endTime
+                                                        itemData?.marketdata?.endTime
                                                     )
                                                 ).format("lll")}
                                             </p>
@@ -221,11 +220,10 @@ export default function Colection() {
                                             )}
                                             <div className="spacer-10"></div>
                                             <h3 style={{ color: "#a48b57" }}>
-                                                {itemData.marketdata.price ===
+                                                {itemData?.marketdata?.price ===
                                                     ""
                                                     ? null
-                                                    : itemData.marketdata
-                                                        .price + " Crypto-Coco"}
+                                                    : itemData?.marketdata?.price + " Crypto-Coco"}
                                             </h3>
                                             <hr />
                                         </span>
@@ -257,15 +255,14 @@ export default function Colection() {
                                                     className="lazy"
                                                     src={
                                                         state.usersInfo[
-                                                            itemData.creator
+                                                            itemData?.creator
                                                         ]?.image === undefined
                                                             ? state
                                                                 .collectionNFT[0]
                                                                 .metadata
                                                                 .image
                                                             : state.usersInfo[
-                                                                itemData
-                                                                    .creator
+                                                                itemData?.creator
                                                             ].image ||
                                                             "../../img/author/author-1.jpg"
                                                     }
@@ -285,7 +282,7 @@ export default function Colection() {
                                     <div className="spacer-40"></div>
                                     <div className="de_tab">
                                         <div className="row">
-                                            {itemData.metadata.attributes.map(
+                                            {itemData?.metadata?.attributes.map(
                                                 (item, index) => (
                                                     <M_itemdetailRedux
                                                         key={index}
@@ -328,7 +325,7 @@ export default function Colection() {
                                                 <div className="de_tab_content">
                                                     {openMenu && (
                                                         <div className="tab-1 onStep fadeIn">
-                                                            {itemData.marketdata.bidders.map(
+                                                            {itemData?.marketdata?.bidders.map(
                                                                 (
                                                                     bidder,
                                                                     index
@@ -353,9 +350,7 @@ export default function Colection() {
                                                                             Bid{" "}
                                                                             <b>
                                                                                 {
-                                                                                    itemData
-                                                                                        .marketdata
-                                                                                        .bidPrices[
+                                                                                    itemData?.marketdata?.bidPrices[
                                                                                     index
                                                                                     ]
                                                                                 }{" "}
@@ -369,14 +364,10 @@ export default function Colection() {
                                                                                     )}
                                                                                 </b>{" "}
                                                                                 at{" "}
-                                                                                {itemData
-                                                                                    .marketdata
-                                                                                    .bidTime
+                                                                                {itemData?.marketdata?.bidTime
                                                                                     ? moment(
                                                                                         Number(
-                                                                                            itemData
-                                                                                                .marketdata
-                                                                                                .bidTime[
+                                                                                            itemData?.marketdata?.bidTime[
                                                                                             index
                                                                                             ]
                                                                                         )

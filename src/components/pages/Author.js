@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "@reach/router";
-import { useWallet } from "use-wallet";
 
 import MyNFT from "../components/mynfts";
 import Profile from "../components/profile";
@@ -16,10 +15,8 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const navigate = useNavigate();
-    const wallet = useWallet();
     const [state, { }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
-    const [openMenu1, setOpenMenu1] = useState(false);
 
     useEffect(() => {
         if (!state.auth.isAuth) {
@@ -28,14 +25,12 @@ export default function Collection() {
     }, [state.auth]);
 
     const handleBtnClick = () => {
-        setOpenMenu(!openMenu);
-        setOpenMenu1(false);
+        setOpenMenu(true);
         document.getElementById("Mainbtn").classList.add("active");
         document.getElementById("Mainbtn1").classList.remove("active");
     };
     const handleBtnClick1 = () => {
         setOpenMenu(false);
-        setOpenMenu1(!openMenu1);
         document.getElementById("Mainbtn1").classList.add("active");
         document.getElementById("Mainbtn").classList.remove("active");
     };
@@ -100,12 +95,11 @@ export default function Collection() {
                         </div>
                     </div>
                 </div>
-                {openMenu && (
+                {openMenu ? (
                     <div id="zero1" className="onStep fadeIn">
                         <MyNFT />
                     </div>
-                )}
-                {openMenu1 && (
+                ):(
                     <div id="zero2" className="onStep fadeIn">
                         <Profile />
                     </div>

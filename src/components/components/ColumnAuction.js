@@ -8,6 +8,7 @@ export default function Responsive(props) {
     const { id, collection } = props;
     const [state, { onsaleNFT }] = useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
+    const [currency, setCurrency] = useState("");
     const [price, setPrice] = useState("");
     const [date, setDate] = useState(new Date());
     const [loading, setLoading] = useState(false);
@@ -86,6 +87,13 @@ export default function Responsive(props) {
                                             <span>Sell to highest bidder</span>
                                         </p>
                                         <div className="spacer-single"></div>
+                                        <h5>currency</h5>
+                                        <select className="form-control">
+                                        {state.currencies.map((currency)=>(
+                                            <option value = {currency.value}>currency.label</option>
+                                        ))}
+                                        </select>
+                                        <div className="spacer-single"></div>
                                         <h5>Price</h5>
                                         <div className="price">
                                             <div
@@ -118,9 +126,7 @@ export default function Responsive(props) {
                                                 }
                                             />
                                         </div>
-
                                         <div className="spacer-30"></div>
-
                                         <h5>ExpiresAt</h5>
                                         <DateTimeField
                                             dateTime={date}
