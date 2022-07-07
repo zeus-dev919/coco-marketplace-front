@@ -18,15 +18,15 @@ const GlobalStyles = createGlobalStyle`
 export default function Colection() {
     const { id, collection } = useParams();
     const navigate = useNavigate();
-    const [state, { bidApprove, cancelOrder }] = useBlockchainContext();
+    const [state, { bidApprove, cancelOrder, getCurrency }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
-    const [openMenu1, setOpenMenu1] = useState(false);
     const [correctCollection, setCorrectCollection] = useState(null);
     const [pageFlag, setPageFlag] = useState(0); // 1 is mine, 2 is saled mine, 3 is others, 4 is saled others
     const [modalShow, setModalShow] = useState(false);
     const [buyFlag, setBuyFlag] = useState(0); // 1 is Buy, 2 is Bid
     const [expireTime, setExpireTime] = useState([]);
-    const [timeFlag, setTimeFlag] = useState(false);
+    const [timeFlag, setTimeFlag] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     // item data
     const [itemData, setItemData] = useState(null);
@@ -37,6 +37,9 @@ export default function Colection() {
                 setInterval(() => {
                     let endTime = moment(Number(itemData.marketdata.endTime));
                     let nowTime = moment(new Date());
+                    // test
+                    let ms = moment(endTime.diff(nowTime));
+                    //
                     if (endTime < nowTime) setTimeFlag(true);
                     else {
                         let ms = moment(endTime.diff(nowTime));
@@ -74,6 +77,8 @@ export default function Colection() {
                     : setPageFlag(3);
             }
         }
+
+        console.log("endTime", itemData?.marketdata);
     }, [itemData]);
 
     useEffect(() => {
@@ -92,14 +97,12 @@ export default function Colection() {
     }, [state.collectionNFT]);
 
     const handleBtnClick = () => {
-        setOpenMenu(!openMenu);
-        setOpenMenu1(false);
+        setOpenMenu(true);
         document.getElementById("Mainbtn").classList.add("active");
         document.getElementById("Mainbtn1").classList.remove("active");
     };
 
     const handleBtnClick1 = () => {
-        setOpenMenu1(!openMenu1);
         setOpenMenu(false);
         document.getElementById("Mainbtn1").classList.add("active");
         document.getElementById("Mainbtn").classList.remove("active");
@@ -127,38 +130,45 @@ export default function Colection() {
         setModalShow(true);
     };
 
-    const handleApproveBid = () => {
-        if (itemData !== null) {
-            bidApprove({
-                address: collection,
-                id: id,
-                price: itemData.marketdata.bidPrice,
-            })
-                .then((res) => {
-                    if (res)
-                        NotificationManager.success("Successfully approve");
+    const handleApproveBid = async () => {
+        try {
+            if (itemData !== null) {
+                setLoading(true);
+                bidApprove({
+                    address: collection,
+                    id: id,
+                    price: itemData.marketdata.bidPrice,
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+                NotificationManager.success("Successfully approve");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.log(err.message);
+            NotificationManager.error("Failed approve");
         }
     };
 
-    const handleCancel = () => {
+    const handleCancel = async () => {
         if (itemData !== null) {
-            cancelOrder({
-                nftAddress: collection,
-                assetId: id,
-            })
-                .then((res) => {
-                    if (res)
-                        NotificationManager.success(
-                            "Successfully canceled order"
-                        );
+
+            setLoading(true);
+            try {
+                await cancelOrder({
+                    nftAddress: collection,
+                    assetId: id,
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+                NotificationManager.success(
+                    "Successfully canceled order"
+                );
+
+                setLoading(false);
+            } catch (err) {
+                console.log(err.message);
+                NotificationManager.error(
+                    "Failed canceled order"
+                );
+                setLoading(false);
+            }
         }
     };
 
@@ -223,7 +233,7 @@ export default function Colection() {
                                                 {itemData?.marketdata?.price ===
                                                     ""
                                                     ? null
-                                                    : itemData?.marketdata?.price + " Crypto-Coco"}
+                                                    : itemData?.marketdata?.price + " " + getCurrency(itemData.marketdata?.acceptedToken)?.label}
                                             </h3>
                                             <hr />
                                         </span>
@@ -244,10 +254,9 @@ export default function Colection() {
                                             {itemData?.likes?.length}
                                         </div>
                                     </div>
-                                    <div className="spacer-10"></div>
                                     <p>{itemData?.metadata?.description}</p>
                                     <div className="spacer-10"></div>
-                                    <h6>Creator</h6>
+                                    <h5>Creator</h5>
                                     <div className="item_author">
                                         <div className="author_list_pp">
                                             <span>
@@ -354,7 +363,6 @@ export default function Colection() {
                                                                                     index
                                                                                     ]
                                                                                 }{" "}
-                                                                                Crypto-Coco
                                                                             </b>
                                                                             <span>
                                                                                 by{" "}
@@ -383,7 +391,7 @@ export default function Colection() {
                                                         </div>
                                                     )}
 
-                                                    {openMenu1 && (
+                                                    {!openMenu && (
                                                         <div className="tab-2 onStep fadeIn">
                                                             {/* <div className="p_list">
                                                                 <div className="p_list_pp">
@@ -435,22 +443,41 @@ export default function Colection() {
                                                     </button>
                                                 ) : pageFlag === 2 ? (
                                                     <div>
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={
-                                                                handleCancel
-                                                            }
-                                                        >
-                                                            Cancel
-                                                        </button>
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={
-                                                                handleApproveBid
-                                                            }
-                                                        >
-                                                            Approve Bid
-                                                        </button>
+                                                        {
+                                                            loading ? (
+                                                                <button className="btn-main">
+                                                                    <span
+                                                                        className="spinner-border spinner-border-sm"
+                                                                        aria-hidden="true"
+                                                                    ></span>
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                    className="btn-main"
+                                                                    onClick={
+                                                                        handleCancel
+                                                                    }
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                            )}
+                                                        {
+                                                            loading ? (
+                                                                <button className="btn-main">
+                                                                    <span
+                                                                        className="spinner-border spinner-border-sm"
+                                                                        aria-hidden="true"
+                                                                    ></span>
+                                                                </button>
+                                                            ) : (<button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleApproveBid
+                                                                }
+                                                            >
+                                                                Approve Bid
+                                                            </button>
+                                                            )}
                                                     </div>
                                                 ) : pageFlag === 3 ? null : (
                                                     <div>
@@ -486,6 +513,6 @@ export default function Colection() {
             </section>
 
             <Footer />
-        </div>
+        </div >
     );
 }

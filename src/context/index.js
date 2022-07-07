@@ -11,7 +11,7 @@ import { NotificationManager } from "react-notifications";
 import decode from "jwt-decode";
 import axios from "axios";
 
-import { testToken, getNFTContract, marketplaceContract, provider } from "../contracts";
+import { testToken, getNFTContract, getTokenContract, marketplaceContract, provider } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
 import {
     GET_ALLNFTS,
@@ -37,11 +37,11 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-        value: "0xC7Fa266c7E1C6849a805044c046b85C5ED89E46F",
+        value: "0x016e9680a48C8731cFF8CD1c23AEA75b5DCc9592",
     },
     {
         label: "BUSD",
-        value: "0x628d77121aB538b1E094e0367D4A49A945d57F6f",
+        value: "0x167e81ac18f7945ddf276e1e7b5b7c09d32640a1",
     },
 ]
 
@@ -121,8 +121,9 @@ export default function Provider({ children }) {
             type: "collectionNFT",
             payload: nftsCollectionData.getCollectionNFTs,
         });
-    }, [nftsCollectionData]);
+    }, [nftsCollectionData, nftsCollectionLoading, nftsCollectionError]);
 
+    // user info
     useEffect(() => {
         if (userDataLoading || userDataError) {
             return;
@@ -133,14 +134,17 @@ export default function Provider({ children }) {
                 type: "userInfo",
                 payload: userData.getUserInfo,
             });
+            let tokenlist = state.currencies.map(currency => currency.value)
+            checkBalances(tokenlist);
         } else {
             dispatch({
                 type: "userInfo",
                 payload: {},
             });
         }
-    }, [userData, userDataLoading]);
+    }, [userData, userDataLoading, userDataError, state.auth.isAuth]);
 
+    // users info
     useEffect(() => {
         if (usersLoading || usersError) {
             return;
@@ -156,7 +160,7 @@ export default function Provider({ children }) {
             type: "usersInfo",
             payload: bump,
         });
-    }, [usersData, usersLoading]);
+    }, [usersData, usersLoading, usersError]);
 
     // auth
     const updateAuth = (token) => {
@@ -180,17 +184,31 @@ export default function Provider({ children }) {
 
     /* ------------ NFT Section ------------- */
     // coin check
-    const checkBalance = async () => {
+    const checkBalances = async (tokenaddresses) => {
         try {
             if (state.auth.isAuth) {
-                const balance = await testToken.balanceOf(state.auth.address);
-                return fromBigNum(balance, 18);
+                console.log("tokenaddresses", tokenaddresses, state.auth.address);
+                let balances = [];
+                for (let i = 0; i < tokenaddresses.length; i++) {
+                    //native coin
+                    if ((tokenaddresses[i]).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
+                        var balance = await state.provider.getBalance(state.auth.address);
+                        balances.push(fromBigNum(balance, 18))
+                    }
+                    else {
+                        var token = getTokenContract(tokenaddresses[i]);
+                        var balance = await token.balanceOf(state.auth.address);
+                        balances.push(fromBigNum(balance, 18))
+                    }
+                }
+                console.log(balances);
+                return balances;
             } else {
-                return 0;
+                return new Array(tokenaddresses.length).fill("0");
             }
         } catch (err) {
-            console.log("checkBalance error: ", err.message);
-            return 0;
+            console.log("checkBalances error: ", err.message);
+            return new Array(tokenaddresses.length).fill("0");
         }
     };
 
@@ -219,14 +237,6 @@ export default function Provider({ children }) {
             const signedMarketplaceContract = marketplaceContract.connect(
                 state.auth.signer
             );
-            console.log(
-                nftAddress,
-                state.auth.address,
-                assetId,
-                currency,
-                toBigNum(price, 18),
-                expiresAt
-            );
             const tx1 = await signedMarketplaceContract.createOrder(
                 nftAddress,
                 state.auth.address,
@@ -245,68 +255,86 @@ export default function Provider({ children }) {
     };
 
     const cancelOrder = async (props) => {
-        try {
-            const { nftAddress, assetId } = props;
+        const { nftAddress, assetId } = props;
 
-            const signedMarketplaceContract = marketplaceContract.connect(
-                state.auth.signer
-            );
-            const tx = await signedMarketplaceContract.cancelOrder(
-                nftAddress,
-                assetId
-            );
-            await tx.wait();
-
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
-        }
+        const signedMarketplaceContract = marketplaceContract.connect(
+            state.auth.signer
+        );
+        const tx = await signedMarketplaceContract.cancelOrder(
+            nftAddress,
+            assetId
+        );
+        await tx.wait();
     };
 
     // NFT buy and bid
     const buyNFT = async (props) => {
-        try {
-            const { nftAddress, assetId, price } = props;
+        const { nftAddress, assetId, price, acceptedToken } = props;
 
-            const signedTokenContract = testToken.connect(state.auth.signer);
+        const signedMarketplaceContract = marketplaceContract.connect(
+            state.auth.signer
+        );
+        if ((acceptedToken).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
+            //native coin
+            const tx = await signedMarketplaceContract.ExecuteOrder(
+                nftAddress,
+                assetId,
+                toBigNum(price, 18),
+                { value: toBigNum(price, 18) }
+            );
+            await tx.wait();
+        }
+        else {
+            //ERC20 
+            var token = getTokenContract(acceptedToken);
+            const signedTokenContract = token.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
             );
             await tx1.wait();
 
-            const signedMarketplaceContract = marketplaceContract.connect(
-                state.auth.signer
-            );
-            const tx = await signedMarketplaceContract.Buy(
+            const tx = await signedMarketplaceContract.ExecuteOrder(
                 nftAddress,
                 assetId,
                 toBigNum(price, 18)
             );
             await tx.wait();
-
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
         }
     };
 
     const bidNFT = async (props) => {
-        try {
-            const { nftAddress, assetId, price, expiresAt } = props;
+        const { nftAddress, assetId, price, expiresAt, acceptedToken } = props;
 
-            const signedTokenContract = testToken.connect(state.auth.signer);
+        const signedMarketplaceContract = marketplaceContract.connect(
+            state.auth.signer
+        );
+        if ((acceptedToken).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
+            console.log(nftAddress,
+                assetId,
+                toBigNum(price, 18),
+                expiresAt,
+                { value: toBigNum(price, 18) });
+            //native coin
+            const tx = await signedMarketplaceContract.PlaceBid(
+                nftAddress,
+                assetId,
+                toBigNum(price, 18),
+                expiresAt,
+                { value: toBigNum(price, 18) }
+            );
+            await tx.wait();
+        }
+        else {
+            //ERC20 
+            var token = getTokenContract(acceptedToken);
+            const signedTokenContract = token.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
                 addresses.Marketplace,
                 toBigNum(price, 18)
             );
             await tx1.wait();
 
-            const signedMarketplaceContract = marketplaceContract.connect(
-                state.auth.signer
-            );
             const tx = await signedMarketplaceContract.PlaceBid(
                 nftAddress,
                 assetId,
@@ -314,11 +342,6 @@ export default function Provider({ children }) {
                 expiresAt
             );
             await tx.wait();
-
-            return true;
-        } catch (err) {
-            console.log(err);
-            return false;
         }
     };
 
@@ -343,6 +366,23 @@ export default function Provider({ children }) {
         }
     };
 
+    // show method
+    const getCurrency = (tokenaddress = "") => {
+        try {
+            let currency = state.currencies.filter((c) => (c.value).toLowerCase() == (tokenaddress).toLowerCase());
+            if (currency.length == 0) {
+                throw new Error("unsupported currency")
+            }
+            return currency[0];
+        } catch (err) {
+            console.log(err.message);
+            return {
+                label: " Invalid Currency",
+                value: "Unknown"
+            }
+        }
+    }
+
     return (
         <BlockchainContext.Provider
             value={useMemo(
@@ -350,21 +390,22 @@ export default function Provider({ children }) {
                     state,
                     {
                         dispatch,
-                        checkBalance,
+                        checkBalances,
                         mintNFT,
                         onsaleNFT,
                         cancelOrder,
                         buyNFT,
                         bidNFT,
                         bidApprove,
-                        updateAuth
+                        updateAuth,
+                        getCurrency
                     },
                 ],
                 [
                     state,
 
                     dispatch,
-                    checkBalance,
+                    checkBalances,
                     mintNFT,
                     onsaleNFT,
                     cancelOrder,

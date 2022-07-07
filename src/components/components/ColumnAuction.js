@@ -14,6 +14,12 @@ export default function Responsive(props) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        const initialDate = new Date();
+        initialDate.setDate(initialDate.getDate() + 10);
+        setDate(initialDate);
+    }, [])
+
+    useEffect(() => {
         for (let i = 0; i < state.collectionNFT.length; i++) {
             if (state.collectionNFT[i].address === collection) {
                 setCorrectCollection(state.collectionNFT[i]);
@@ -88,29 +94,18 @@ export default function Responsive(props) {
                                             <span>Sell to highest bidder</span>
                                         </p>
                                         <div className="spacer-single"></div>
-                                        <h5>currency</h5>
-                                        <select className="form-control" onChange={(e) => { setCurrency(e.target.value) }}>
-                                            {state.currencies.map((currency) => (
-                                                <option value={currency.value}>{currency.label}</option>
-                                            ))}
-                                        </select>
-                                        <div className="spacer-single"></div>
                                         <h5>Price</h5>
                                         <div className="price">
                                             <div
-                                                className="form-control"
                                                 style={{
                                                     flex: "1 1 0",
                                                 }}
                                             >
-                                                <img
-                                                    src="../../img/logo.png"
-                                                    alt=""
-                                                    style={{
-                                                        width: "25px",
-                                                    }}
-                                                />
-                                                <span>Crypto-Coco</span>
+                                                <select className="form-control" onChange={(e) => { setCurrency(e.target.value) }}>
+                                                    {state.currencies.map((currency) => (
+                                                        <option value={currency.value}>{currency.label}</option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <input
                                                 type="number"

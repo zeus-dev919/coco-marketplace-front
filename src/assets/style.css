@@ -4055,8 +4055,6 @@ img.img-rounded {
 }
 
 .form-control {
-    padding: 8px;
-    margin-bottom: 20px;
     border: none;
     border: solid 1px rgba(255, 255, 255, .1);
     background: none;
