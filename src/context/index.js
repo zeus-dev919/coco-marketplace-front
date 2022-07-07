@@ -37,13 +37,13 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-        value: "0xC7Fa266c7E1C6849a805044c046b85C5ED89E46F",
+        value: "0xC558EB823F6ac01612FF1Bb87529321B674Add82",
     },
     {
         label: "BUSD",
-        value: "0x628d77121aB538b1E094e0367D4A49A945d57F6f",
+        value: "0xE6c0E0C7801aD356b0499Fe3b913f9518121e78f",
     },
-]
+];
 
 const INIT_STATE = {
     allNFT: [],
