@@ -8,25 +8,35 @@ import moment from "moment";
 
 export default function BuyModal(props) {
     const { buyFlag, show, setShow, correctItem } = props;
-    const [state, { checkBalance, buyNFT, bidNFT }] = useBlockchainContext();
+    const [state, { checkBalances, buyNFT, bidNFT, getCurrency }] = useBlockchainContext();
     const [price, setPrice] = useState("");
+    const [currency, setCurrency] = useState("BNB");
     const [date, setDate] = useState(new Date());
-    const [mybalance, setMybalance] = useState(0);
+    const [mybalance, setMybalances] = useState(["0", "0"]);
     const [bidBtnFlag, setBidBtnFlag] = useState(true);
     const [buyBtnFlag, setBuyBtnFlag] = useState(true);
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        const initialDate = new Date();
+        initialDate.setDate(initialDate.getDate() + 10);
+        setDate(initialDate);
+    }, [])
 
     useEffect(() => {
         const b = async () => {
-            let result = await checkBalance();
-            setMybalance(result);
+            let accpetedCurrency = getCurrency(correctItem.marketdata?.acceptedToken);
+            setCurrency(accpetedCurrency.label);
+            let result = await checkBalances([state.currencies[0].value, accpetedCurrency.value]);
+            setMybalances(result);
         };
-
         b();
+    }, [state.auth, correctItem]);
+    useEffect(() => {
         if (correctItem) {
             if (
-                mybalance > Number(correctItem.marketdata.price) &&
+                mybalance[0] > price &&
                 price > 0 &&
-                price !== "" &&
                 moment(date).isValid()
             ) {
                 setBidBtnFlag(false);
@@ -34,68 +44,71 @@ export default function BuyModal(props) {
                 setBidBtnFlag(true);
             }
 
-            if (mybalance > Number(correctItem.marketdata.price)) {
+            if (mybalance[0] > Number(correctItem.marketdata.price)) {
                 setBuyBtnFlag(false);
             } else {
                 setBuyBtnFlag(true);
             }
         }
-    }, [mybalance, date, price]);
+    }, [mybalance, date, price])
 
     const handle = (newDate) => {
         setDate(newDate);
     };
 
     const handleCopy = () => {
-        navigator.clipboard.write(state.userInfo.address);
+        navigator.clipboard.writeText(state.auth.address);
         NotificationManager.success("address copied");
     };
 
-    const buyHandle = () => {
-        if (mybalance < Number(correctItem?.marketdata.price)) {
-            return;
-        }
+    const handleBuy = async () => {
+        try {
 
-        buyNFT({
-            nftAddress: correctItem?.collectionAddress,
-            assetId: correctItem?.tokenID,
-            price: correctItem?.marketdata.price,
-        })
-            .then((res) => {
-                if (res) NotificationManager.success("Successfully Buy NFT");
+            setLoading(true);
+            if (mybalance[0] < Number(correctItem?.marketdata.price)) {
+                return;
+            }
+
+            await buyNFT({
+                nftAddress: correctItem?.collectionAddress,
+                assetId: correctItem?.tokenID,
+                price: correctItem?.marketdata.price,
+                acceptedToken: correctItem?.marketdata.acceptedToken,
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            NotificationManager.success("Successfully Buy NFT");
+            setLoading(false);
+        } catch (err) {
+            console.log(err.message);
+            NotificationManager.error("Buy NFT Failed");
+            setLoading(false);
+        }
     };
 
-    const bidHandle = () => {
-        if (
-            mybalance < Number(correctItem?.marketdata.price) ||
-            mybalance < Number(correctItem?.marketdata.bidPrice)
-        ) {
-            return;
-        }
-        if (!moment(date).isValid()) {
-            return;
-        }
-        if (mybalance < Number(correctItem?.marketdata.bidPrice)) {
-            NotificationManager.error("Please increase bid price");
-            return;
-        }
+    const handleBid = async () => {
+        try {
+            if (!moment(date).isValid()) {
+                return;
+            }
+            if (price < Number(correctItem?.marketdata.bidPrice)) {
+                NotificationManager.error("Please increase bid price");
+                return;
+            }
 
-        bidNFT({
-            nftAddress: correctItem?.collectionAddress,
-            assetId: correctItem?.tokenID,
-            price: price,
-            expiresAt: moment(date).valueOf(),
-        })
-            .then((res) => {
-                if (res) NotificationManager.success("Successfully Bid NFT");
-            })
-            .catch((err) => {
-                console.log(err);
+            setLoading(true);
+            await bidNFT({
+                nftAddress: correctItem?.collectionAddress,
+                assetId: correctItem?.tokenID,
+                price: price,
+                acceptedToken: correctItem?.marketdata.acceptedToken,
+                expiresAt: moment(date).valueOf(),
             });
+            NotificationManager.success("Successfully Bid NFT");
+            setLoading(false);
+        } catch (err) {
+            console.log(err.message);
+            NotificationManager.error("Failed Bid NFT");
+            setLoading(false);
+        }
     };
 
     return (
@@ -114,19 +127,20 @@ export default function BuyModal(props) {
                     <Modal.Body>
                         <span className="spacer-single"></span>
                         <h4 className="text-center">
-                            You need {correctItem?.marketdata.price} Crypto-Coco +{" "}
+                            You need {correctItem?.marketdata.price} {currency} +{" "}
                             <Link to="">gas fees</Link>
                         </h4>
                         <span className="spacer-10"></span>
                         <p className="text-center">
-                            Buy any NFT with Crypto-Coco token. It can take up to a
+                            Buy any NFT with {currency} token. It can take up to a
                             minute for your balance update.
                         </p>
                         <span className="spacer-single"></span>
                         <div>
                             <span style={{ justifyContent: "space-between" }}>
                                 <h5>Wallet Address</h5>
-                                <p>Balance: {mybalance} Crypto-Coco</p>
+                                <p>Balance: {mybalance[1]} {currency}</p>
+                                <p>Balance: {mybalance[0]} BNB</p>
                             </span>
                             <div
                                 className="text_copy noselect"
@@ -143,13 +157,24 @@ export default function BuyModal(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="spacer-10"></div>
-                        <button
-                            className="btn-main"
-                            onClick={buyHandle}
-                            disabled={buyBtnFlag}
-                        >
-                            Checkout
-                        </button>
+                        {
+                            loading ? (
+                                <button className="btn-main">
+                                    <span
+                                        className="spinner-border spinner-border-sm"
+                                        aria-hidden="true"
+                                    ></span>
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn-main"
+                                    onClick={handleBuy}
+                                    disabled={buyBtnFlag}
+                                >
+                                    Checkout
+                                </button>
+                            )
+                        }
                         <div className="spacer-10"></div>
                     </Modal.Footer>
                 </>
@@ -179,7 +204,7 @@ export default function BuyModal(props) {
                                         width: "25px",
                                     }}
                                 />
-                                <span>Crypto-Coco</span>
+                                <span>{currency}</span>
                             </div>
                             <input
                                 type="number"
@@ -196,7 +221,7 @@ export default function BuyModal(props) {
                         </div>
                         <p style={{ float: "right" }}>
                             {"Available Price: "}
-                            {mybalance + " Crypto-Coco"}
+                            {mybalance[0] + " " + currency}
                         </p>
                         <div className="spacer-30"></div>
 
@@ -216,13 +241,24 @@ export default function BuyModal(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="spacer-10"></div>
-                        <button
-                            className="btn-main"
-                            onClick={bidHandle}
-                            disabled={bidBtnFlag}
-                        >
-                            Make Offer
-                        </button>
+                        {
+                            loading ? (
+                                <button className="btn-main">
+                                    <span
+                                        className="spinner-border spinner-border-sm"
+                                        aria-hidden="true"
+                                    ></span>
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn-main"
+                                    onClick={handleBid}
+                                    disabled={bidBtnFlag}
+                                >
+                                    Make Offer
+                                </button>
+                            )
+                        }
                         <div className="spacer-10"></div>
                     </Modal.Footer>
                 </>

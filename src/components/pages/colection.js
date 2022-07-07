@@ -138,7 +138,7 @@ export default function Collection() {
                                                             )}
                                                         K
                                                     </h3>
-                                                    <p>floor price(Crypto-Coco)</p>
+                                                    <p>floor price</p>
                                                 </div>
                                             </span>
                                         </div>

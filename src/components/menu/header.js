@@ -99,17 +99,17 @@ export default function Header() {
                         <div className="navbar-title navbar-item">
                             <NavLink to="/">
                                 <img
-                                    src="./img/logo.png"
+                                    src="img/logo.png"
                                     className="img-fluid d-block"
                                     alt="#"
                                 />
                                 <img
-                                    src="./img/logo.png"
+                                    src="img/logo.png"
                                     className="img-fluid d-3"
                                     alt="#"
                                 />
                                 <img
-                                    src="./img/logo.png"
+                                    src="img/logo.png"
                                     className="img-fluid d-none"
                                     alt="#"
                                 />

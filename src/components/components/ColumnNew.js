@@ -3,12 +3,12 @@ import { useNavigate } from "@reach/router";
 import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";
-import {fromBigNum} from "../../utils"
+import { fromBigNum } from "../../utils"
 
 export default function Responsive() {
     const navigate = useNavigate();
     const [height, setHeight] = useState(0);
-    const [state, { }] = useBlockchainContext();
+    const [state, { getCurrency }] = useBlockchainContext();
     const [filter, setFilter] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);
     const [modalShow, setModalShow] = useState(false);
@@ -127,7 +127,7 @@ export default function Responsive() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : fromBigNum(nft.marketdata.price,18) + " Crypto-Coco"}
+                                    : nft.marketdata.price + getCurrency(nft.marketdata.acceptedToken)?.label}
                                 <span>
                                     {nft.marketdata.bidders.length} bids
                                 </span>

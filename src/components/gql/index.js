@@ -42,10 +42,13 @@ const GET_COLLECTIONNFTS = gql`
                     startTime
                     endTime
                     prices
+                    tokens
                     owners
                     bidders
                     bidPrices
+                    bidTokens
                     bidTime
+                    acceptedToken
                 }
             }
         }
@@ -86,6 +89,7 @@ const GET_ALLNFTS = gql`
                 bidders
                 bidPrices
                 bidTime
+                acceptedToken
             }
         }
     }

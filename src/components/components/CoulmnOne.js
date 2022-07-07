@@ -31,7 +31,7 @@ const Outer = styled.div`
 export default function ColumnOne(props) {
     const navigate = useNavigate();
     const { correctItem } = props;
-    const [state, { }] = useBlockchainContext();
+    const [state, { getCurrency }] = useBlockchainContext();
     const [height, setHeight] = useState(0);
     const [filter, setFilter] = useState(null);
 
@@ -124,7 +124,7 @@ export default function ColumnOne(props) {
                                 <div className="nft__item_price">
                                     {nft.marketdata.price === ""
                                         ? null
-                                        : nft.marketdata.price + " Crypto-Coco"}
+                                        : nft.marketdata.price + " " + getCurrency(nft.marketdata?.acceptedToken)?.label}
                                     <span>
                                         {nft.marketdata.bidders.length} bids
                                     </span>
