@@ -43,7 +43,7 @@ const Currency = [
     },
     {
         label: "BUSD",
-        value: addresses.testToken,
+        value: addresses.TestToken,
     },
 ];
 
@@ -377,7 +377,7 @@ export default function Provider({ children }) {
             }
             return currency[0];
         } catch (err) {
-            console.log(err.message);
+            console.log(err.message,tokenaddress);
             return {
                 label: " Invalid Currency",
                 value: "Unknown"
