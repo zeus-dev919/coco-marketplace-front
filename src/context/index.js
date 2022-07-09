@@ -39,19 +39,11 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-<<<<<<< HEAD
         value: addresses.WETH,
     },
     {
         label: "BUSD",
         value: addresses.testToken,
-=======
-        value: "0x9f5103b1518DeBf71a7048652324Cc8141ff68C1",
-    },
-    {
-        label: "BUSD",
-        value: "0x2e2bD777C8F9546CD8Fb72fC3458517Ae12d066b",
->>>>>>> e056f8fe1705c8300e971eb70a9785d372273584
     },
 ];
 
