@@ -1,7 +1,7 @@
 import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
-axios.defaults.baseURL = "http://192.168.115.168:5000";
+axios.defaults.baseURL = "";
 
 // NFT manage
 const nft_mint = async (formData) => {
@@ -65,8 +65,7 @@ const user_login = async (account) => {
         NotificationManager.error("Server Error");
         return false;
     }
-}
-
+};
 
 // Export Functions
 const Action = {

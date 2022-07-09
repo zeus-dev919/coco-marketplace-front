@@ -21,6 +21,8 @@ import {
 } from "../components/gql";
 import addresses from "../contracts/contracts/addresses.json";
 
+
+ 
 const BlockchainContext = createContext();
 
 export function useBlockchainContext() {
@@ -37,11 +39,11 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-        value: "0x016e9680a48C8731cFF8CD1c23AEA75b5DCc9592",
+        value: "0x9f5103b1518DeBf71a7048652324Cc8141ff68C1",
     },
     {
         label: "BUSD",
-        value: "0x167e81ac18f7945ddf276e1e7b5b7c09d32640a1",
+        value: "0x2e2bD777C8F9546CD8Fb72fC3458517Ae12d066b",
     },
 ];
 
