@@ -65,8 +65,7 @@ const user_login = async (account) => {
         NotificationManager.error("Server Error");
         return false;
     }
-}
-
+};
 
 // Export Functions
 const Action = {
