@@ -17,7 +17,7 @@ import App from "./components/app";
 import Provider from "./context";
 
 const client = new ApolloClient({
-    uri: "/graphql/",
+    uri: process.env.REACT_APP_GRAPQLENDPOINT,
     cache: new InMemoryCache(),
 });
 

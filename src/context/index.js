@@ -39,11 +39,11 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-        value: "0x9f5103b1518DeBf71a7048652324Cc8141ff68C1",
+        value: addresses.WETH,
     },
     {
         label: "BUSD",
-        value: "0x2e2bD777C8F9546CD8Fb72fC3458517Ae12d066b",
+        value: addresses.TestToken,
     },
 ];
 
@@ -377,7 +377,7 @@ export default function Provider({ children }) {
             }
             return currency[0];
         } catch (err) {
-            console.log(err.message);
+            console.log(err.message,tokenaddress);
             return {
                 label: " Invalid Currency",
                 value: "Unknown"
