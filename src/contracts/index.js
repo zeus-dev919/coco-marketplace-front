@@ -10,7 +10,7 @@ const supportChainId = 4002;
 
 const RPCS = {
     1: "http://13.59.118.124/eth",
-    4002: "https://rpc.testnet.fantom.network",
+    4002: "https://ftm-test.babylonswap.finance",
     // 1337: "http://localhost:7545",
     // 31337: "http://localhost:8545/",
 };

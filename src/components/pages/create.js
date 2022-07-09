@@ -81,11 +81,14 @@ export default function Createpage() {
             }
             setLoading(false);
         } catch (err) {
-            console.log(err);
+            console.log(err.code);
             if (err.code === 4001) {
                 NotificationManager.error("uploading rejected");
-            } else {
-                NotificationManager.error(err.message);
+            } else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+                NotificationManager.error("Please check your balance");
+            }
+            else {
+                NotificationManager.error("NFT creat failed");
             }
             setLoading(false);
         }

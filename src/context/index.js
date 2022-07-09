@@ -37,11 +37,11 @@ function reducer(state, { type, payload }) {
 const Currency = [
     {
         label: "BNB",
-        value: "0x016e9680a48C8731cFF8CD1c23AEA75b5DCc9592",
+        value: addresses.WETH,
     },
     {
         label: "BUSD",
-        value: "0x167e81ac18f7945ddf276e1e7b5b7c09d32640a1",
+        value: addresses.testToken,
     },
 ];
 
