@@ -18,7 +18,8 @@ const GlobalStyles = createGlobalStyle`
 export default function Colection() {
     const { id, collection } = useParams();
     const navigate = useNavigate();
-    const [state, { bidApprove, cancelOrder, getCurrency }] = useBlockchainContext();
+    const [state, { bidApprove, cancelOrder, getCurrency }] =
+        useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [correctCollection, setCorrectCollection] = useState(null);
     const [pageFlag, setPageFlag] = useState(0); // 1 is mine, 2 is saled mine, 3 is others, 4 is saled others
@@ -66,13 +67,13 @@ export default function Colection() {
             ) {
                 // on market
                 itemData.marketdata.owner?.toLowerCase() ===
-                    state.userInfo.address?.toLowerCase()
+                state.userInfo.address?.toLowerCase()
                     ? setPageFlag(2)
                     : setPageFlag(4);
             } else {
                 //on user
                 itemData.owner?.toLowerCase() ===
-                    state.userInfo.address?.toLowerCase()
+                state.userInfo.address?.toLowerCase()
                     ? setPageFlag(1)
                     : setPageFlag(3);
             }
@@ -88,9 +89,11 @@ export default function Colection() {
                 if (!state.collectionNFT[i].items[id]) {
                     //go to 404 page
                 }
-                console.log("========================>", state.collectionNFT[i]);
-                setItemData(state.collectionNFT[i].items[id]);
-                console.log(id);
+                var itemData = state.collectionNFT[i].items.find(
+                    (item) => item.tokenID === id
+                );
+                if (!itemData) navigate("/Auction");
+                else setItemData(itemData);
                 break;
             }
         }
@@ -138,7 +141,7 @@ export default function Colection() {
                     address: collection,
                     id: id,
                     price: itemData.marketdata.bidPrice,
-                })
+                });
                 NotificationManager.success("Successfully approve");
                 setLoading(false);
             }
@@ -150,23 +153,18 @@ export default function Colection() {
 
     const handleCancel = async () => {
         if (itemData !== null) {
-
             setLoading(true);
             try {
                 await cancelOrder({
                     nftAddress: collection,
                     assetId: id,
-                })
-                NotificationManager.success(
-                    "Successfully canceled order"
-                );
+                });
+                NotificationManager.success("Successfully canceled order");
 
                 setLoading(false);
             } catch (err) {
                 console.log(err.message);
-                NotificationManager.error(
-                    "Failed canceled order"
-                );
+                NotificationManager.error("Failed canceled order");
                 setLoading(false);
             }
         }
@@ -197,13 +195,14 @@ export default function Colection() {
                                 <div className="item_info">
                                     {/* end time */}
                                     {itemData?.marketdata?.endTime ===
-                                        "" ? null : (
+                                    "" ? null : (
                                         <span>
                                             <p>
                                                 Sale ends{" "}
                                                 {moment(
                                                     Number(
-                                                        itemData?.marketdata?.endTime
+                                                        itemData?.marketdata
+                                                            ?.endTime
                                                     )
                                                 ).format("lll")}
                                             </p>
@@ -231,9 +230,15 @@ export default function Colection() {
                                             <div className="spacer-10"></div>
                                             <h3 style={{ color: "#a48b57" }}>
                                                 {itemData?.marketdata?.price ===
-                                                    ""
+                                                ""
                                                     ? null
-                                                    : itemData?.marketdata?.price + " " + getCurrency(itemData.marketdata?.acceptedToken)?.label}
+                                                    : itemData?.marketdata
+                                                          ?.price +
+                                                      " " +
+                                                      getCurrency(
+                                                          itemData.marketdata
+                                                              ?.acceptedToken
+                                                      )?.label}
                                             </h3>
                                             <hr />
                                         </span>
@@ -267,13 +272,14 @@ export default function Colection() {
                                                             itemData?.creator
                                                         ]?.image === undefined
                                                             ? state
-                                                                .collectionNFT[0]
-                                                                .metadata
-                                                                .image
+                                                                  .collectionNFT[0]
+                                                                  .metadata
+                                                                  .image
                                                             : state.usersInfo[
-                                                                itemData?.creator
-                                                            ].image ||
-                                                            "../../img/author/author-1.jpg"
+                                                                  itemData
+                                                                      ?.creator
+                                                              ].image ||
+                                                              "../../img/author/author-1.jpg"
                                                     }
                                                     alt=""
                                                 />
@@ -359,8 +365,10 @@ export default function Colection() {
                                                                             Bid{" "}
                                                                             <b>
                                                                                 {
-                                                                                    itemData?.marketdata?.bidPrices[
-                                                                                    index
+                                                                                    itemData
+                                                                                        ?.marketdata
+                                                                                        ?.bidPrices[
+                                                                                        index
                                                                                     ]
                                                                                 }{" "}
                                                                             </b>
@@ -372,16 +380,20 @@ export default function Colection() {
                                                                                     )}
                                                                                 </b>{" "}
                                                                                 at{" "}
-                                                                                {itemData?.marketdata?.bidTime
+                                                                                {itemData
+                                                                                    ?.marketdata
+                                                                                    ?.bidTime
                                                                                     ? moment(
-                                                                                        Number(
-                                                                                            itemData?.marketdata?.bidTime[
-                                                                                            index
-                                                                                            ]
-                                                                                        )
-                                                                                    ).format(
-                                                                                        "lll"
-                                                                                    )
+                                                                                          Number(
+                                                                                              itemData
+                                                                                                  ?.marketdata
+                                                                                                  ?.bidTime[
+                                                                                                  index
+                                                                                              ]
+                                                                                          )
+                                                                                      ).format(
+                                                                                          "lll"
+                                                                                      )
                                                                                     : ""}
                                                                             </span>
                                                                         </div>
@@ -443,33 +455,32 @@ export default function Colection() {
                                                     </button>
                                                 ) : pageFlag === 2 ? (
                                                     <div>
-                                                        {
-                                                            loading ? (
-                                                                <button className="btn-main">
-                                                                    <span
-                                                                        className="spinner-border spinner-border-sm"
-                                                                        aria-hidden="true"
-                                                                    ></span>
-                                                                </button>
-                                                            ) : (
-                                                                <button
-                                                                    className="btn-main"
-                                                                    onClick={
-                                                                        handleCancel
-                                                                    }
-                                                                >
-                                                                    Cancel
-                                                                </button>
-                                                            )}
-                                                        {
-                                                            loading ? (
-                                                                <button className="btn-main">
-                                                                    <span
-                                                                        className="spinner-border spinner-border-sm"
-                                                                        aria-hidden="true"
-                                                                    ></span>
-                                                                </button>
-                                                            ) : (<button
+                                                        {loading ? (
+                                                            <button className="btn-main">
+                                                                <span
+                                                                    className="spinner-border spinner-border-sm"
+                                                                    aria-hidden="true"
+                                                                ></span>
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleCancel
+                                                                }
+                                                            >
+                                                                Cancel
+                                                            </button>
+                                                        )}
+                                                        {loading ? (
+                                                            <button className="btn-main">
+                                                                <span
+                                                                    className="spinner-border spinner-border-sm"
+                                                                    aria-hidden="true"
+                                                                ></span>
+                                                            </button>
+                                                        ) : (
+                                                            <button
                                                                 className="btn-main"
                                                                 onClick={
                                                                     handleApproveBid
@@ -477,7 +488,7 @@ export default function Colection() {
                                                             >
                                                                 Approve Bid
                                                             </button>
-                                                            )}
+                                                        )}
                                                     </div>
                                                 ) : pageFlag === 3 ? null : (
                                                     <div>
@@ -513,6 +524,6 @@ export default function Colection() {
             </section>
 
             <Footer />
-        </div >
+        </div>
     );
 }

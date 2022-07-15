@@ -15,7 +15,7 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const navigate = useNavigate();
-    const [state, { }] = useBlockchainContext();
+    const [state, {}] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
 
     useEffect(() => {
@@ -99,7 +99,7 @@ export default function Collection() {
                     <div id="zero1" className="onStep fadeIn">
                         <MyNFT />
                     </div>
-                ):(
+                ) : (
                     <div id="zero2" className="onStep fadeIn">
                         <Profile />
                     </div>

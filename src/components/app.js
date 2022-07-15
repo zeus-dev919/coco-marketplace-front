@@ -11,6 +11,7 @@ import ItemDetail from "./pages/ItemDetail";
 import Author from "./pages/Author";
 import Sign from "./pages/Sign";
 import Create from "./pages/create";
+import LazyCreate from "./pages/lazycreate";
 import Auction from "./pages/Auction";
 import Contact from "./pages/contact";
 import Collections from "./pages/collections";
@@ -44,26 +45,27 @@ const PosedRouter = ({ children }) => (
     </Location>
 );
 
-const app = () => (
-    <div className="wraper">
-        <GlobalStyles />
-        <PosedRouter>
-            <ScrollTop path="/">
-                <Home exact path="/" />
-                <Explore exact path="/explore" />
-                <Helpcenter path="/helpcenter" />
-                <Collection path="/collection/:collection" />
-                <Collections path="/Collections" />
-                <ItemDetail exact path="/ItemDetail/:collection/:id" />
-                <Author path="/Author" />
-                <Sign path="/signPage" />
-                <Create path="/create" />
-                <Auction path="/Auction/:collection/:id" />
-                <Contact path="/contact" />
-                {/* <Rangking path="/rangking" /> */}
-            </ScrollTop>
-        </PosedRouter>
-        <ScrollToTopBtn />
-    </div>
-);
-export default app;
+export default function App() {
+    return (
+        <div className="wraper">
+            <GlobalStyles />
+            <PosedRouter>
+                <ScrollTop path="/">
+                    <Home exact path="/" />
+                    <Explore exact path="/explore" />
+                    <Helpcenter path="/helpcenter" />
+                    <Collection path="/collection/:collection" />
+                    <Collections path="/Collections" />
+                    <ItemDetail exact path="/ItemDetail/:collection/:id" />
+                    <Author path="/Author" />
+                    <Sign path="/signPage" />
+                    <Create path="/create" />
+                    <LazyCreate path="/lazy-mint" />
+                    <Auction exact path="/Auction/:collection/:id" />
+                    <Contact path="/contact" />
+                </ScrollTop>
+            </PosedRouter>
+            <ScrollToTopBtn />
+        </div>
+    );
+}

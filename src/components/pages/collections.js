@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function Collections() {
-    const [state, { }] = useBlockchainContext();
+    const [state, {}] = useBlockchainContext();
     const navigate = useNavigate();
 
     const handle = (address) => {

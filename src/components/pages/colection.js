@@ -14,9 +14,8 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const { collection } = useParams();
-    const [state, { }] = useBlockchainContext();
+    const [state, {}] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
-    const [openMenu1, setOpenMenu1] = useState(false);
     const [correctItem, setCorrectItem] = useState(null);
     const [owners, setOwners] = useState([]);
     const [avgAmount, setAvgAmount] = useState(0);
@@ -112,7 +111,9 @@ export default function Collection() {
                                         <div className="collection_info">
                                             <p className="text-center">
                                                 by{" "}
-                                                <b className="color">Crypto-Coco</b>
+                                                <b className="color">
+                                                    Crypto-Coco
+                                                </b>
                                             </p>
                                             <div className="spacer-10"></div>
                                             <span>
@@ -134,8 +135,8 @@ export default function Collection() {
                                                         {isNaN(avgAmount)
                                                             ? 0
                                                             : avgAmount.toFixed(
-                                                                2
-                                                            )}
+                                                                  2
+                                                              )}
                                                         K
                                                     </h3>
                                                     <p>floor price</p>
