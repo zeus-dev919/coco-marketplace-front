@@ -64,6 +64,7 @@ export default function App() {
                     <Auction exact path="/Auction/:collection/:id" />
                     <Contact path="/contact" />
                 </ScrollTop>
+                <Home default />
             </PosedRouter>
             <ScrollToTopBtn />
         </div>

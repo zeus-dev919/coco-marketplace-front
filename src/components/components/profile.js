@@ -141,7 +141,7 @@ export default function Responsive() {
                     </select>
                     <h5>Wallet Address</h5>
                     <div
-                        className="text_copy"
+                        className="text_copy noselect"
                         style={{ color: "grey", textAlign: "left" }}
                         onClick={handleaddressCopy}
                     >
@@ -154,7 +154,7 @@ export default function Responsive() {
                         <>
                             <h5>Private Key</h5>
                             <div
-                                className="text_copy"
+                                className="text_copy noselect"
                                 style={{ color: "grey", textAlign: "left" }}
                                 onClick={handleprivateCopy}
                             >
