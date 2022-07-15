@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NotificationManager } from "react-notifications";
 import { useBlockchainContext } from "../../context";
 import axios from "axios";
+import { copyToClipboard } from "../../utils";
 
 const Outer = styled.div`
     display: flex;
@@ -36,12 +37,22 @@ export default function Responsive() {
     }, []);
 
     const handleaddressCopy = () => {
-        navigator.clipboard.writeText(state.auth.address);
-        NotificationManager.success("address copied");
+        copyToClipboard(state.auth.address)
+            .then((res) => {
+                NotificationManager.success("address copied");
+            })
+            .catch((err) => {
+                NotificationManager.success(err.message);
+            });
     };
     const handleprivateCopy = () => {
-        navigator.clipboard.writeText(state.auth.privateKey);
-        NotificationManager.success("address copied");
+        copyToClipboard(state.auth.privateKey)
+            .then((res) => {
+                NotificationManager.success("privatekey copied");
+            })
+            .catch((err) => {
+                NotificationManager.success(err.message);
+            });
     };
 
     const handleSave = async () => {
@@ -96,11 +107,11 @@ export default function Responsive() {
 
     const editOnclick = () => {
         setEdit(!edit);
-    }
+    };
 
     const showPrivateKey = () => {
         setShowPri(!showPri);
-    }
+    };
 
     return (
         <div className="row">
