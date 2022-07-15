@@ -131,11 +131,11 @@ export default function Responsive() {
             <div className="col-lg-5 col-md-6 col-sm-6 col-xs-12">
                 <div className="field-set">
                     <h5>My Balance</h5>
-                    Token:{" "}
                     <select className="form-control">
                         {state.currencies.map((item, index) => (
                             <option defaultChecked={index === 0 ? true : false}>
-                                {mybalance[index]}$ ({item.label})
+                                {mybalance[index]}
+                                {"  "}({item.label})
                             </option>
                         ))}
                     </select>
