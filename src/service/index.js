@@ -36,6 +36,38 @@ const nft_like = async (data) => {
     }
 };
 
+const lazy_mint = async (data) => {
+    try {
+        var res = await axios.post("/api/lazy-mint", data);
+
+        if (!res.data.success) {
+            NotificationManager.error("Community Error");
+            return false;
+        }
+
+        return res.data;
+    } catch (err) {
+        NotificationManager.error("Server Error");
+        return false;
+    }
+};
+
+const lazy_onsale = async (data) => {
+    try {
+        var res = await axios.post("/api/lazy-onsale", data);
+
+        if (!res.data.success) {
+            NotificationManager.error("Community Error");
+            return false;
+        }
+
+        return res.data;
+    } catch (err) {
+        NotificationManager.error("Server Error");
+        return false;
+    }
+};
+
 // User Manage
 const user_create = async (account) => {
     try {
@@ -71,6 +103,8 @@ const user_login = async (account) => {
 const Action = {
     nft_mint,
     nft_like,
+    lazy_mint,
+    lazy_onsale,
     user_create,
     user_login,
 };

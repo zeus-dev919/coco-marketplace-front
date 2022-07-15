@@ -3,8 +3,11 @@ import DateTimeField from "@1stquad/react-bootstrap-datetimepicker";
 import moment from "moment";
 import { useBlockchainContext } from "../../context";
 import { NotificationManager } from "react-notifications";
+import { useNavigate } from "@reach/router";
+import Action from "../../service";
 
 export default function Responsive(props) {
+    const navigate = useNavigate();
     const { id, collection } = props;
     const [state, { onsaleNFT }] = useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
@@ -17,12 +20,16 @@ export default function Responsive(props) {
         const initialDate = new Date();
         initialDate.setDate(initialDate.getDate() + 10);
         setDate(initialDate);
-    }, [])
+    }, []);
 
     useEffect(() => {
         for (let i = 0; i < state.collectionNFT.length; i++) {
             if (state.collectionNFT[i].address === collection) {
-                setCorrectCollection(state.collectionNFT[i]);
+                var itemData = state.collectionNFT[i].items.find(
+                    (item) => item.tokenID === id
+                );
+                if (!itemData) navigate("/Auction");
+                else setCorrectCollection(itemData);
                 break;
             }
         }
@@ -38,25 +45,47 @@ export default function Responsive(props) {
 
         try {
             setLoading(true);
-            onsaleNFT({
-                nftAddress: collection,
-                assetId: correctCollection.items[id].tokenID,
-                currency: currency,
-                price: price,
-                expiresAt: moment(date).valueOf(),
-            })
-                .then((res) => {
-                    if (res) {
-                        NotificationManager.success("Successfully listing");
-                    } else {
-                        NotificationManager.error("Listing failed");
-                    }
-                    setLoading(false);
+            if (id.includes("0x")) {
+                Action.lazy_onsale({
+                    nftAddress: collection,
+                    assetId: correctCollection.tokenID,
+                    currency: currency,
+                    price: price,
+                    expiresAt: moment(date).valueOf(),
                 })
-                .catch((err) => {
-                    console.log(err);
-                    setLoading(false);
-                });
+                    .then((res) => {
+                        if (res.success) {
+                            console.log(res);
+                        } else {
+                            NotificationManager.error("Listing failed");
+                        }
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        setLoading(false);
+                    });
+            } else {
+                onsaleNFT({
+                    nftAddress: collection,
+                    assetId: correctCollection.tokenID,
+                    currency: currency,
+                    price: price,
+                    expiresAt: moment(date).valueOf(),
+                })
+                    .then((res) => {
+                        if (res) {
+                            NotificationManager.success("Successfully listing");
+                        } else {
+                            NotificationManager.error("Listing failed");
+                        }
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        setLoading(false);
+                    });
+            }
         } catch (err) {
             console.log(err);
             NotificationManager.error("Operation failed");
@@ -101,10 +130,25 @@ export default function Responsive(props) {
                                                     flex: "1 1 0",
                                                 }}
                                             >
-                                                <select className="form-control" onChange={(e) => { setCurrency(e.target.value) }}>
-                                                    {state.currencies.map((currency) => (
-                                                        <option value={currency.value}>{currency.label}</option>
-                                                    ))}
+                                                <select
+                                                    className="form-control"
+                                                    onChange={(e) => {
+                                                        setCurrency(
+                                                            e.target.value
+                                                        );
+                                                    }}
+                                                >
+                                                    {state.currencies.map(
+                                                        (currency) => (
+                                                            <option
+                                                                value={
+                                                                    currency.value
+                                                                }
+                                                            >
+                                                                {currency.label}
+                                                            </option>
+                                                        )
+                                                    )}
                                                 </select>
                                             </div>
                                             <input
@@ -157,7 +201,7 @@ export default function Responsive(props) {
                                             className="btn-main"
                                             disabled={
                                                 price === "" ||
-                                                    !moment(date).isValid()
+                                                !moment(date).isValid()
                                                     ? true
                                                     : false
                                             }
@@ -180,18 +224,15 @@ export default function Responsive(props) {
                                                 className="lazy"
                                                 src={
                                                     state.usersInfo[
-                                                        correctCollection.items[
-                                                            id
-                                                        ].owner
+                                                        correctCollection.owner
                                                     ]?.image === undefined
                                                         ? state.collectionNFT[0]
-                                                            ?.metadata.image
+                                                              ?.metadata.image
                                                         : state.usersInfo[
-                                                            correctCollection
-                                                                .items[id]
-                                                                .owner
-                                                        ].image ||
-                                                        "../../img/author/author-1.jpg"
+                                                              correctCollection
+                                                                  .owner
+                                                          ].image ||
+                                                          "../../img/author/author-1.jpg"
                                                 }
                                                 alt=""
                                             />
@@ -202,8 +243,8 @@ export default function Responsive(props) {
                                         <span>
                                             <img
                                                 src={
-                                                    correctCollection.items[id]
-                                                        .metadata.image ||
+                                                    correctCollection.metadata
+                                                        .image ||
                                                     "../../img/collections/coll-item-3.jpg"
                                                 }
                                                 id="get_file_2"
@@ -216,18 +257,14 @@ export default function Responsive(props) {
                                         <div className="sell_preview">
                                             <div>
                                                 <p>
-                                                    {correctCollection.items[id]
-                                                        ?.metadata?.name
-                                                        .length > 15
-                                                        ? correctCollection.items[
-                                                            id
-                                                        ]?.metadata?.name.slice(
-                                                            0,
-                                                            15
-                                                        ) + "..."
+                                                    {correctCollection?.metadata
+                                                        ?.name.length > 15
+                                                        ? correctCollection.metadata?.name.slice(
+                                                              0,
+                                                              15
+                                                          ) + "..."
                                                         : correctCollection
-                                                            .items[id]
-                                                            ?.metadata?.name}
+                                                              .metadata?.name}
                                                 </p>
                                             </div>
                                             <div>
@@ -235,10 +272,11 @@ export default function Responsive(props) {
                                                     {price === ""
                                                         ? "0  Crypto-Coco"
                                                         : price?.length > 15
-                                                            ? price.slice(0, 15) +
-                                                            "..." +
-                                                            "  Crypto-Coco"
-                                                            : price + "  Crypto-Coco"}
+                                                        ? price.slice(0, 15) +
+                                                          "..." +
+                                                          "  Crypto-Coco"
+                                                        : price +
+                                                          "  Crypto-Coco"}
                                                 </p>
                                             </div>
                                         </div>

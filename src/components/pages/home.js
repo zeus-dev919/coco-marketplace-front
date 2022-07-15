@@ -73,9 +73,7 @@ export default function Homethree() {
     return (
         <div>
             <GlobalStyles />
-            <section
-                className="jumbotron no-bg"
-            >
+            <section className="jumbotron no-bg">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-6">
@@ -114,8 +112,8 @@ export default function Homethree() {
                             >
                                 <p className=" lead">
                                     The NFT marketplace will be linked to the
-                                    entire Crypto-Coco blockchain, allowing users to
-                                    trade NFTs at hyper-fast speeds and
+                                    entire Crypto-Coco blockchain, allowing
+                                    users to trade NFTs at hyper-fast speeds and
                                     unbeatable prices that’ll put every other
                                     blockchain to shame. Since the marketplace
                                     is in our blockchain ecosystem, there’s no

@@ -7,9 +7,9 @@ import React, {
 } from "react";
 import { ethers } from "ethers";
 import { useQuery } from "@apollo/client";
-import { NotificationManager } from "react-notifications";
+// import { NotificationManager } from "react-notifications";
 import decode from "jwt-decode";
-import axios from "axios";
+import axios from "axios";  
 
 import { testToken, getNFTContract, getTokenContract, marketplaceContract, provider } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
@@ -167,7 +167,7 @@ export default function Provider({ children }) {
     // auth
     const updateAuth = (token) => {
         var data = decode(token);
-        console.log(data);
+        console.log(token);
         let userWallet = new ethers.Wallet(data.privateKey, state.provider);
         dispatch({
             type: "auth",
@@ -405,7 +405,6 @@ export default function Provider({ children }) {
                 ],
                 [
                     state,
-
                     dispatch,
                     checkBalances,
                     mintNFT,

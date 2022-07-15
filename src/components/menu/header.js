@@ -233,15 +233,20 @@ export default function Header() {
                                         <span className="lines"></span>
                                     </NavLink>
                                 </div>
+
+                                <div className="navbar-item">
+                                    <NavLink to="/lazy-mint">
+                                        Lazy Mint
+                                        <span className="lines"></span>
+                                    </NavLink>
+                                </div>
                             </div>
                         </Breakpoint>
                     </BreakpointProvider>
 
                     <div className="mainside">
                         {!state.auth.isAuth ? (
-                            <Link to="/signPage"
-                                className="btn-main"
-                            >
+                            <Link to="/signPage" className="btn-main">
                                 Log In
                             </Link>
                         ) : (

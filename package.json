@@ -30,7 +30,7 @@
         "react-notifications": "^1.7.3",
         "react-photo-gallery": "^8.0.0",
         "react-pose": "^4.0.10",
-        "react-scripts": "4.0.3",
+        "react-scripts": "^5.0.1",
         "react-select": "^4.3.1",
         "react-slick": "^0.28.1",
         "react-socks": "^2.2.0",
