@@ -234,12 +234,12 @@ export default function Header() {
                                     </NavLink>
                                 </div>
 
-                                <div className="navbar-item">
+                                {/* <div className="navbar-item">
                                     <NavLink to="/lazy-mint">
                                         Lazy Mint
                                         <span className="lines"></span>
                                     </NavLink>
-                                </div>
+                                </div> */}
                             </div>
                         </Breakpoint>
                     </BreakpointProvider>
