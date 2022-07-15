@@ -20,8 +20,6 @@ import {
     GET_COLLECTIONNFTS,
 } from "../components/gql";
 import addresses from "../contracts/contracts/addresses.json";
-
-
  
 const BlockchainContext = createContext();
 

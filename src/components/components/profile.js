@@ -25,6 +25,7 @@ export default function Responsive() {
     const [edit, setEdit] = useState(false);
     const [showPri, setShowPri] = useState(false);
     const fileRef = useRef(null);
+    const [mybalance, setMybalances] = useState(["0", "0"]);
 
     useEffect(() => {
         init(
@@ -35,6 +36,17 @@ export default function Responsive() {
             null
         );
     }, []);
+
+    useEffect(() => {
+        const b = async () => {
+            let result = await checkBalances([
+                state.currencies[0].value,
+                state.currencies[1].value,
+            ]);
+            setMybalances(result);
+        };
+        b();
+    }, [state.auth, correctItem]);
 
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
@@ -117,6 +129,15 @@ export default function Responsive() {
         <div className="row">
             <div className="col-lg-5 col-md-6 col-sm-6 col-xs-12">
                 <div className="field-set">
+                    <h5>My Balance</h5>
+                    Token:{" "}
+                    <select className="form-control">
+                        {state.currencies.map((item, index) => (
+                            <option defaultChecked={index === 0 ? true : false}>
+                                {mybalance[index]}$ ({item.label})
+                            </option>
+                        ))}
+                    </select>
                     <h5>Wallet Address</h5>
                     <div
                         className="text_copy"
@@ -145,9 +166,7 @@ export default function Responsive() {
                     ) : (
                         ""
                     )}
-
                     <div className="spacer-20"></div>
-
                     {edit ? (
                         <>
                             <h5>Username</h5>
@@ -239,7 +258,6 @@ export default function Responsive() {
                             Export Private
                         </div>
                     </div>
-
                     <div className="spacer-20"></div>
                 </div>
             </div>
