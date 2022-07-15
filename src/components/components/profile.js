@@ -15,7 +15,8 @@ const Outer = styled.div`
 `;
 
 export default function Responsive() {
-    const [state, { dispatch, updateAuth }] = useBlockchainContext();
+    const [state, { dispatch, updateAuth, checkBalances }] =
+        useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -46,7 +47,7 @@ export default function Responsive() {
             setMybalances(result);
         };
         b();
-    }, [state.auth, correctItem]);
+    }, [state.auth]);
 
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
