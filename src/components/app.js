@@ -1,5 +1,13 @@
 import React, { useEffect } from "react";
-import { Router, Location } from "@reach/router";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+    useNavigate,
+    useLocation,
+} from "react-router-dom";
+import { createGlobalStyle } from "styled-components";
 
 import ScrollToTopBtn from "./menu/ScrollToTop";
 import Header from "./menu/header";
@@ -16,8 +24,7 @@ import Auction from "./pages/Auction";
 import Contact from "./pages/contact";
 import Collections from "./pages/collections";
 // import Rangking from "./pages/rangking";
-
-import { createGlobalStyle } from "styled-components";
+import { useBlockchainContext } from "../context";
 
 const GlobalStyles = createGlobalStyle`
   :root {
@@ -25,48 +32,86 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export const ScrollTop = ({ children, location }) => {
-    useEffect(() => window.scrollTo(0, 0), [location]);
+const PrivateRoute = ({ children }) => {
+    const location = useLocation();
+
+    const [state, {}] = useBlockchainContext();
+
+    if (!state.auth.isAuth) {
+        return <Navigate to="/signPage" replace state={{ from: location }} />;
+    }
+
     return children;
 };
-
-const PosedRouter = ({ children }) => (
-    <Location>
-        {({ location }) => (
-            <>
-                <Header />
-                <div id="routerhang">
-                    <div key={location.key}>
-                        <Router location={location}>{children}</Router>
-                    </div>
-                </div>
-            </>
-        )}
-    </Location>
-);
 
 export default function App() {
     return (
         <div className="wraper">
-            <GlobalStyles />
-            <PosedRouter>
-                <ScrollTop path="/">
-                    <Home exact path="/" />
-                    <Explore exact path="/explore" />
-                    <Helpcenter path="/helpcenter" />
-                    <Collection path="/collection/:collection" />
-                    <Collections path="/Collections" />
-                    <ItemDetail exact path="/ItemDetail/:collection/:id" />
-                    <Author path="/Author" />
-                    <Sign path="/signPage" />
-                    <Create path="/create" />
-                    <LazyCreate path="/lazy-mint" />
-                    <Auction exact path="/Auction/:collection/:id" />
-                    <Contact path="/contact" />
-                </ScrollTop>
-                <Home default />
-            </PosedRouter>
-            <ScrollToTopBtn />
+            <Router>
+                <GlobalStyles />
+                <Header />
+                <Routes>
+                    <Route exact path="/" element={<Home />} />
+                    <Route path="/explore" element={<Explore />} />
+                    <Route path="/helpcenter" element={<Helpcenter />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/Collections" element={<Collections />} />
+                    <Route path="/signPage" element={<Sign />} />
+
+                    <Route
+                        exact
+                        path="/collection/:collection"
+                        element={
+                            <PrivateRoute>
+                                <Collection />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        exact
+                        path="/ItemDetail/:collection/:id"
+                        element={
+                            <PrivateRoute>
+                                <ItemDetail />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/Author"
+                        element={
+                            <PrivateRoute>
+                                <Author />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/create"
+                        element={
+                            <PrivateRoute>
+                                <Create />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/lazy-mint"
+                        element={
+                            <PrivateRoute>
+                                <LazyCreate />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        exact
+                        path="/Auction/:collection/:id"
+                        element={
+                            <PrivateRoute>
+                                <Auction />
+                            </PrivateRoute>
+                        }
+                    />
+                </Routes>
+                <ScrollToTopBtn />
+            </Router>
         </div>
     );
 }

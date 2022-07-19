@@ -3,7 +3,7 @@ import DateTimeField from "@1stquad/react-bootstrap-datetimepicker";
 import moment from "moment";
 import { useBlockchainContext } from "../../context";
 import { NotificationManager } from "react-notifications";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import Action from "../../service";
 
 export default function Responsive(props) {

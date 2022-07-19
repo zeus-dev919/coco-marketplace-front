@@ -206,29 +206,23 @@ export default function Provider({ children }) {
     const checkBalances = async (tokenaddresses) => {
         try {
             if (state.auth.isAuth) {
-                console.log(
-                    "tokenaddresses",
-                    tokenaddresses,
-                    state.auth.address
-                );
                 let balances = [];
                 for (let i = 0; i < tokenaddresses.length; i++) {
                     //native coin
                     if (
-                        tokenaddresses[i].toLowerCase() ==
+                        tokenaddresses[i].toLowerCase() ===
                         state.currencies[0].value.toLowerCase()
                     ) {
-                        var balance = await state.provider.getBalance(
+                        let balance = await state.provider.getBalance(
                             state.auth.address
                         );
                         balances.push(fromBigNum(balance, 18));
                     } else {
                         var token = getTokenContract(tokenaddresses[i]);
-                        var balance = await token.balanceOf(state.auth.address);
+                        let balance = await token.balanceOf(state.auth.address);
                         balances.push(fromBigNum(balance, 18));
                     }
                 }
-                console.log(balances);
                 return balances;
             } else {
                 return new Array(tokenaddresses.length).fill("0");
@@ -319,7 +313,7 @@ export default function Provider({ children }) {
             state.auth.signer
         );
         if (
-            acceptedToken.toLowerCase() ==
+            acceptedToken.toLowerCase() ===
             state.currencies[0].value.toLowerCase()
         ) {
             //native coin
@@ -356,12 +350,9 @@ export default function Provider({ children }) {
             state.auth.signer
         );
         if (
-            acceptedToken.toLowerCase() ==
+            acceptedToken.toLowerCase() ===
             state.currencies[0].value.toLowerCase()
         ) {
-            console.log(nftAddress, assetId, toBigNum(price, 18), expiresAt, {
-                value: toBigNum(price, 18),
-            });
             //native coin
             const tx = await signedMarketplaceContract.PlaceBid(
                 nftAddress,
@@ -416,16 +407,15 @@ export default function Provider({ children }) {
     const getCurrency = (tokenaddress = "") => {
         try {
             let currency = state.currencies.filter(
-                (c) => c.value.toLowerCase() == tokenaddress.toLowerCase()
+                (c) => c.value.toLowerCase() === tokenaddress.toLowerCase()
             );
-            if (currency.length == 0) {
+            if (currency.length === 0) {
                 throw new Error("unsupported currency");
             }
             return currency[0];
         } catch (err) {
-            console.log(err.message, tokenaddress);
             return {
-                label: " Invalid Currency",
+                label: "Invalid Currency",
                 value: "Unknown",
             };
         }

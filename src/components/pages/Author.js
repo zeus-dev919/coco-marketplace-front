@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 
 import MyNFT from "../components/mynfts";
 import Profile from "../components/profile";
@@ -17,12 +17,6 @@ export default function Collection() {
     const navigate = useNavigate();
     const [state, {}] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
-
-    useEffect(() => {
-        if (!state.auth.isAuth) {
-            navigate("/signPage");
-        }
-    }, [state.auth]);
 
     const handleBtnClick = () => {
         setOpenMenu(true);

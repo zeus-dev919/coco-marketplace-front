@@ -3,11 +3,9 @@ import Breakpoint, {
     BreakpointProvider,
     setDefaultBreakpoints,
 } from "react-socks";
-import { useNavigate } from "@reach/router";
-import { Link } from "@reach/router";
+import { useNavigate, Link } from "react-router-dom";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useBlockchainContext } from "../../context";
-import SignIn from "../components/signin";
 
 setDefaultBreakpoints([{ xs: 0 }, { l: 1199 }, { xl: 1200 }]);
 
@@ -62,10 +60,10 @@ export default function Header() {
         dispatch({
             type: "auth",
             payload: {
-                isAuth: false
-            }
-        })
-    }
+                isAuth: false,
+            },
+        });
+    };
 
     const [showmenu, btn_icon] = useState(false);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "@reach/router";
+import { useParams } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import ColumnZero from "../components/ColumnZero";
 import CoulmnOne from "../components/CoulmnOne";

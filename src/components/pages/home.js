@@ -7,7 +7,7 @@ import Footer from "../components/footer";
 import { createGlobalStyle } from "styled-components";
 import Reveal from "react-awesome-reveal";
 import { keyframes } from "@emotion/react";
-import { Link } from "@reach/router";
+import { Link } from "react-router-dom";
 
 const fadeInUp = keyframes`
   0% {

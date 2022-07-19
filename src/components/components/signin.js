@@ -1,13 +1,15 @@
-import { navigate } from "@reach/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
-import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 import decode from "jwt-decode";
 import axios from "axios";
 import { ethers } from "ethers";
+import Action from "../../service";
 
 const SignIn = (props) => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const { auth } = props;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
@@ -52,10 +54,11 @@ const SignIn = (props) => {
                     signer: userWallet,
                 },
             });
-            console.log(response.data);
             axios.defaults.headers.common["Authorization"] = response.data;
             NotificationManager.success("Signed In successfully!");
-            navigate("/");
+
+            const origin = location.state?.from?.pathname || "/";
+            navigate(origin);
         }
     };
 

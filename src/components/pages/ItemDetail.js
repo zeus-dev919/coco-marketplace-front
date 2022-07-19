@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "@reach/router";
+import { useParams, useNavigate } from "react-router-dom";
 import Footer from "../components/footer";
 import moment from "moment";
 import { createGlobalStyle } from "styled-components";
@@ -39,8 +39,6 @@ export default function Colection() {
                     let endTime = moment(Number(itemData.marketdata.endTime));
                     let nowTime = moment(new Date());
                     // test
-                    let ms = moment(endTime.diff(nowTime));
-                    //
                     if (endTime < nowTime) setTimeFlag(true);
                     else {
                         let ms = moment(endTime.diff(nowTime));
@@ -78,8 +76,6 @@ export default function Colection() {
                     : setPageFlag(3);
             }
         }
-
-        console.log("endTime", itemData?.marketdata);
     }, [itemData]);
 
     useEffect(() => {
