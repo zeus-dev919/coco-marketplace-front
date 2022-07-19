@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 
 import Footer from "../components/footer";
@@ -7,46 +6,47 @@ import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
 export default function CreateCollection() {
-    const navigate = useNavigate();
     const [state, {}] = useBlockchainContext();
-    const [image, _setImage] = useState(null);
-    const [selectedFile, setSeletedFile] = useState(null);
+
+    const [logoImage, _setLogoImage] = useState(null);
+    const [selectedLogoFile, setSeletedLogoFile] = useState(null);
+    const [bannerImage, _setBannerImage] = useState(null);
+    const [selectedBannerFile, setSeletedBannerFile] = useState(null);
     const [name, setName] = useState("");
     const [extLink, setExtLink] = useState("");
     const [desc, setDesc] = useState("");
+    const [fee, setFee] = useState("");
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (!state.auth.isAuth) {
-            navigate("/signPage");
-        }
-    }, [state.auth.isAuth]);
 
     const handleSubmit = async () => {
         try {
-            if (!selectedFile) {
-                NotificationManager.error("please choose image");
+            if (!selectedLogoFile) {
+                NotificationManager.error("please select logo image");
                 return;
             }
-            if (selectedFile.size > 1024 * 1024 * 100) {
-                NotificationManager.error("upload file is too big");
+            if (!selectedBannerFile) {
+                NotificationManager.error("please select logo image");
                 return;
             }
             if (name.trim() === "") {
-                NotificationManager.error("please fill name");
-                document.getElementById("item_name").focus();
+                NotificationManager.error("please input collection name");
+                return;
+            }
+            if (fee < 0) {
+                NotificationManager.error("fee must be integer");
                 return;
             }
             setLoading(true);
             var formData = new FormData();
-            formData.append("image", selectedFile);
-            formData.append("name", name);
-            formData.append("extlink", extLink);
-            formData.append("desc", desc);
+            formData.append("logoImage", selectedLogoFile);
+            formData.append("bannerImage", selectedBannerFile);
+            formData.append("name", name.trim());
+            formData.append("extUrl", extLink.trim());
+            formData.append("desc", desc.trim());
+            formData.append("fee", fee);
 
-            const uploadData = await Action.nft_mint(formData);
-            if (uploadData.success) {
-                await mintNFT(uploadData.url);
+            const uploadData = await Action.create_collection(formData);
+            if (uploadData) {
                 NotificationManager.success("image uploaded");
                 reset();
             } else {
@@ -54,37 +54,33 @@ export default function CreateCollection() {
             }
             setLoading(false);
         } catch (err) {
-            console.log(err.code);
-            if (err.code === 4001) {
-                NotificationManager.error("uploading rejected");
-            } else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
-                NotificationManager.error("Please check your balance");
-            } else {
-                NotificationManager.error("NFT creat failed");
-            }
             setLoading(false);
+            console.log(err);
+            NotificationManager.error("Collection Create failed");
         }
     };
 
     const reset = () => {
         cleanup();
-        _setImage(null);
-        setSeletedFile(null);
+        _setLogoImage(null);
+        _setBannerImage(null);
+        setSeletedLogoFile(null);
+        setSeletedBannerFile(null);
         setName("");
         setExtLink("");
         setDesc("");
     };
 
-    const handleImgChange = async (event) => {
-        if (image) {
-            setImage(null);
-            setSeletedFile(null);
+    const handleLogoImgChange = async (event) => {
+        if (logoImage) {
+            setLogoImage(null);
+            setSeletedLogoFile(null);
         }
         const newImage = event.target?.files?.[0];
         if (newImage) {
             try {
-                setImage(URL.createObjectURL(newImage));
-                setSeletedFile(newImage);
+                setLogoImage(URL.createObjectURL(newImage));
+                setSeletedLogoFile(newImage);
             } catch (err) {
                 console.log(err);
                 NotificationManager.error("image loading error");
@@ -92,15 +88,43 @@ export default function CreateCollection() {
         }
     };
 
-    const cleanup = () => {
-        URL.revokeObjectURL(image);
+    const handleBannerImgChange = async (event) => {
+        if (bannerImage) {
+            setBannerImage(null);
+            setSeletedBannerFile(null);
+        }
+        const newImage = event.target?.files?.[0];
+        if (newImage) {
+            try {
+                setBannerImage(URL.createObjectURL(newImage));
+                setSeletedBannerFile(newImage);
+            } catch (err) {
+                console.log(err);
+                NotificationManager.error("image loading error");
+            }
+        }
     };
 
-    const setImage = (newImage) => {
-        if (image) {
-            cleanup();
+    const cleanup = (index) => {
+        if (index === 1) {
+            URL.revokeObjectURL(logoImage);
+        } else {
+            URL.revokeObjectURL(bannerImage);
         }
-        _setImage(newImage);
+    };
+
+    const setLogoImage = (newImage) => {
+        if (logoImage) {
+            cleanup(1);
+        }
+        _setLogoImage(newImage);
+    };
+
+    const setBannerImage = (newImage) => {
+        if (bannerImage) {
+            cleanup(2);
+        }
+        _setBannerImage(newImage);
     };
 
     return (
@@ -121,21 +145,60 @@ export default function CreateCollection() {
 
             <section className="container">
                 <div className="row">
-                    <div className="col-lg-7 offset-lg-1 mb-5">
+                    <div className="col-lg-10 offset-lg-1 mb-5">
                         <div id="form-create-item" className="form-border">
                             <div className="field-set">
                                 <h5>
-                                    Upload Media{" "}
+                                    Logo Image <b style={{ color: "red" }}>*</b>
+                                </h5>
+                                <p>
+                                    This image will also be used for navigation.
+                                    350 * 350 recommended.
+                                </p>
+                                <div className="c-create-file">
+                                    <p className="file_name">
+                                        {logoImage ? (
+                                            <div className="mask">
+                                                <img src={logoImage} alt="" />
+                                            </div>
+                                        ) : (
+                                            <i className="bg-color-2 i-boxed icon_image"></i>
+                                        )}
+                                    </p>
+                                    <div className="browser_button">
+                                        <div className="browse">
+                                            <input
+                                                type="button"
+                                                className="btn-main"
+                                                value="Browse"
+                                            />
+                                            <input
+                                                id="upload_file"
+                                                type="file"
+                                                multiple
+                                                accept="image/*, video/*"
+                                                onChange={handleLogoImgChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="spacer-single"></div>
+
+                                <h5>
+                                    Banner Image{" "}
                                     <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <p>
-                                    File types supported: all image and video
-                                    Max size: 100 MB
+                                    This image will appear at the top of your
+                                    collection page. Avoid including too much
+                                    text in this banner image, as the dimensions
+                                    change on different devices. 1400 * 350
+                                    recommended.
                                 </p>
                                 <div className="d-create-file">
                                     <p className="file_name">
-                                        {image ? (
-                                            selectedFile.name
+                                        {bannerImage ? (
+                                            <img src={bannerImage} alt="" />
                                         ) : (
                                             <i className="bg-color-2 i-boxed icon_image"></i>
                                         )}
@@ -151,10 +214,11 @@ export default function CreateCollection() {
                                             type="file"
                                             multiple
                                             accept="image/*, video/*"
-                                            onChange={handleImgChange}
+                                            onChange={handleBannerImgChange}
                                         />
                                     </div>
                                 </div>
+
                                 <div className="spacer-single"></div>
                                 <h5>
                                     Name <b style={{ color: "red" }}>*</b>
@@ -207,14 +271,21 @@ export default function CreateCollection() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Collection</h5>
+                                <h5>Percentage fee</h5>
                                 <p>
-                                    This is the collection where your item will
-                                    appear.
+                                    Collect a fee when a user re-sells an item
+                                    you originally created. This is deducted
+                                    from the final sale price and paid monthly
+                                    to a payout address of your choosing.
                                 </p>
-                                <select className="form-control">
-                                    <option>Crypto-Coco Art</option>
-                                </select>
+                                <input
+                                    type="number"
+                                    name="item_link"
+                                    className="form-control"
+                                    placeholder="e.g. 2.5"
+                                    onChange={(e) => setFee(e.target.value)}
+                                    value={fee}
+                                />
 
                                 <div className="spacer-30"></div>
                                 {!loading ? (
@@ -233,60 +304,6 @@ export default function CreateCollection() {
                                         ></span>
                                     </button>
                                 )}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-3 col-sm-12 col-xs-12">
-                        <h5>Preview item</h5>
-                        <div className="nft__item m-0">
-                            <div className="author_list_pp">
-                                <span>
-                                    <img
-                                        className="lazy"
-                                        src={
-                                            state.userInfo?.image ||
-                                            "./img/author/author-1.jpg"
-                                        }
-                                        alt=""
-                                    />
-                                    <i className="fa fa-check"></i>
-                                </span>
-                            </div>
-                            <div className="nft__item_wrap">
-                                <span>
-                                    <img
-                                        src={
-                                            image ||
-                                            "./img/collections/coll-item-3.jpg"
-                                        }
-                                        id="get_file_2"
-                                        className="lazy nft__item_preview"
-                                        alt=""
-                                    />
-                                </span>
-                            </div>
-                            <div className="nft__item_info">
-                                <span>
-                                    <p>
-                                        {name.trim() === ""
-                                            ? "unknown"
-                                            : name.length > 20
-                                            ? name.slice(0, 20) + "..."
-                                            : name}
-                                    </p>
-                                </span>
-                                {/* <div className="nft__item_price">
-                                    <span>1/20</span>
-                                </div>
-                                <div className="nft__item_action">
-                                    <span>Place a bid</span>
-                                </div>
-                                <div className="nft__item_like">
-                                    <i className="fa fa-heart"></i>
-                                    <span>50</span>
-                                </div> */}
-                                <div className="spacer-10"></div>
                             </div>
                         </div>
                     </div>
