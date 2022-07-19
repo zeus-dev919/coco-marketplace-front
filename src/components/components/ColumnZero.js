@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import Reveal from "react-awesome-reveal";
 import { keyframes } from "@emotion/react";
 import styled from "styled-components";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";

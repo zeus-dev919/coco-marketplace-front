@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "@reach/router";
+import { useParams } from "react-router-dom";
 import ColumnAuction from "../components/ColumnAuction";
 import Footer from "../components/footer";
 

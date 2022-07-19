@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 
 import Footer from "../components/footer";
@@ -17,12 +17,6 @@ export default function LazyCreate() {
     const [attrItem, setAttrItem] = useState({ 0: { key: "", value: "" } });
     const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (!state.auth.isAuth) {
-            navigate("/signPage");
-        }
-    }, [state.auth.isAuth]);
 
     const handleSubmit = async () => {
         try {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 
 const Outer = styled.div`

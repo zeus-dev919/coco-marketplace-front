@@ -6,17 +6,21 @@ import Footer from "../components/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
-export default function Createpage() {
+export default function CreateCollection() {
     const navigate = useNavigate();
-    const [state, { mintNFT }] = useBlockchainContext();
+    const [state, {}] = useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
     const [name, setName] = useState("");
     const [extLink, setExtLink] = useState("");
     const [desc, setDesc] = useState("");
-    const [attrItem, setAttrItem] = useState({ 0: { key: "", value: "" } });
-    const [count, setCount] = useState(1);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!state.auth.isAuth) {
+            navigate("/signPage");
+        }
+    }, [state.auth.isAuth]);
 
     const handleSubmit = async () => {
         try {
@@ -33,36 +37,12 @@ export default function Createpage() {
                 document.getElementById("item_name").focus();
                 return;
             }
-            for (let x in attrItem) {
-                if (Object.keys(attrItem).length === 1) {
-                    if (attrItem[x].key === "" && attrItem[x].value === "") {
-                    } else {
-                        if (
-                            attrItem[x].key === "" ||
-                            attrItem[x].value === ""
-                        ) {
-                            NotificationManager.error(
-                                "please fill all attribute or delete element"
-                            );
-                            return;
-                        }
-                    }
-                } else {
-                    if (attrItem[x].key === "" || attrItem[x].value === "") {
-                        NotificationManager.error(
-                            "please fill all attribute or delete element"
-                        );
-                        return;
-                    }
-                }
-            }
             setLoading(true);
             var formData = new FormData();
             formData.append("image", selectedFile);
             formData.append("name", name);
             formData.append("extlink", extLink);
             formData.append("desc", desc);
-            formData.append("attribute", JSON.stringify(attrItem));
 
             const uploadData = await Action.nft_mint(formData);
             if (uploadData.success) {
@@ -93,8 +73,6 @@ export default function Createpage() {
         setName("");
         setExtLink("");
         setDesc("");
-        setCount(1);
-        setAttrItem({ 0: { key: "", value: "" } });
     };
 
     const handleImgChange = async (event) => {
@@ -125,26 +103,6 @@ export default function Createpage() {
         _setImage(newImage);
     };
 
-    const addItem = () => {
-        setCount(count + 1);
-        setAttrItem({
-            ...attrItem,
-            [count]: { key: "", value: "" },
-        });
-    };
-
-    const deleteItem = (param) => {
-        let bump = Object.assign({}, attrItem);
-        if (Object.keys(attrItem).length > 1) {
-            delete bump[param];
-            setAttrItem(bump);
-        } else {
-            bump[param].key = "";
-            bump[param].value = "";
-            setAttrItem(bump);
-        }
-    };
-
     return (
         <div>
             <section className="jumbotron breadcumb no-bg">
@@ -153,7 +111,7 @@ export default function Createpage() {
                         <div className="row m-10-hor">
                             <div className="col-12">
                                 <h1 className="text-center">
-                                    Create New NFT Item
+                                    Create New Collection
                                 </h1>
                             </div>
                         </div>
@@ -257,63 +215,6 @@ export default function Createpage() {
                                 <select className="form-control">
                                     <option>Crypto-Coco Art</option>
                                 </select>
-
-                                <div className="spacer-30"></div>
-
-                                <h5>Attribute</h5>
-                                <p>Textual traits that show up as rectangles</p>
-                                {Object.keys(attrItem).map((item, index) => (
-                                    <div className="attribute" key={index}>
-                                        <button
-                                            type="button"
-                                            className="form-control-button"
-                                            style={{ flex: "1 1 0" }}
-                                            onClick={() => deleteItem(item)}
-                                        >
-                                            <i className="bg-color-2 i-boxed icon_close" />
-                                        </button>
-                                        <input
-                                            type="input"
-                                            className="form-control"
-                                            style={{ flex: "5 5 0" }}
-                                            placeholder="Character"
-                                            onChange={(e) => {
-                                                setAttrItem({
-                                                    ...attrItem,
-                                                    [item]: {
-                                                        ...attrItem[item],
-                                                        key: e.target.value,
-                                                    },
-                                                });
-                                            }}
-                                            value={attrItem[item].key}
-                                        />
-                                        <input
-                                            type="input"
-                                            className="form-control"
-                                            style={{ flex: "5 5 0" }}
-                                            placeholder="Value"
-                                            onChange={(e) => {
-                                                setAttrItem({
-                                                    ...attrItem,
-                                                    [item]: {
-                                                        ...attrItem[item],
-                                                        value: e.target.value,
-                                                    },
-                                                });
-                                            }}
-                                            value={attrItem[item].value}
-                                        />
-                                        <button
-                                            type="button"
-                                            className="form-control-button"
-                                            style={{ flex: "1 1 0" }}
-                                            onClick={addItem}
-                                        >
-                                            <i className="bg-color-2 i-boxed icon_plus" />
-                                        </button>
-                                    </div>
-                                ))}
 
                                 <div className="spacer-30"></div>
                                 {!loading ? (
