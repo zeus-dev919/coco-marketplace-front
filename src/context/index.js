@@ -9,9 +9,16 @@ import { ethers } from "ethers";
 import { useQuery } from "@apollo/client";
 // import { NotificationManager } from "react-notifications";
 import decode from "jwt-decode";
-import axios from "axios";  
+import axios from "axios";
 
-import { testToken, getNFTContract, getTokenContract, marketplaceContract, provider } from "../contracts";
+import {
+    testToken,
+    getNFTContract,
+    getTokenContract,
+    marketplaceContract,
+    storeFontContract,
+    provider,
+} from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
 import {
     GET_ALLNFTS,
@@ -20,7 +27,7 @@ import {
     GET_COLLECTIONNFTS,
 } from "../components/gql";
 import addresses from "../contracts/contracts/addresses.json";
- 
+
 const BlockchainContext = createContext();
 
 export function useBlockchainContext() {
@@ -58,11 +65,11 @@ const INIT_STATE = {
         user: "",
         address: "",
         signer: {},
-        privateKey: ""
+        privateKey: "",
     },
-    currencies: Currency
+    balances: [],
+    currencies: Currency,
 };
-
 
 export default function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
@@ -103,7 +110,6 @@ export default function Provider({ children }) {
     });
 
     useEffect(() => {
-        console.log(nftsLoading, nftsError);
         if (nftsLoading || nftsError) {
             return;
         }
@@ -134,7 +140,7 @@ export default function Provider({ children }) {
                 type: "userInfo",
                 payload: userData.getUserInfo,
             });
-            let tokenlist = state.currencies.map(currency => currency.value)
+            let tokenlist = state.currencies.map((currency) => currency.value);
             checkBalances(tokenlist);
         } else {
             dispatch({
@@ -162,6 +168,19 @@ export default function Provider({ children }) {
         });
     }, [usersData, usersLoading, usersError]);
 
+    useEffect(() => {
+        (async () => {
+            let result = await checkBalances([
+                state.currencies[0].value,
+                state.currencies[1].value,
+            ]);
+            dispatch({
+                type: "balances",
+                payload: result,
+            });
+        })();
+    }, [state.auth]);
+
     // auth
     const updateAuth = (token) => {
         var data = decode(token);
@@ -176,29 +195,37 @@ export default function Provider({ children }) {
                 bio: data.bio,
                 address: data.address,
                 privateKey: data.privateKey,
-                signer: userWallet
-            }
-        })
-        axios.defaults.headers.common['Authorization'] = token;
-    }
+                signer: userWallet,
+            },
+        });
+        axios.defaults.headers.common["Authorization"] = token;
+    };
 
     /* ------------ NFT Section ------------- */
     // coin check
     const checkBalances = async (tokenaddresses) => {
         try {
             if (state.auth.isAuth) {
-                console.log("tokenaddresses", tokenaddresses, state.auth.address);
+                console.log(
+                    "tokenaddresses",
+                    tokenaddresses,
+                    state.auth.address
+                );
                 let balances = [];
                 for (let i = 0; i < tokenaddresses.length; i++) {
                     //native coin
-                    if ((tokenaddresses[i]).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
-                        var balance = await state.provider.getBalance(state.auth.address);
-                        balances.push(fromBigNum(balance, 18))
-                    }
-                    else {
+                    if (
+                        tokenaddresses[i].toLowerCase() ==
+                        state.currencies[0].value.toLowerCase()
+                    ) {
+                        var balance = await state.provider.getBalance(
+                            state.auth.address
+                        );
+                        balances.push(fromBigNum(balance, 18));
+                    } else {
                         var token = getTokenContract(tokenaddresses[i]);
                         var balance = await token.balanceOf(state.auth.address);
-                        balances.push(fromBigNum(balance, 18))
+                        balances.push(fromBigNum(balance, 18));
                     }
                 }
                 console.log(balances);
@@ -254,6 +281,23 @@ export default function Provider({ children }) {
         }
     };
 
+    const onsaleLazyNFT = async (props) => {
+        const { tokenId, price, currency, expiresAt, singature } = props;
+        const signedLazyContract = storeFontContract.connect(state.auth.signer);
+
+        const tx = await signedLazyContract.mintAndOnsale(
+            tokenId,
+            addresses.Marketplace,
+            currency,
+            toBigNum(price, 18),
+            expiresAt,
+            singature
+        );
+        await tx.wait();
+
+        return true;
+    };
+
     const cancelOrder = async (props) => {
         const { nftAddress, assetId } = props;
 
@@ -274,7 +318,10 @@ export default function Provider({ children }) {
         const signedMarketplaceContract = marketplaceContract.connect(
             state.auth.signer
         );
-        if ((acceptedToken).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
+        if (
+            acceptedToken.toLowerCase() ==
+            state.currencies[0].value.toLowerCase()
+        ) {
             //native coin
             const tx = await signedMarketplaceContract.ExecuteOrder(
                 nftAddress,
@@ -283,9 +330,8 @@ export default function Provider({ children }) {
                 { value: toBigNum(price, 18) }
             );
             await tx.wait();
-        }
-        else {
-            //ERC20 
+        } else {
+            //ERC20
             var token = getTokenContract(acceptedToken);
             const signedTokenContract = token.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
@@ -309,12 +355,13 @@ export default function Provider({ children }) {
         const signedMarketplaceContract = marketplaceContract.connect(
             state.auth.signer
         );
-        if ((acceptedToken).toLowerCase() == (state.currencies[0].value).toLowerCase()) {
-            console.log(nftAddress,
-                assetId,
-                toBigNum(price, 18),
-                expiresAt,
-                { value: toBigNum(price, 18) });
+        if (
+            acceptedToken.toLowerCase() ==
+            state.currencies[0].value.toLowerCase()
+        ) {
+            console.log(nftAddress, assetId, toBigNum(price, 18), expiresAt, {
+                value: toBigNum(price, 18),
+            });
             //native coin
             const tx = await signedMarketplaceContract.PlaceBid(
                 nftAddress,
@@ -324,9 +371,8 @@ export default function Provider({ children }) {
                 { value: toBigNum(price, 18) }
             );
             await tx.wait();
-        }
-        else {
-            //ERC20 
+        } else {
+            //ERC20
             var token = getTokenContract(acceptedToken);
             const signedTokenContract = token.connect(state.auth.signer);
             const tx1 = await signedTokenContract.approve(
@@ -369,19 +415,21 @@ export default function Provider({ children }) {
     // show method
     const getCurrency = (tokenaddress = "") => {
         try {
-            let currency = state.currencies.filter((c) => (c.value).toLowerCase() == (tokenaddress).toLowerCase());
+            let currency = state.currencies.filter(
+                (c) => c.value.toLowerCase() == tokenaddress.toLowerCase()
+            );
             if (currency.length == 0) {
-                throw new Error("unsupported currency")
+                throw new Error("unsupported currency");
             }
             return currency[0];
         } catch (err) {
-            console.log(err.message,tokenaddress);
+            console.log(err.message, tokenaddress);
             return {
                 label: " Invalid Currency",
-                value: "Unknown"
-            }
+                value: "Unknown",
+            };
         }
-    }
+    };
 
     return (
         <BlockchainContext.Provider
@@ -393,12 +441,13 @@ export default function Provider({ children }) {
                         checkBalances,
                         mintNFT,
                         onsaleNFT,
+                        onsaleLazyNFT,
                         cancelOrder,
                         buyNFT,
                         bidNFT,
                         bidApprove,
                         updateAuth,
-                        getCurrency
+                        getCurrency,
                     },
                 ],
                 [
@@ -407,11 +456,12 @@ export default function Provider({ children }) {
                     checkBalances,
                     mintNFT,
                     onsaleNFT,
+                    onsaleLazyNFT,
                     cancelOrder,
                     buyNFT,
                     bidNFT,
                     bidApprove,
-                    updateAuth
+                    updateAuth,
                 ]
             )}
         >

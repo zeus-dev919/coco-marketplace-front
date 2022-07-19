@@ -23,11 +23,21 @@ const providers = {
 
 const provider = providers[supportChainId];
 
-const testToken = new ethers.Contract(Addresses.TestToken, Abis.TestToken, provider);
+const testToken = new ethers.Contract(
+    Addresses.TestToken,
+    Abis.TestToken,
+    provider
+);
 
 const marketplaceContract = new ethers.Contract(
     Addresses.Marketplace,
     Abis.Marketplace,
+    provider
+);
+
+const storeFontContract = new ethers.Contract(
+    Addresses.StoreFront,
+    Abis.StoreFront,
     provider
 );
 
@@ -42,7 +52,8 @@ export {
     supportChainId,
     provider,
     marketplaceContract,
+    storeFontContract,
     testToken,
     getNFTContract,
-    getTokenContract
+    getTokenContract,
 };

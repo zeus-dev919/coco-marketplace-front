@@ -71,7 +71,6 @@ export default function Createpage() {
             formData.append("attribute", JSON.stringify(attrItem));
 
             const uploadData = await Action.nft_mint(formData);
-            console.log(uploadData);
             if (uploadData.success) {
                 await mintNFT(uploadData.url);
                 NotificationManager.success("image uploaded");

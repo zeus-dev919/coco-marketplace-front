@@ -71,7 +71,6 @@ export default function LazyCreate() {
             formData.append("attribute", JSON.stringify(attrItem));
 
             const uploadData = await Action.lazy_mint(formData);
-            console.log(uploadData);
             if (uploadData.success) {
                 NotificationManager.success("image uploaded");
                 reset();

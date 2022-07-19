@@ -38,17 +38,6 @@ export default function Responsive() {
         );
     }, []);
 
-    useEffect(() => {
-        const b = async () => {
-            let result = await checkBalances([
-                state.currencies[0].value,
-                state.currencies[1].value,
-            ]);
-            setMybalances(result);
-        };
-        b();
-    }, [state.auth]);
-
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
             .then((res) => {
@@ -134,7 +123,7 @@ export default function Responsive() {
                     <select className="form-control">
                         {state.currencies.map((item, index) => (
                             <option defaultChecked={index === 0 ? true : false}>
-                                {mybalance[index]}
+                                {state.balances[index]}
                                 {"  "}({item.label})
                             </option>
                         ))}

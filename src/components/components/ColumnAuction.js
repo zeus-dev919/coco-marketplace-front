@@ -9,7 +9,7 @@ import Action from "../../service";
 export default function Responsive(props) {
     const navigate = useNavigate();
     const { id, collection } = props;
-    const [state, { onsaleNFT }] = useBlockchainContext();
+    const [state, { onsaleNFT, onsaleLazyNFT }] = useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
     const [currency, setCurrency] = useState(state.currencies[0].value);
     const [price, setPrice] = useState("");
@@ -46,25 +46,31 @@ export default function Responsive(props) {
         try {
             setLoading(true);
             if (id.includes("0x")) {
-                Action.lazy_onsale({
+                const lazyAction = await Action.lazy_onsale({
                     nftAddress: collection,
                     assetId: correctCollection.tokenID,
-                    currency: currency,
                     price: price,
                     expiresAt: moment(date).valueOf(),
-                })
-                    .then((res) => {
-                        if (res.success) {
-                            console.log(res);
-                        } else {
-                            NotificationManager.error("Listing failed");
-                        }
-                        setLoading(false);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        setLoading(false);
-                    });
+                });
+
+                if (!lazyAction.success) {
+                    setLoading(false);
+                    NotificationManager.error("Listing failed");
+                    return;
+                }
+
+                const txOnSale = await onsaleLazyNFT({
+                    tokenId: correctCollection.tokenID,
+                    price: price,
+                    currency: currency,
+                    expiresAt: moment(date).valueOf(),
+                    singature: lazyAction.result,
+                });
+
+                if (txOnSale)
+                    NotificationManager.success("Successfully listing");
+                else NotificationManager.error("Listing failed");
+                setLoading(false);
             } else {
                 onsaleNFT({
                     nftAddress: collection,
@@ -88,6 +94,7 @@ export default function Responsive(props) {
             }
         } catch (err) {
             console.log(err);
+            setLoading(false);
             NotificationManager.error("Operation failed");
         }
     };
