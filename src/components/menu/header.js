@@ -136,6 +136,7 @@ export default function Header() {
                                                 onClick={handleBtnClick1}
                                             >
                                                 Explore
+                                                <span className="lines"></span>
                                             </div>
                                             {openMenu1 && (
                                                 <div className="item-dropdown">
@@ -168,21 +169,65 @@ export default function Header() {
                                             )}
                                         </div>
                                     </div>
+
                                     <div className="navbar-item">
                                         <NavLink
                                             to="/Author"
                                             onClick={() => btn_icon(!showmenu)}
                                         >
                                             Profile
+                                            <span className="lines"></span>
                                         </NavLink>
                                     </div>
 
                                     <div className="navbar-item">
+                                        <div ref={ref2}>
+                                            <div
+                                                className="dropdown-custom dropdown-toggle btn"
+                                                onClick={handleBtnClick2}
+                                            >
+                                                Create
+                                                <span className="lines"></span>
+                                            </div>
+                                            {openMenu2 && (
+                                                <div className="item-dropdown">
+                                                    <div
+                                                        className="dropdown"
+                                                        onClick={closeMenu2}
+                                                    >
+                                                        <NavLink
+                                                            to="/create/nft"
+                                                            onClick={() =>
+                                                                btn_icon(
+                                                                    !showmenu
+                                                                )
+                                                            }
+                                                        >
+                                                            Create NFT
+                                                        </NavLink>
+                                                        <NavLink
+                                                            to="/create/collection"
+                                                            onClick={() =>
+                                                                btn_icon(
+                                                                    !showmenu
+                                                                )
+                                                            }
+                                                        >
+                                                            Create Collection
+                                                        </NavLink>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="navbar-item">
                                         <NavLink
-                                            to="/create"
+                                            to="/lazy-mint"
                                             onClick={() => btn_icon(!showmenu)}
                                         >
-                                            Create
+                                            Lazy Mint
+                                            <span className="lines"></span>
                                         </NavLink>
                                     </div>
                                 </div>
@@ -224,12 +269,32 @@ export default function Header() {
                                         <span className="lines"></span>
                                     </NavLink>
                                 </div>
-
                                 <div className="navbar-item">
-                                    <NavLink to="/create">
-                                        Create
-                                        <span className="lines"></span>
-                                    </NavLink>
+                                    <div ref={ref2}>
+                                        <div
+                                            className="dropdown-custom dropdown-toggle btn"
+                                            onMouseEnter={handleBtnClick2}
+                                            onMouseLeave={closeMenu2}
+                                        >
+                                            Create
+                                            <span className="lines"></span>
+                                            {openMenu2 && (
+                                                <div className="item-dropdown">
+                                                    <div
+                                                        className="dropdown"
+                                                        onClick={closeMenu2}
+                                                    >
+                                                        <NavLink to="/create/nft">
+                                                            Create NFT
+                                                        </NavLink>
+                                                        <NavLink to="/create/collection">
+                                                            Create Collection
+                                                        </NavLink>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="navbar-item">

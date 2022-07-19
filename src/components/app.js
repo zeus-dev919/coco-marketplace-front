@@ -4,7 +4,6 @@ import {
     Routes,
     Route,
     Navigate,
-    useNavigate,
     useLocation,
 } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
@@ -18,6 +17,7 @@ import Collection from "./pages/colection";
 import ItemDetail from "./pages/ItemDetail";
 import Author from "./pages/Author";
 import Sign from "./pages/Sign";
+import CreateCollection from "./pages/createcollection";
 import Create from "./pages/create";
 import LazyCreate from "./pages/lazycreate";
 import Auction from "./pages/Auction";
@@ -85,7 +85,15 @@ export default function App() {
                         }
                     />
                     <Route
-                        path="/create"
+                        path="/create/collection"
+                        element={
+                            <PrivateRoute>
+                                <CreateCollection />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/create/nft"
                         element={
                             <PrivateRoute>
                                 <Create />

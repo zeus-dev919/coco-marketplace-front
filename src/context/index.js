@@ -184,7 +184,6 @@ export default function Provider({ children }) {
     // auth
     const updateAuth = (token) => {
         var data = decode(token);
-        console.log(token);
         let userWallet = new ethers.Wallet(data.privateKey, state.provider);
         dispatch({
             type: "auth",
