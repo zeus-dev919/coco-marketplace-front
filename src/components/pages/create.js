@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 
 import Footer from "../components/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
+import Addresses from "../../contracts/contracts/addresses.json";
 
 export default function Createpage() {
-    const navigate = useNavigate();
     const [state, { mintNFT }] = useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
@@ -16,7 +15,25 @@ export default function Createpage() {
     const [desc, setDesc] = useState("");
     const [attrItem, setAttrItem] = useState({ 0: { key: "", value: "" } });
     const [count, setCount] = useState(1);
+    const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentCollection, setCurrentCollection] = useState(Addresses.NFT1);
+
+    useEffect(() => {
+        setCollections([]);
+        for (let i = 0; i < state.collectionNFT.length; i++) {
+            if (
+                state.collectionNFT[i].metadata.fee_recipent ===
+                state.auth.address
+            ) {
+                let data = {
+                    name: state.collectionNFT[i].metadata.name,
+                    owner: state.collectionNFT[i].address,
+                };
+                setCollections((state) => [...state, data]);
+            }
+        }
+    }, [state]);
 
     const handleSubmit = async () => {
         try {
@@ -66,7 +83,7 @@ export default function Createpage() {
 
             const uploadData = await Action.nft_mint(formData);
             if (uploadData.success) {
-                await mintNFT(uploadData.url);
+                await mintNFT(uploadData.url, currentCollection);
                 NotificationManager.success("image uploaded");
                 reset();
             } else {
@@ -112,6 +129,10 @@ export default function Createpage() {
                 NotificationManager.error("image loading error");
             }
         }
+    };
+
+    const handleCollectionChange = async (e) => {
+        setCurrentCollection(e.target.value);
     };
 
     const cleanup = () => {
@@ -254,8 +275,18 @@ export default function Createpage() {
                                     This is the collection where your item will
                                     appear.
                                 </p>
-                                <select className="form-control">
-                                    <option>Crypto-Coco Art</option>
+                                <select
+                                    className="form-control"
+                                    onChange={(e) => handleCollectionChange(e)}
+                                >
+                                    <option value={Addresses.NFT1}>
+                                        Crypto-Coco Art
+                                    </option>
+                                    {collections.map((item, index) => (
+                                        <option key={index} value={item.owner}>
+                                            {item.name}
+                                        </option>
+                                    ))}
                                 </select>
 
                                 <div className="spacer-30"></div>
@@ -345,7 +376,7 @@ export default function Createpage() {
                                         className="lazy"
                                         src={
                                             state.userInfo?.image ||
-                                            "./img/author/author-1.jpg"
+                                            "./../img/author/author-1.jpg"
                                         }
                                         alt=""
                                     />
@@ -357,7 +388,7 @@ export default function Createpage() {
                                     <img
                                         src={
                                             image ||
-                                            "./img/collections/coll-item-3.jpg"
+                                            "./../img/collections/coll-item-3.jpg"
                                         }
                                         id="get_file_2"
                                         className="lazy nft__item_preview"
@@ -375,16 +406,6 @@ export default function Createpage() {
                                             : name}
                                     </p>
                                 </span>
-                                {/* <div className="nft__item_price">
-                                    <span>1/20</span>
-                                </div>
-                                <div className="nft__item_action">
-                                    <span>Place a bid</span>
-                                </div>
-                                <div className="nft__item_like">
-                                    <i className="fa fa-heart"></i>
-                                    <span>50</span>
-                                </div> */}
                                 <div className="spacer-10"></div>
                             </div>
                         </div>

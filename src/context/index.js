@@ -233,8 +233,8 @@ export default function Provider({ children }) {
     };
 
     // NFT manage
-    const mintNFT = async (url) => {
-        const NFTContract1 = getNFTContract(addresses.NFT1);
+    const mintNFT = async (url, collection) => {
+        const NFTContract1 = getNFTContract(collection);
 
         const signedNFTContract1 = NFTContract1.connect(state.auth.signer);
         const tx = await signedNFTContract1.mint(url);
