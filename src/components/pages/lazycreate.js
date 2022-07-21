@@ -7,12 +7,14 @@ import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
 export default function LazyCreate() {
-    const navigate = useNavigate();
     const [state, {}] = useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
     const [name, setName] = useState("");
-    const [extLink, setExtLink] = useState("");
+    const [extLink1, setExtLink1] = useState("");
+    const [extLink2, setExtLink2] = useState("");
+    const [extLink3, setExtLink3] = useState("");
+    const [extLink4, setExtLink4] = useState("");
     const [desc, setDesc] = useState("");
     const [attrItem, setAttrItem] = useState({ 0: { key: "", value: "" } });
     const [count, setCount] = useState(1);
@@ -59,9 +61,12 @@ export default function LazyCreate() {
             setLoading(true);
             var formData = new FormData();
             formData.append("image", selectedFile);
-            formData.append("name", name);
-            formData.append("extlink", extLink);
-            formData.append("desc", desc);
+            formData.append("name", name.trim());
+            formData.append("extlink1", extLink1.trim());
+            formData.append("extlink2", extLink2.trim());
+            formData.append("extlink3", extLink3.trim());
+            formData.append("extlink4", extLink4.trim());
+            formData.append("desc", desc.trim());
             formData.append("attribute", JSON.stringify(attrItem));
 
             const uploadData = await Action.lazy_mint(formData);
@@ -90,7 +95,10 @@ export default function LazyCreate() {
         _setImage(null);
         setSeletedFile(null);
         setName("");
-        setExtLink("");
+        setExtLink1("");
+        setExtLink2("");
+        setExtLink3("");
+        setExtLink4("");
         setDesc("");
         setCount(1);
         setAttrItem({ 0: { key: "", value: "" } });
@@ -220,14 +228,60 @@ export default function LazyCreate() {
                                     welcome to link to your own webpage with
                                     more details.
                                 </p>
-                                <input
-                                    type="text"
-                                    name="item_link"
-                                    className="form-control"
-                                    placeholder="https://yoursite.io/item/123"
-                                    onChange={(e) => setExtLink(e.target.value)}
-                                    value={extLink}
-                                />
+                                <div className="social">
+                                    <span>
+                                        <i className="fa fa-twitter-square"></i>
+                                        <input
+                                            type="text"
+                                            name="item_link"
+                                            className="form-control"
+                                            placeholder="https://twitter.com/"
+                                            onChange={(e) =>
+                                                setExtLink1(e.target.value)
+                                            }
+                                            value={extLink1}
+                                        />
+                                    </span>
+                                    <span>
+                                        <i className="fa fa-facebook-square"></i>
+                                        <input
+                                            type="text"
+                                            name="item_link"
+                                            className="form-control"
+                                            placeholder="https://facebook.com/"
+                                            onChange={(e) =>
+                                                setExtLink2(e.target.value)
+                                            }
+                                            value={extLink2}
+                                        />
+                                    </span>
+                                    <span>
+                                        <i className="fa fa-instagram"></i>
+                                        <input
+                                            type="text"
+                                            name="item_link"
+                                            className="form-control"
+                                            placeholder="https://instagram.com/"
+                                            onChange={(e) =>
+                                                setExtLink3(e.target.value)
+                                            }
+                                            value={extLink3}
+                                        />
+                                    </span>
+                                    <span>
+                                        <i className="fa fa-pinterest"></i>
+                                        <input
+                                            type="text"
+                                            name="item_link"
+                                            className="form-control"
+                                            placeholder="https://pinterest.com/"
+                                            onChange={(e) =>
+                                                setExtLink4(e.target.value)
+                                            }
+                                            value={extLink4}
+                                        />
+                                    </span>
+                                </div>
 
                                 <div className="spacer-30"></div>
 

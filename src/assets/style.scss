@@ -1039,7 +1039,7 @@ p.lead {
 
             .search {
                 display: inline-block;
-                position: relative;
+                // position: relative;
                 top: -9px;
 
                 #quick_search {
@@ -1067,7 +1067,6 @@ p.lead {
 
         .w-100-nav {
             display: block;
-            padding: 20px 2%;
         }
 
         .navbar-item {
@@ -1135,10 +1134,6 @@ p.lead {
             top: 10px;
             background-color: $white;
         }
-
-        &.sticky {
-            position: absolute !important;
-        }
     }
 
     @media only screen and (max-width: 641px) {
@@ -1171,7 +1166,6 @@ p.lead {
         transition: all 0.6s ease;
 
         &.white {
-            background: white;
             box-shadow: 0 4px 20px 0 #ecbdb0;
 
             .btn {
@@ -3505,7 +3499,7 @@ i.font60 {
 }
 
 .feature-font {
-    color: white;
+    color: rgb(50, 50, 50);
 }
 
 .author_list_pp img {
@@ -3562,8 +3556,8 @@ i.font60 {
     display: block;
     padding: 10px;
     text-align: center;
-    background: rgba(131, 110, 63, 0.15);
-    border: solid 1px rgba(0, 0, 0, 0.15);
+    background-color: rgb(255, 189, 169);
+    border: solid 1px rgba(196, 71, 33, 0.719);
     border-radius: 5px;
     margin-bottom: 8px;
 
@@ -3577,7 +3571,7 @@ i.font60 {
     h4 {
         font-size: 15px;
         font-weight: 700;
-        color: white;
+        color: rgb(54, 54, 54);
         margin-bottom: 0;
     }
 
@@ -4369,7 +4363,7 @@ img.img-rounded {
 
 .form-control {
     padding: 8px;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     border: none;
     border: solid 1px $color;
     background: none;
@@ -4483,7 +4477,6 @@ img.img-rounded {
 }
 
 .form-control-button {
-    margin-bottom: 20px;
     border: none;
     border: solid 1px $white;
     background: none;
@@ -4996,6 +4989,44 @@ img.img-rounded {
 
     .d-min {
         color: #eb5757;
+    }
+}
+.social {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        i {
+            font-size: 20px;
+            padding: 10px;
+        }
+    }
+}
+
+.social-link {
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    a {
+        color: $color;
+        i {
+            cursor: pointer;
+            transition: 0.3s;
+            &:hover {
+                color: #ff3c00;
+            }
+        }
+    }
+
+    @media screen and (max-width: 990px) {
+        font-size: 40px;
+    }
+    @media screen and (max-width: 315px) {
+        font-size: 25px;
     }
 }
 

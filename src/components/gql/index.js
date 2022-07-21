@@ -17,17 +17,16 @@ const GET_COLLECTIONNFTS = gql`
             items {
                 metadata {
                     image
-                    image_data
-                    external_url
+                    external_url1
+                    external_url2
+                    external_url3
+                    external_url4
                     description
                     name
                     attributes {
                         value
                         key
                     }
-                    background_color
-                    animation_url
-                    youtube_url
                 }
                 tokenID
                 collectionAddress
@@ -65,13 +64,12 @@ const GET_ALLNFTS = gql`
             owner
             metadata {
                 image
-                image_data
-                external_url
+                external_url1
+                external_url2
+                external_url3
+                external_url4
                 description
                 name
-                animation_url
-                background_color
-                youtube_url
                 attributes {
                     key
                     value

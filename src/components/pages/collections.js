@@ -4,12 +4,6 @@ import Footer from "../components/footer";
 import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 
-const GlobalStyles = createGlobalStyle`
-  header#myHeader.navbar.white {
-    background: #ecbdb0;
-  }
-`;
-
 export default function Collections() {
     const [state, {}] = useBlockchainContext();
     const navigate = useNavigate();
@@ -20,8 +14,6 @@ export default function Collections() {
 
     return (
         <>
-            <GlobalStyles />
-
             <section className="jumbotron breadcumb no-bg">
                 <div className="mainbreadcumb">
                     <div className="row m-10-hor">
