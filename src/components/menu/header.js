@@ -23,7 +23,6 @@ const NavLink = (props) => (
 );
 
 export default function Header() {
-    const navigate = useNavigate();
     const [state, { dispatch }] = useBlockchainContext();
     const [openMenu1, setOpenMenu1] = useState(false);
     const [openMenu2, setOpenMenu2] = useState(false);

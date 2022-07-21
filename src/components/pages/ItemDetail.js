@@ -185,6 +185,41 @@ export default function Colection() {
                                     className="img-fluid img-rounded mb-sm-30"
                                     alt=""
                                 />
+                                <div className="social-link">
+                                    {itemData?.metadata?.external_url1 !=
+                                        "" && (
+                                        <a
+                                            href={
+                                                itemData?.metadata
+                                                    ?.external_url1
+                                            }
+                                        >
+                                            <i className="fa fa-twitter-square"></i>
+                                        </a>
+                                    )}
+                                    {itemData?.metadata?.external_url2 !=
+                                        "" && (
+                                        <a
+                                            href={
+                                                itemData?.metadata
+                                                    ?.external_url2
+                                            }
+                                        >
+                                            <i className="fa fa-facebook-square"></i>
+                                        </a>
+                                    )}
+                                    {itemData?.metadata?.external_url3 !=
+                                        "" && (
+                                        <a
+                                            href={
+                                                itemData?.metadata
+                                                    ?.external_url3
+                                            }
+                                        >
+                                            <i className="fa fa-instagram"></i>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
                             {/* main panel */}
                             <div className="col-md-6">
