@@ -5,6 +5,8 @@ import ColumnZero from "../components/ColumnZero";
 import CoulmnOne from "../components/CoulmnOne";
 import Footer from "../components/footer";
 import { useBlockchainContext } from "../../context";
+import { copyToClipboard } from "../../utils";
+import { NotificationManager } from "react-notifications";
 
 const GlobalStyles = createGlobalStyle`
   header#myHeader.navbar.white {
@@ -60,6 +62,16 @@ export default function Collection() {
         document.getElementById("Mainbtn").classList.remove("active");
     };
 
+    const handleaddressCopy = () => {
+        copyToClipboard(correctItem.address)
+            .then((res) => {
+                NotificationManager.success("address copied");
+            })
+            .catch((err) => {
+                NotificationManager.success(err.message);
+            });
+    };
+
     return (
         <div>
             <GlobalStyles />
@@ -102,6 +114,7 @@ export default function Collection() {
                                                 <button
                                                     id="btn_copy"
                                                     title="Copy Text"
+                                                    onClick={handleaddressCopy}
                                                 >
                                                     Copy
                                                 </button>

@@ -61,7 +61,17 @@ export default function Collections() {
                                         {item.metadata.name}
                                     </h4>
                                     <p className="text-center">
-                                        by <b className="color">Crypto-Coco</b>
+                                        by{" "}
+                                        <b className="color">
+                                            {item.metadata.fee_recipent.slice(
+                                                0,
+                                                5
+                                            ) +
+                                                "..." +
+                                                item.metadata.fee_recipent.slice(
+                                                    -4
+                                                )}
+                                        </b>
                                     </p>
                                     <div className="spacer-10"></div>
                                     <p className="card-text text-center">

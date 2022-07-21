@@ -97,7 +97,7 @@ export default function Responsive() {
                                         //         .image
                                         //     : state.usersInfo[nft.owner]
                                         //         .image ||
-                                        "../img/author/author-1.jpg"
+                                        "./img/author/author-1.jpg"
                                     }
                                     alt=""
                                 />
@@ -127,7 +127,9 @@ export default function Responsive() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : nft.marketdata.price + getCurrency(nft.marketdata.acceptedToken)?.label}
+                                    : nft.marketdata.price +
+                                      getCurrency(nft.marketdata.acceptedToken)
+                                          ?.label}
                                 <span>
                                     {nft.marketdata.bidders.length} bids
                                 </span>
