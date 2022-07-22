@@ -67,12 +67,23 @@ const INIT_STATE = {
         signer: {},
         privateKey: "",
     },
+    tokenPrice: {
+        BNB: 0,
+        BUSD: 0,
+    },
     balances: [],
     currencies: Currency,
 };
 
 export default function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
+
+    useEffect(() => {
+        checkPrice();
+        setTimeout(() => {
+            checkPrice();
+        }, 15000);
+    }, []);
 
     const {
         data: nftsData,
@@ -201,6 +212,24 @@ export default function Provider({ children }) {
     };
 
     /* ------------ NFT Section ------------- */
+    // check Price bnb and busd
+    const checkPrice = async () => {
+        var promiseArray = [];
+        promiseArray.push(
+            axios.get("https://api.binance.com/api/v3/avgPrice?symbol=BNBEUR"),
+            axios.get("https://api.binance.com/api/v3/avgPrice?symbol=EURBUSD")
+        );
+
+        const [BNBPrice, BUSDPrice] = await Promise.all(promiseArray);
+
+        dispatch({
+            type: "tokenPrice",
+            payload: {
+                BNB: BNBPrice.data.price,
+                BUSD: BUSDPrice.data.price,
+            },
+        });
+    };
     // coin check
     const checkBalances = async (tokenaddresses) => {
         try {

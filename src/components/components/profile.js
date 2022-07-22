@@ -26,7 +26,6 @@ export default function Responsive() {
     const [edit, setEdit] = useState(false);
     const [showPri, setShowPri] = useState(false);
     const fileRef = useRef(null);
-    const [mybalance, setMybalances] = useState(["0", "0"]);
 
     useEffect(() => {
         init(
@@ -123,8 +122,15 @@ export default function Responsive() {
                     <select className="form-control">
                         {state.currencies.map((item, index) => (
                             <option defaultChecked={index === 0 ? true : false}>
-                                {state.balances[index]}
-                                {"  "}({item.label})
+                                {Number(state.balances[index]).toFixed(2)}
+                                {"  "}
+                                {item.label}
+                                {"   "}(
+                                {Number(
+                                    state.balances[index] *
+                                        state.tokenPrice[item.label]
+                                ).toFixed(2) + "$"}
+                                )
                             </option>
                         ))}
                     </select>
