@@ -304,14 +304,14 @@ export default function Provider({ children }) {
     };
 
     const onsaleLazyNFT = async (props) => {
-        const { tokenId, price, currency, expiresAt, singature } = props;
+        const { tokenId, priceGwei, currency, expiresAt, singature } = props;
         const signedLazyContract = storeFontContract.connect(state.auth.signer);
 
         const tx = await signedLazyContract.mintAndOnsale(
             tokenId,
             addresses.Marketplace,
             currency,
-            toBigNum(price, 18),
+            priceGwei,
             expiresAt,
             singature
         );
