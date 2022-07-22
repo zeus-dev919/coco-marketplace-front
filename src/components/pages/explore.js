@@ -3,6 +3,7 @@ import React, { useState } from "react";
 
 import ColumnNew from "../components/ColumnNew";
 import Footer from "../components/footer";
+import { useBlockchainContext } from "../../context";
 
 // const customStyles = {
 //     option: (base, state) => ({
@@ -48,6 +49,7 @@ import Footer from "../components/footer";
 // ];
 
 export default function Explore() {
+    const [state, { translateLang }] = useBlockchainContext();
     const [searchWord, setSearchWord] = useState("");
 
     return (
@@ -57,7 +59,9 @@ export default function Explore() {
                     <div className="container">
                         <div className="row m-10-hor">
                             <div className="col-12">
-                                <h1 className="text-center">Explore NFTs</h1>
+                                <h1 className="text-center">
+                                    {translateLang("allnft_title")}
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -79,7 +83,7 @@ export default function Explore() {
                                         className="form-control"
                                         id="name_1"
                                         name="name_1"
-                                        placeholder="search item here..."
+                                        placeholder={translateLang("seachtext")}
                                         onChange={(e) =>
                                             setSearchWord(e.target.value)
                                         }

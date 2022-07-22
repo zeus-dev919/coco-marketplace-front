@@ -23,7 +23,7 @@ const NavLink = (props) => (
 );
 
 export default function Header() {
-    const [state, { dispatch }] = useBlockchainContext();
+    const [state, { dispatch, translateLang }] = useBlockchainContext();
     const [openMenu1, setOpenMenu1] = useState(false);
     const [openMenu2, setOpenMenu2] = useState(false);
     const [openMenu3, setOpenMenu3] = useState(false);
@@ -119,7 +119,7 @@ export default function Header() {
                             id="quick_search"
                             className="xs-hide"
                             name="quick_search"
-                            placeholder="search item here..."
+                            placeholder={translateLang("seachtext")}
                             type="text"
                         />
                     </div>
@@ -134,7 +134,7 @@ export default function Header() {
                                                 className="dropdown-custom dropdown-toggle btn"
                                                 onClick={handleBtnClick1}
                                             >
-                                                Explore
+                                                {translateLang("explore")}
                                                 <span className="lines"></span>
                                             </div>
                                             {openMenu1 && (
@@ -151,7 +151,9 @@ export default function Header() {
                                                                 )
                                                             }
                                                         >
-                                                            All NFTs
+                                                            {translateLang(
+                                                                "allnfts"
+                                                            )}
                                                         </NavLink>
                                                         <NavLink
                                                             to="/Collections"
@@ -161,7 +163,9 @@ export default function Header() {
                                                                 )
                                                             }
                                                         >
-                                                            Collection
+                                                            {translateLang(
+                                                                "collection"
+                                                            )}
                                                         </NavLink>
                                                     </div>
                                                 </div>
@@ -174,7 +178,7 @@ export default function Header() {
                                             to="/Author"
                                             onClick={() => btn_icon(!showmenu)}
                                         >
-                                            Profile
+                                            {translateLang("profile")}
                                             <span className="lines"></span>
                                         </NavLink>
                                     </div>
@@ -185,7 +189,7 @@ export default function Header() {
                                                 className="dropdown-custom dropdown-toggle btn"
                                                 onClick={handleBtnClick2}
                                             >
-                                                Create
+                                                {translateLang("create")}
                                                 <span className="lines"></span>
                                             </div>
                                             {openMenu2 && (
@@ -202,7 +206,9 @@ export default function Header() {
                                                                 )
                                                             }
                                                         >
-                                                            Create NFT
+                                                            {translateLang(
+                                                                "createnft"
+                                                            )}
                                                         </NavLink>
                                                         <NavLink
                                                             to="/create/collection"
@@ -212,7 +218,9 @@ export default function Header() {
                                                                 )
                                                             }
                                                         >
-                                                            Create Collection
+                                                            {translateLang(
+                                                                "createcollection"
+                                                            )}
                                                         </NavLink>
                                                     </div>
                                                 </div>
@@ -225,7 +233,7 @@ export default function Header() {
                                             to="/lazy-mint"
                                             onClick={() => btn_icon(!showmenu)}
                                         >
-                                            Lazy Mint
+                                            {translateLang("lazymint")}
                                             <span className="lines"></span>
                                         </NavLink>
                                     </div>
@@ -242,7 +250,7 @@ export default function Header() {
                                             onMouseEnter={handleBtnClick1}
                                             onMouseLeave={closeMenu1}
                                         >
-                                            Explore
+                                            {translateLang("explore")}
                                             <span className="lines"></span>
                                             {openMenu1 && (
                                                 <div className="item-dropdown">
@@ -251,10 +259,14 @@ export default function Header() {
                                                         onClick={closeMenu1}
                                                     >
                                                         <NavLink to="/explore">
-                                                            All NFTs
+                                                            {translateLang(
+                                                                "allnfts"
+                                                            )}
                                                         </NavLink>
                                                         <NavLink to="/Collections">
-                                                            Collection
+                                                            {translateLang(
+                                                                "collection"
+                                                            )}
                                                         </NavLink>
                                                     </div>
                                                 </div>
@@ -264,7 +276,7 @@ export default function Header() {
                                 </div>
                                 <div className="navbar-item">
                                     <NavLink to="/Author">
-                                        Profile
+                                        {translateLang("profile")}
                                         <span className="lines"></span>
                                     </NavLink>
                                 </div>
@@ -275,7 +287,7 @@ export default function Header() {
                                             onMouseEnter={handleBtnClick2}
                                             onMouseLeave={closeMenu2}
                                         >
-                                            Create
+                                            {translateLang("create")}
                                             <span className="lines"></span>
                                             {openMenu2 && (
                                                 <div className="item-dropdown">
@@ -284,10 +296,14 @@ export default function Header() {
                                                         onClick={closeMenu2}
                                                     >
                                                         <NavLink to="/create/nft">
-                                                            Create NFT
+                                                            {translateLang(
+                                                                "createnft"
+                                                            )}
                                                         </NavLink>
                                                         <NavLink to="/create/collection">
-                                                            Create Collection
+                                                            {translateLang(
+                                                                "createcollection"
+                                                            )}
                                                         </NavLink>
                                                     </div>
                                                 </div>
@@ -298,7 +314,7 @@ export default function Header() {
 
                                 <div className="navbar-item">
                                     <NavLink to="/lazy-mint">
-                                        Lazy Mint
+                                        {translateLang("lazymint")}
                                         <span className="lines"></span>
                                     </NavLink>
                                 </div>
@@ -309,15 +325,16 @@ export default function Header() {
                     <div className="mainside">
                         {!state.auth.isAuth ? (
                             <Link to="/signPage" className="btn-main">
-                                Log In
+                                {translateLang("btn_login")}
                             </Link>
                         ) : (
                             <button className="btn-main" onClick={logout}>
-                                Log Out
+                                {translateLang("btn_logout")}
                             </button>
                         )}
                     </div>
                 </div>
+
                 <button
                     className="nav-icon"
                     onClick={() => btn_icon(!showmenu)}

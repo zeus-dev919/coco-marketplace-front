@@ -1049,7 +1049,7 @@ p.lead {
 
             .mainside {
                 position: absolute;
-                right: 60px;
+                right: 100px;
                 top: 28px;
             }
 
@@ -1078,7 +1078,7 @@ p.lead {
         .nav-icon {
             position: absolute;
             top: 35px;
-            right: 25px;
+            right: 75px;
             display: block;
             width: 20px;
             height: 10px;
@@ -4457,7 +4457,7 @@ img.img-rounded {
     flex-direction: row;
     justify-content: space-between;
     padding: 8px;
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     border: none;
     border: solid 1px #d05e3b80;
     border-radius: 6px;

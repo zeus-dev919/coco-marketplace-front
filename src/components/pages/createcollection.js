@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NotificationManager } from "react-notifications";
 
 import Footer from "../components/footer";
@@ -6,7 +6,7 @@ import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
 export default function CreateCollection() {
-    const [state, {}] = useBlockchainContext();
+    const [state, { translateLang }] = useBlockchainContext();
 
     const [logoImage, _setLogoImage] = useState(null);
     const [selectedLogoFile, setSeletedLogoFile] = useState(null);
@@ -135,7 +135,7 @@ export default function CreateCollection() {
                         <div className="row m-10-hor">
                             <div className="col-12">
                                 <h1 className="text-center">
-                                    Create New Collection
+                                    {translateLang("createcollection_title")}
                                 </h1>
                             </div>
                         </div>
@@ -149,7 +149,8 @@ export default function CreateCollection() {
                         <div id="form-create-item" className="form-border">
                             <div className="field-set">
                                 <h5>
-                                    Logo Image <b style={{ color: "red" }}>*</b>
+                                    {translateLang("logoimage")}{" "}
+                                    <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <p>
                                     This image will also be used for navigation.
@@ -170,7 +171,7 @@ export default function CreateCollection() {
                                             <input
                                                 type="button"
                                                 className="btn-main"
-                                                value="Browse"
+                                                value={translateLang("browse")}
                                             />
                                             <input
                                                 id="upload_file"
@@ -185,7 +186,7 @@ export default function CreateCollection() {
                                 <div className="spacer-single"></div>
 
                                 <h5>
-                                    Banner Image{" "}
+                                    {translateLang("bannerimage")}{" "}
                                     <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <p>
@@ -207,7 +208,7 @@ export default function CreateCollection() {
                                         <input
                                             type="button"
                                             className="btn-main"
-                                            value="Browse"
+                                            value={translateLang("browse")}
                                         />
                                         <input
                                             id="upload_file"
@@ -221,7 +222,8 @@ export default function CreateCollection() {
 
                                 <div className="spacer-single"></div>
                                 <h5>
-                                    Name <b style={{ color: "red" }}>*</b>
+                                    {translateLang("name")}{" "}
+                                    <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <input
                                     type="text"
@@ -235,7 +237,7 @@ export default function CreateCollection() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>External link</h5>
+                                <h5>{translateLang("externallink")}</h5>
                                 <p>
                                     Crypto-Coco will include a link to this URL
                                     on this item"'"s detail page, so that users
@@ -254,7 +256,7 @@ export default function CreateCollection() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Description</h5>
+                                <h5>{translateLang("description")}</h5>
                                 <p>
                                     The description will be included on the
                                     item"'"s detail page underneath its image.
@@ -271,7 +273,7 @@ export default function CreateCollection() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Percentage fee</h5>
+                                <h5>{translateLang("percentagefee")}</h5>
                                 <p>
                                     Collect a fee when a user re-sells an item
                                     you originally created. This is deducted
@@ -293,7 +295,7 @@ export default function CreateCollection() {
                                         type="button"
                                         id="submit"
                                         className="btn-main"
-                                        value="Create Item"
+                                        value={translateLang("btn_createitem")}
                                         onClick={handleSubmit}
                                     />
                                 ) : (

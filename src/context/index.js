@@ -7,12 +7,10 @@ import React, {
 } from "react";
 import { ethers } from "ethers";
 import { useQuery } from "@apollo/client";
-// import { NotificationManager } from "react-notifications";
 import decode from "jwt-decode";
 import axios from "axios";
 
 import {
-    testToken,
     getNFTContract,
     getTokenContract,
     marketplaceContract,
@@ -27,6 +25,8 @@ import {
     GET_COLLECTIONNFTS,
 } from "../components/gql";
 import addresses from "../contracts/contracts/addresses.json";
+
+import { translations } from "../components/language/translate";
 
 const BlockchainContext = createContext();
 
@@ -64,6 +64,7 @@ const INIT_STATE = {
         isAuth: false,
         user: "",
         address: "",
+        bio: "",
         signer: {},
         privateKey: "",
     },
@@ -73,6 +74,7 @@ const INIT_STATE = {
     },
     balances: [],
     currencies: Currency,
+    lang: "en",
 };
 
 export default function Provider({ children }) {
@@ -83,8 +85,13 @@ export default function Provider({ children }) {
         setTimeout(() => {
             checkPrice();
         }, 15000);
+
+        let savedLang = localStorage.getItem("lang");
+        if (savedLang) setLanguage({ newLang: savedLang });
+        else setLanguage({ newLang: "en" });
     }, []);
 
+    /** Begin GraphQL Query */
     const {
         data: nftsData,
         loading: nftsLoading,
@@ -119,6 +126,7 @@ export default function Provider({ children }) {
     } = useQuery(GET_USERSINFO, {
         pollInterval: 500,
     });
+    /** End GraphQL Query */
 
     useEffect(() => {
         if (nftsLoading || nftsError) {
@@ -192,6 +200,21 @@ export default function Provider({ children }) {
         })();
     }, [state.auth]);
 
+    // set language
+    const setLanguage = (props) => {
+        const { newLang } = props;
+        dispatch({
+            type: "lang",
+            payload: newLang,
+        });
+
+        localStorage.setItem("lang", newLang);
+    };
+
+    const translateLang = (txt) => {
+        return translations[state.lang][txt];
+    };
+
     // auth
     const updateAuth = (token) => {
         var data = decode(token);
@@ -230,6 +253,7 @@ export default function Provider({ children }) {
             },
         });
     };
+
     // coin check
     const checkBalances = async (tokenaddresses) => {
         try {
@@ -261,7 +285,7 @@ export default function Provider({ children }) {
         }
     };
 
-    // NFT manage
+    // NFT mint
     const mintNFT = async (url, collection) => {
         const NFTContract1 = getNFTContract(collection);
 
@@ -335,6 +359,7 @@ export default function Provider({ children }) {
         }
     };
 
+    // on sale lazy nfts
     const onsaleLazyNFT = async (props) => {
         const { tokenId, priceGwei, currency, expiresAt, singature } = props;
         const signedLazyContract = storeFontContract.connect(state.auth.signer);
@@ -498,6 +523,8 @@ export default function Provider({ children }) {
                         bidApprove,
                         updateAuth,
                         getCurrency,
+                        setLanguage,
+                        translateLang,
                     },
                 ],
                 [
@@ -512,6 +539,8 @@ export default function Provider({ children }) {
                     bidNFT,
                     bidApprove,
                     updateAuth,
+                    setLanguage,
+                    translateLang,
                 ]
             )}
         >

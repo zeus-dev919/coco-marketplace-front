@@ -13,7 +13,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function Collection() {
-    const [state, {}] = useBlockchainContext();
+    const [state, { translateLang }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
 
     const handleBtnClick = () => {
@@ -75,12 +75,12 @@ export default function Collection() {
                             <ul className="de_nav text-left">
                                 <li id="Mainbtn" className="active">
                                     <span onClick={handleBtnClick}>
-                                        My NFTs
+                                        {translateLang("mynft")}
                                     </span>
                                 </li>
                                 <li id="Mainbtn1" className="">
                                     <span onClick={handleBtnClick1}>
-                                        Profile
+                                        {translateLang("profile")}
                                     </span>
                                 </li>
                             </ul>

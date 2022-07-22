@@ -8,6 +8,7 @@ import { createGlobalStyle } from "styled-components";
 import Reveal from "react-awesome-reveal";
 import { keyframes } from "@emotion/react";
 import { Link } from "react-router-dom";
+import { useBlockchainContext } from "../../context";
 
 const fadeInUp = keyframes`
   0% {
@@ -70,6 +71,8 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 export default function Homethree() {
+    const [state, { translateLang }] = useBlockchainContext();
+
     return (
         <div>
             <GlobalStyles />
@@ -130,7 +133,7 @@ export default function Homethree() {
                                 triggerOnce
                             >
                                 <Link to="/explore" className="btn-main lead">
-                                    Explore
+                                    {translateLang("explore")}
                                 </Link>
                                 <div className="mb-sm-30"></div>
                             </Reveal>

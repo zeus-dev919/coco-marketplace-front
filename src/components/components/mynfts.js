@@ -21,7 +21,6 @@ export default function Responsive() {
     useEffect(() => {
         if (state.allNFT !== []) {
             let bump = [];
-            // console.log(state.allNFT);
             state.allNFT.map((item) => {
                 if (
                     item.owner === state.userInfo.address ||
