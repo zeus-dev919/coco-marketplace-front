@@ -61,13 +61,25 @@ export default function Responsive(props) {
                     return;
                 }
 
-                const txOnSale = await onsaleLazyNFT({
-                    tokenId: correctCollection.tokenID,
-                    priceGwei: priceGwei,
-                    currency: currency,
-                    expiresAt: moment(date).valueOf(),
-                    singature: lazyAction.result,
-                });
+                let txOnSale = null;
+                if (correctCollection.isOffchain == true) {
+                    txOnSale = await onsaleLazyNFT({
+                        tokenId: correctCollection.tokenID,
+                        priceGwei: priceGwei,
+                        currency: currency,
+                        expiresAt: moment(date).valueOf(),
+                        singature: lazyAction.result,
+                    });
+                } else {
+                    txOnSale = await onsaleNFT({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        currency: currency,
+                        price: price,
+                        expiresAt: moment(date).valueOf(),
+                        flag: 2,
+                    });
+                }
 
                 if (txOnSale)
                     NotificationManager.success("Successfully listing");
@@ -80,6 +92,7 @@ export default function Responsive(props) {
                     currency: currency,
                     price: price,
                     expiresAt: moment(date).valueOf(),
+                    flag: 1,
                 })
                     .then((res) => {
                         if (res) {

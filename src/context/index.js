@@ -273,30 +273,62 @@ export default function Provider({ children }) {
     // NFT on sale
     const onsaleNFT = async (props) => {
         try {
-            const { nftAddress, assetId, currency, price, expiresAt } = props;
+            const { nftAddress, assetId, currency, price, expiresAt, flag } =
+                props;
 
-            const NFTContract = getNFTContract(nftAddress);
-            const signedNFTContract1 = NFTContract.connect(state.auth.signer);
-            const tx = await signedNFTContract1.approve(
-                addresses.Marketplace,
-                toBigNum(assetId, 0)
-            );
-            await tx.wait();
+            if (flag === 1) {
+                const NFTContract = getNFTContract(nftAddress);
+                const signedNFTContract1 = NFTContract.connect(
+                    state.auth.signer
+                );
+                const tx = await signedNFTContract1.approve(
+                    addresses.Marketplace,
+                    toBigNum(assetId, 0)
+                );
+                await tx.wait();
 
-            const signedMarketplaceContract = marketplaceContract.connect(
-                state.auth.signer
-            );
-            const tx1 = await signedMarketplaceContract.createOrder(
-                nftAddress,
-                state.auth.address,
-                assetId,
-                currency,
-                toBigNum(price, 18),
-                expiresAt
-            );
-            await tx1.wait();
+                let bigprice = toBigNum(price, 18);
 
-            return true;
+                const signedMarketplaceContract = marketplaceContract.connect(
+                    state.auth.signer
+                );
+                const tx1 = await signedMarketplaceContract.createOrder(
+                    nftAddress,
+                    state.auth.address,
+                    assetId,
+                    currency,
+                    bigprice,
+                    expiresAt
+                );
+                await tx1.wait();
+
+                return true;
+            } else {
+                const NFTContract = getNFTContract(nftAddress);
+                const signedNFTContract1 = NFTContract.connect(
+                    state.auth.signer
+                );
+                const tx = await signedNFTContract1.approve(
+                    addresses.Marketplace,
+                    assetId
+                );
+                await tx.wait();
+
+                const signedMarketplaceContract = marketplaceContract.connect(
+                    state.auth.signer
+                );
+                const tx1 = await signedMarketplaceContract.createOrder(
+                    nftAddress,
+                    state.auth.address,
+                    assetId,
+                    currency,
+                    toBigNum(price, 18),
+                    expiresAt
+                );
+                await tx1.wait();
+
+                return true;
+            }
         } catch (err) {
             console.log(err);
             return false;

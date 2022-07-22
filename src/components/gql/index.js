@@ -33,6 +33,7 @@ const GET_COLLECTIONNFTS = gql`
                 likes
                 creator
                 owner
+                isOffchain
                 marketdata {
                     bidder
                     bidPrice
@@ -62,6 +63,7 @@ const GET_ALLNFTS = gql`
             likes
             creator
             owner
+            isOffchain
             metadata {
                 image
                 external_url1
