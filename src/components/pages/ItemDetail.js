@@ -227,7 +227,7 @@ export default function Colection() {
                                                     ?.external_url4
                                             }
                                         >
-                                            <i className="fa fa-medium"></i>
+                                            <i className="fa fa-pinterest-square"></i>
                                         </a>
                                     )}
                                 </div>
