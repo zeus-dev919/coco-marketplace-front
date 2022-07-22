@@ -7,7 +7,7 @@ import { useBlockchainContext } from "../../context";
 import Addresses from "../../contracts/contracts/addresses.json";
 
 export default function Createpage() {
-    const [state, { mintNFT }] = useBlockchainContext();
+    const [state, { mintNFT, translateLang }] = useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
     const [name, setName] = useState("");
@@ -183,7 +183,7 @@ export default function Createpage() {
                         <div className="row m-10-hor">
                             <div className="col-12">
                                 <h1 className="text-center">
-                                    Create New NFT Item
+                                    {translateLang("createnft_title")}
                                 </h1>
                             </div>
                         </div>
@@ -197,7 +197,7 @@ export default function Createpage() {
                         <div id="form-create-item" className="form-border">
                             <div className="field-set">
                                 <h5>
-                                    Upload Media{" "}
+                                    {translateLang("uploadmedia")}{" "}
                                     <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <p>
@@ -216,7 +216,7 @@ export default function Createpage() {
                                         <input
                                             type="button"
                                             className="btn-main"
-                                            value="Browse"
+                                            value={translateLang("browse")}
                                         />
                                         <input
                                             id="upload_file"
@@ -229,7 +229,8 @@ export default function Createpage() {
                                 </div>
                                 <div className="spacer-single"></div>
                                 <h5>
-                                    Name <b style={{ color: "red" }}>*</b>
+                                    {translateLang("name")}{" "}
+                                    <b style={{ color: "red" }}>*</b>
                                 </h5>
                                 <input
                                     type="text"
@@ -243,7 +244,7 @@ export default function Createpage() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>External link</h5>
+                                <h5>{translateLang("externallink")}</h5>
                                 <p>
                                     Crypto-Coco will include a link to this URL
                                     on this item"'"s detail page, so that users
@@ -308,7 +309,7 @@ export default function Createpage() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Description</h5>
+                                <h5>{translateLang("description")}</h5>
                                 <p>
                                     The description will be included on the
                                     item"'"s detail page underneath its image.
@@ -325,7 +326,7 @@ export default function Createpage() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Collection</h5>
+                                <h5>{translateLang("choosecollection")}</h5>
                                 <p>
                                     This is the collection where your item will
                                     appear.
@@ -346,7 +347,7 @@ export default function Createpage() {
 
                                 <div className="spacer-30"></div>
 
-                                <h5>Attribute</h5>
+                                <h5>{translateLang("attribute")}</h5>
                                 <p>Textual traits that show up as rectangles</p>
                                 {Object.keys(attrItem).map((item, index) => (
                                     <div className="attribute" key={index}>
@@ -407,7 +408,7 @@ export default function Createpage() {
                                         type="button"
                                         id="submit"
                                         className="btn-main"
-                                        value="Create Item"
+                                        value={translateLang("btn_createitem")}
                                         onClick={handleSubmit}
                                     />
                                 ) : (
@@ -423,7 +424,7 @@ export default function Createpage() {
                     </div>
 
                     <div className="col-lg-3 col-sm-12 col-xs-12">
-                        <h5>Preview item</h5>
+                        <h5>{translateLang("previewitem")}</h5>
                         <div className="nft__item m-0">
                             <div className="author_list_pp">
                                 <span>
@@ -455,7 +456,7 @@ export default function Createpage() {
                                 <span>
                                     <p>
                                         {name.trim() === ""
-                                            ? "unknown"
+                                            ? translateLang("unknown")
                                             : name.length > 20
                                             ? name.slice(0, 20) + "..."
                                             : name}

@@ -15,8 +15,10 @@ const Outer = styled.div`
 `;
 
 export default function Responsive() {
-    const [state, { dispatch, updateAuth, checkBalances }] =
-        useBlockchainContext();
+    const [
+        state,
+        { dispatch, updateAuth, checkBalances, setLanguage, translateLang },
+    ] = useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -38,6 +40,10 @@ export default function Responsive() {
         let tokenlist = state.currencies.map((currency) => currency.value);
         checkBalances(tokenlist);
     }, []);
+
+    const setLang = (e) => {
+        setLanguage({ newLang: e.target.value });
+    };
 
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
@@ -120,10 +126,10 @@ export default function Responsive() {
         <div className="row">
             <div className="col-lg-5 col-md-6 col-sm-6 col-xs-12">
                 <div className="field-set">
-                    <h5>My Balance</h5>
+                    <h5>{translateLang("mybalance")}</h5>
                     <select className="form-control">
                         {state.currencies.map((item, index) => (
-                            <option defaultChecked={index === 0 ? true : false}>
+                            <option selected={index === 0 ? true : false}>
                                 {Number(state.balances[index]).toFixed(2)}
                                 {"  "}
                                 {item.label}
@@ -136,7 +142,8 @@ export default function Responsive() {
                             </option>
                         ))}
                     </select>
-                    <h5>Wallet Address</h5>
+                    <div className="spacer-20"></div>
+                    <h5>{translateLang("walletaddress")}</h5>
                     <div
                         className="text_copy noselect"
                         style={{ color: "grey", textAlign: "left" }}
@@ -149,7 +156,7 @@ export default function Responsive() {
                     </div>
                     {showPri ? (
                         <>
-                            <h5>Private Key</h5>
+                            <h5>{translateLang("privatekey")}</h5>
                             <div
                                 className="text_copy noselect"
                                 style={{ color: "grey", textAlign: "left" }}
@@ -165,9 +172,30 @@ export default function Responsive() {
                         ""
                     )}
                     <div className="spacer-20"></div>
+
+                    <h5>{translateLang("language")}</h5>
+                    <select
+                        className="form-control"
+                        onChange={(e) => setLang(e)}
+                    >
+                        <option
+                            value="en"
+                            selected={state.lang === "en" && true}
+                        >
+                            EN
+                        </option>
+                        <option
+                            value="jp"
+                            selected={state.lang === "jp" && true}
+                        >
+                            JP
+                        </option>
+                    </select>
+
+                    <div className="spacer-20"></div>
                     {edit ? (
                         <>
-                            <h5>Username</h5>
+                            <h5>{translateLang("username")}</h5>
                             <input
                                 type="text"
                                 name="item_name"
@@ -178,9 +206,9 @@ export default function Responsive() {
                                 value={newName}
                             />
 
-                            <div className="spacer-10"></div>
+                            <div className="spacer-20"></div>
 
-                            <h5>Bio</h5>
+                            <h5>{translateLang("bio")}</h5>
                             <textarea
                                 name="item_bio"
                                 id="item_bio"
@@ -190,9 +218,9 @@ export default function Responsive() {
                                 value={newBio}
                             />
 
-                            <div className="spacer-10"></div>
+                            <div className="spacer-20"></div>
 
-                            <h5>Email Address</h5>
+                            <h5>{translateLang("emailaddress")}</h5>
                             <input
                                 type="text"
                                 name="item_email"
@@ -209,7 +237,7 @@ export default function Responsive() {
                                 type="button"
                                 id="submit"
                                 className="btn-main"
-                                value="Save"
+                                value={translateLang("btn_save")}
                                 onClick={handleSave}
                                 disabled={loading}
                             />
@@ -218,15 +246,14 @@ export default function Responsive() {
                         </>
                     ) : (
                         <>
-                            <h5>Username</h5>
+                            <h5>{translateLang("username")}</h5>
                             <div className="userInfo_input">
                                 {state.auth?.name}
                             </div>
 
-                            <div className="spacer-10"></div>
                             {state.auth?.bio ? (
                                 <div>
-                                    <h5>Bio</h5>
+                                    <h5>{translateLang("bio")}</h5>
                                     <div className="userInfo_input">
                                         {state.auth?.bio}
                                     </div>
@@ -234,9 +261,8 @@ export default function Responsive() {
                             ) : (
                                 ""
                             )}
-                            <div className="spacer-10"></div>
 
-                            <h5>Email Address</h5>
+                            <h5>{translateLang("emailaddress")}</h5>
                             <div className="userInfo_input">
                                 {state.auth?.email}
                             </div>
@@ -244,16 +270,17 @@ export default function Responsive() {
                             <div className="spacer-10"></div>
                         </>
                     )}
+
                     <div style={{ display: "flex" }}>
                         <div
                             className="profile-btn"
                             style={{ marginRight: "10px" }}
                             onClick={editOnclick}
                         >
-                            Edit
+                            {translateLang("btn_edit")}
                         </div>
                         <div className="profile-btn" onClick={showPrivateKey}>
-                            Export Private
+                            {translateLang("btn_exportprivatekey")}
                         </div>
                     </div>
                     <div className="spacer-20"></div>

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 
 export default function Collections() {
-    const [state, {}] = useBlockchainContext();
+    const [state, { translateLang }] = useBlockchainContext();
     const navigate = useNavigate();
 
     const handle = (address) => {
@@ -18,7 +18,7 @@ export default function Collections() {
                 <div className="mainbreadcumb">
                     <div className="row m-10-hor">
                         <div className="col-12 text-center">
-                            <h1>Explore Collections</h1>
+                            <h1>{translateLang("allcollection_title")}</h1>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@ export default function Collections() {
                                         {item.metadata.name}
                                     </h4>
                                     <p className="text-center">
-                                        by{" "}
+                                        {translateLang("by")}{" "}
                                         <b className="color">
                                             {item.metadata.fee_recipent.slice(
                                                 0,

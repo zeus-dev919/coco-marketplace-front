@@ -16,7 +16,7 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const { collection } = useParams();
-    const [state, {}] = useBlockchainContext();
+    const [state, { translateLang }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [correctItem, setCorrectItem] = useState(null);
     const [owners, setOwners] = useState([]);
@@ -123,7 +123,7 @@ export default function Collection() {
 
                                         <div className="collection_info">
                                             <p className="text-center">
-                                                by{" "}
+                                                {translateLang("by")}{" "}
                                                 <b className="color">
                                                     Crypto-Coco
                                                 </b>
@@ -137,11 +137,17 @@ export default function Collection() {
                                                                 .length
                                                         }
                                                     </h3>
-                                                    <p>items</p>
+                                                    <p>
+                                                        {translateLang("items")}
+                                                    </p>
                                                 </div>
                                                 <div>
                                                     <h3>{owners.length}</h3>
-                                                    <p>owners</p>
+                                                    <p>
+                                                        {translateLang(
+                                                            "owners"
+                                                        )}
+                                                    </p>
                                                 </div>
                                                 <div>
                                                     <h3>
@@ -152,7 +158,11 @@ export default function Collection() {
                                                               )}
                                                         K
                                                     </h3>
-                                                    <p>floor price</p>
+                                                    <p>
+                                                        {translateLang(
+                                                            "prices"
+                                                        )}
+                                                    </p>
                                                 </div>
                                             </span>
                                         </div>
@@ -169,12 +179,12 @@ export default function Collection() {
                                     <ul className="de_nav">
                                         <li id="Mainbtn" className="active">
                                             <span onClick={handleBtnClick}>
-                                                onSaled
+                                                {translateLang("onsaled")}
                                             </span>
                                         </li>
                                         <li id="Mainbtn1" className="">
                                             <span onClick={handleBtnClick1}>
-                                                Owned
+                                                {translateLang("owned")}
                                             </span>
                                         </li>
                                     </ul>
