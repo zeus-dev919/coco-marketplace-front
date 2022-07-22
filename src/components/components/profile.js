@@ -35,6 +35,7 @@ export default function Responsive() {
             null,
             null
         );
+        checkBalances();
     }, []);
 
     const handleaddressCopy = () => {
