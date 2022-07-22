@@ -219,6 +219,17 @@ export default function Colection() {
                                             <i className="fa fa-instagram"></i>
                                         </a>
                                     )}
+                                    {itemData?.metadata?.external_url4 !=
+                                        "" && (
+                                        <a
+                                            href={
+                                                itemData?.metadata
+                                                    ?.external_url4
+                                            }
+                                        >
+                                            <i className="fa fa-medium"></i>
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                             {/* main panel */}
