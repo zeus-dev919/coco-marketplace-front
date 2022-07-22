@@ -5,6 +5,7 @@ import { useBlockchainContext } from "../../context";
 import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 import Action from "../../service";
+import { toBigNum } from "../../utils";
 
 export default function Responsive(props) {
     const navigate = useNavigate();
@@ -46,10 +47,11 @@ export default function Responsive(props) {
         try {
             setLoading(true);
             if (id.includes("0x")) {
+                let priceGwei = toBigNum(price, 18);
                 const lazyAction = await Action.lazy_onsale({
                     nftAddress: collection,
                     assetId: correctCollection.tokenID,
-                    price: price,
+                    priceGwei: priceGwei,
                     expiresAt: moment(date).valueOf(),
                 });
 
@@ -59,13 +61,25 @@ export default function Responsive(props) {
                     return;
                 }
 
-                const txOnSale = await onsaleLazyNFT({
-                    tokenId: correctCollection.tokenID,
-                    price: price,
-                    currency: currency,
-                    expiresAt: moment(date).valueOf(),
-                    singature: lazyAction.result,
-                });
+                let txOnSale = null;
+                if (correctCollection.isOffchain == true) {
+                    txOnSale = await onsaleLazyNFT({
+                        tokenId: correctCollection.tokenID,
+                        priceGwei: priceGwei,
+                        currency: currency,
+                        expiresAt: moment(date).valueOf(),
+                        singature: lazyAction.result,
+                    });
+                } else {
+                    txOnSale = await onsaleNFT({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        currency: currency,
+                        price: price,
+                        expiresAt: moment(date).valueOf(),
+                        flag: 2,
+                    });
+                }
 
                 if (txOnSale)
                     NotificationManager.success("Successfully listing");
@@ -78,6 +92,7 @@ export default function Responsive(props) {
                     currency: currency,
                     price: price,
                     expiresAt: moment(date).valueOf(),
+                    flag: 1,
                 })
                     .then((res) => {
                         if (res) {

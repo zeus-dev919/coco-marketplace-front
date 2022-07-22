@@ -35,7 +35,8 @@ export default function Responsive() {
             null,
             null
         );
-        checkBalances();
+        let tokenlist = state.currencies.map((currency) => currency.value);
+        checkBalances(tokenlist);
     }, []);
 
     const handleaddressCopy = () => {

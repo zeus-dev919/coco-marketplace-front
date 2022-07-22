@@ -8,7 +8,7 @@ function delay(delayTimes) {
 }
 
 function toBigNum(value, d = 18) {
-    return ethers.utils.parseUnits(Number(value).toFixed(d), d);
+    return ethers.utils.parseUnits(String(value), d);
 }
 
 function fromBigNum(value, d = 18) {

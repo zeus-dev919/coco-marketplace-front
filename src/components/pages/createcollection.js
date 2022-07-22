@@ -47,16 +47,16 @@ export default function CreateCollection() {
 
             const uploadData = await Action.create_collection(formData);
             if (uploadData) {
-                NotificationManager.success("image uploaded");
+                NotificationManager.success("Successfully Collection Creating");
                 reset();
             } else {
-                NotificationManager.error("upload failed");
+                NotificationManager.error("Creating failed");
             }
             setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
-            NotificationManager.error("Collection Create failed");
+            NotificationManager.error("Collection Creating failed");
         }
     };
 
