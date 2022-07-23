@@ -89,7 +89,8 @@ export default function Homethree() {
                             >
                                 <h6 className="">
                                     <span className="text-uppercase color">
-                                        Crypto-Coco NFT Marketplace
+                                        Crypto-Coco NFT{" "}
+                                        {translateLang("marketplace")}
                                     </span>
                                 </h6>
                             </Reveal>
@@ -102,7 +103,7 @@ export default function Homethree() {
                                 triggerOnce
                             >
                                 <h1 className="">
-                                    Discover, collect, and sell special NFTs
+                                    {translateLang("home_txt1")}
                                 </h1>
                             </Reveal>
                             <Reveal
@@ -113,14 +114,7 @@ export default function Homethree() {
                                 triggerOnce
                             >
                                 <p className=" lead">
-                                    The NFT marketplace will be linked to the
-                                    entire Crypto-Coco blockchain, allowing
-                                    users to trade NFTs at hyper-fast speeds and
-                                    unbeatable prices that’ll put every other
-                                    blockchain to shame. Since the marketplace
-                                    is in our blockchain ecosystem, there’s no
-                                    need to connect it to a separate wallet,
-                                    apps, etc.
+                                    {translateLang("home_txt2")}
                                 </p>
                             </Reveal>
                             <div className="spacer-10"></div>
@@ -148,7 +142,9 @@ export default function Homethree() {
             <section className="container no-top">
                 <div className="row">
                     <div className="col-lg-12">
-                        <h2 className="style-2">Notable Collections</h2>
+                        <h2 className="style-2">
+                            {translateLang("notablecollection")}
+                        </h2>
                     </div>
                 </div>
                 <div className="container no-top">
@@ -185,7 +181,9 @@ export default function Homethree() {
             <section className="container no-top">
                 <div className="row">
                     <div className="col-lg-12">
-                        <h2 className="style-2">Create and sell</h2>
+                        <h2 className="style-2">
+                            {translateLang("createandsell")}
+                        </h2>
                     </div>
                 </div>
                 <div className="container px-0">
