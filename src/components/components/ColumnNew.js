@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";
-import { fromBigNum } from "../../utils"
+import { fromBigNum } from "../../utils";
 
 export default function Responsive() {
     const navigate = useNavigate();
     const [height, setHeight] = useState(0);
-    const [state, { getCurrency }] = useBlockchainContext();
+    const [state, { getCurrency, translateLang }] = useBlockchainContext();
     const [filter, setFilter] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);
     const [modalShow, setModalShow] = useState(false);
@@ -131,12 +131,15 @@ export default function Responsive() {
                                       getCurrency(nft.marketdata.acceptedToken)
                                           ?.label}
                                 <span>
-                                    {nft.marketdata.bidders.length} bids
+                                    {nft.marketdata.bidders.length}{" "}
+                                    {translateLang("bid")}
                                 </span>
                             </div>
                             <div className="nft__item_action">
                                 {nft.marketdata.price === "" ? null : (
-                                    <span id={"buy" + index}>Buy Now</span>
+                                    <span id={"buy" + index}>
+                                        {translateLang("buynow")}
+                                    </span>
                                 )}
                             </div>
                             <div

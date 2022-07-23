@@ -1,6 +1,5 @@
 import React from "react";
-import { createGlobalStyle } from "styled-components";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import { useNavigate } from "react-router-dom";
 import { useBlockchainContext } from "../../context";
 

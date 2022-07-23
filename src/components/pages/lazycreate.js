@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
@@ -23,15 +23,15 @@ export default function LazyCreate() {
     const handleSubmit = async () => {
         try {
             if (!selectedFile) {
-                NotificationManager.error("please choose image");
+                NotificationManager.error(translateLang("chooseimage_error"));
                 return;
             }
             if (selectedFile.size > 1024 * 1024 * 100) {
-                NotificationManager.error("upload file is too big");
+                NotificationManager.error(translateLang("bigfileupload_error"));
                 return;
             }
             if (name.trim() === "") {
-                NotificationManager.error("please fill name");
+                NotificationManager.error(translateLang("fillname"));
                 document.getElementById("item_name").focus();
                 return;
             }
@@ -44,7 +44,7 @@ export default function LazyCreate() {
                             attrItem[x].value === ""
                         ) {
                             NotificationManager.error(
-                                "please fill all attribute or delete element"
+                                translateLang("fillattribute")
                             );
                             return;
                         }
@@ -52,7 +52,7 @@ export default function LazyCreate() {
                 } else {
                     if (attrItem[x].key === "" || attrItem[x].value === "") {
                         NotificationManager.error(
-                            "please fill all attribute or delete element"
+                            translateLang("fillattribute")
                         );
                         return;
                     }
@@ -71,20 +71,22 @@ export default function LazyCreate() {
 
             const uploadData = await Action.lazy_mint(formData);
             if (uploadData.success) {
-                NotificationManager.success("image uploaded");
+                NotificationManager.success(
+                    translateLang("imageupload_success")
+                );
                 reset();
             } else {
-                NotificationManager.error("upload failed");
+                NotificationManager.error(translateLang("uploadfail"));
             }
             setLoading(false);
         } catch (err) {
             console.log(err.code);
             if (err.code === 4001) {
-                NotificationManager.error("uploading rejected");
+                NotificationManager.error(translateLang("uploadreject"));
             } else if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
-                NotificationManager.error("Please check your balance");
+                NotificationManager.error(translateLang("checkBalance"));
             } else {
-                NotificationManager.error("NFT creat failed");
+                NotificationManager.error(translateLang("operation_error"));
             }
             setLoading(false);
         }
@@ -116,7 +118,7 @@ export default function LazyCreate() {
                 setSeletedFile(newImage);
             } catch (err) {
                 console.log(err);
-                NotificationManager.error("image loading error");
+                NotificationManager.error(translateLang("imageloading_error"));
             }
         }
     };

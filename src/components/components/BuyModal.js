@@ -8,7 +8,10 @@ import moment from "moment";
 
 export default function BuyModal(props) {
     const { buyFlag, show, setShow, correctItem } = props;
-    const [state, { checkBalances, buyNFT, bidNFT, getCurrency }] = useBlockchainContext();
+    const [
+        state,
+        { checkBalances, buyNFT, bidNFT, getCurrency, translateLang },
+    ] = useBlockchainContext();
     const [price, setPrice] = useState("");
     const [currency, setCurrency] = useState("BNB");
     const [date, setDate] = useState(new Date());
@@ -16,29 +19,30 @@ export default function BuyModal(props) {
     const [bidBtnFlag, setBidBtnFlag] = useState(true);
     const [buyBtnFlag, setBuyBtnFlag] = useState(true);
     const [loading, setLoading] = useState(false);
-    
+
     useEffect(() => {
         const initialDate = new Date();
         initialDate.setDate(initialDate.getDate() + 10);
         setDate(initialDate);
-    }, [])
+    }, []);
 
     useEffect(() => {
         const b = async () => {
-            let accpetedCurrency = getCurrency(correctItem.marketdata?.acceptedToken);
+            let accpetedCurrency = getCurrency(
+                correctItem.marketdata?.acceptedToken
+            );
             setCurrency(accpetedCurrency.label);
-            let result = await checkBalances([state.currencies[0].value, accpetedCurrency.value]);
+            let result = await checkBalances([
+                state.currencies[0].value,
+                accpetedCurrency.value,
+            ]);
             setMybalances(result);
         };
         b();
     }, [state.auth, correctItem]);
     useEffect(() => {
         if (correctItem) {
-            if (
-                mybalance[0] > price &&
-                price > 0 &&
-                moment(date).isValid()
-            ) {
+            if (mybalance[0] > price && price > 0 && moment(date).isValid()) {
                 setBidBtnFlag(false);
             } else {
                 setBidBtnFlag(true);
@@ -50,7 +54,7 @@ export default function BuyModal(props) {
                 setBuyBtnFlag(true);
             }
         }
-    }, [mybalance, date, price])
+    }, [mybalance, date, price]);
 
     const handle = (newDate) => {
         setDate(newDate);
@@ -58,12 +62,11 @@ export default function BuyModal(props) {
 
     const handleCopy = () => {
         navigator.clipboard.writeText(state.auth.address);
-        NotificationManager.success("address copied");
+        NotificationManager.success(translateLang("addresscopy_success"));
     };
 
     const handleBuy = async () => {
         try {
-
             setLoading(true);
             if (mybalance[0] < Number(correctItem?.marketdata.price)) {
                 return;
@@ -74,12 +77,12 @@ export default function BuyModal(props) {
                 assetId: correctItem?.tokenID,
                 price: correctItem?.marketdata.price,
                 acceptedToken: correctItem?.marketdata.acceptedToken,
-            })
-            NotificationManager.success("Successfully Buy NFT");
+            });
+            NotificationManager.success(translateLang("buynft_success"));
             setLoading(false);
         } catch (err) {
             console.log(err.message);
-            NotificationManager.error("Buy NFT Failed");
+            NotificationManager.error(translateLang("buynft_error"));
             setLoading(false);
         }
     };
@@ -90,7 +93,7 @@ export default function BuyModal(props) {
                 return;
             }
             if (price < Number(correctItem?.marketdata.bidPrice)) {
-                NotificationManager.error("Please increase bid price");
+                NotificationManager.warning(translateLang("increasebid_warn"));
                 return;
             }
 
@@ -102,11 +105,11 @@ export default function BuyModal(props) {
                 acceptedToken: correctItem?.marketdata.acceptedToken,
                 expiresAt: moment(date).valueOf(),
             });
-            NotificationManager.success("Successfully Bid NFT");
+            NotificationManager.success(translateLang("bid_success"));
             setLoading(false);
         } catch (err) {
             console.log(err.message);
-            NotificationManager.error("Failed Bid NFT");
+            NotificationManager.error(translateLang("bid_error"));
             setLoading(false);
         }
     };
@@ -122,25 +125,34 @@ export default function BuyModal(props) {
             {buyFlag === 1 ? (
                 <>
                     <Modal.Header>
-                        <Modal.Title>Buying NFT</Modal.Title>
+                        <Modal.Title>
+                            {translateLang("buyingnft_title")}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <span className="spacer-single"></span>
                         <h4 className="text-center">
-                            You need {correctItem?.marketdata.price} {currency} +{" "}
-                            <Link to="">gas fees</Link>
+                            {translateLang("youneed")}{" "}
+                            {correctItem?.marketdata.price} {currency} +{" "}
+                            <Link to="">{translateLang("gasfee")}</Link>
                         </h4>
                         <span className="spacer-10"></span>
                         <p className="text-center">
-                            Buy any NFT with {currency} token. It can take up to a
-                            minute for your balance update.
+                            Buy any NFT with {currency} token. It can take up to
+                            a minute for your balance update.
                         </p>
                         <span className="spacer-single"></span>
                         <div>
                             <span style={{ justifyContent: "space-between" }}>
-                                <h5>Wallet Address</h5>
-                                <p>Balance: {mybalance[1]} {currency}</p>
-                                <p>Balance: {mybalance[0]} BNB</p>
+                                <h5>{translateLang("walletaddress")}</h5>
+                                <p>
+                                    {translateLang("mybalance")}: {mybalance[1]}{" "}
+                                    {currency}
+                                </p>
+                                <p>
+                                    {translateLang("mybalance")}: {mybalance[0]}{" "}
+                                    BNB
+                                </p>
                             </span>
                             <div
                                 className="text_copy noselect"
@@ -157,39 +169,38 @@ export default function BuyModal(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="spacer-10"></div>
-                        {
-                            loading ? (
-                                <button className="btn-main">
-                                    <span
-                                        className="spinner-border spinner-border-sm"
-                                        aria-hidden="true"
-                                    ></span>
-                                </button>
-                            ) : (
-                                <button
-                                    className="btn-main"
-                                    onClick={handleBuy}
-                                    disabled={buyBtnFlag}
-                                >
-                                    Checkout
-                                </button>
-                            )
-                        }
+                        {loading ? (
+                            <button className="btn-main">
+                                <span
+                                    className="spinner-border spinner-border-sm"
+                                    aria-hidden="true"
+                                ></span>
+                            </button>
+                        ) : (
+                            <button
+                                className="btn-main"
+                                onClick={handleBuy}
+                                disabled={buyBtnFlag}
+                            >
+                                {translateLang("checkout")}
+                            </button>
+                        )}
                         <div className="spacer-10"></div>
                     </Modal.Footer>
                 </>
             ) : (
                 <>
                     <Modal.Header>
-                        <Modal.Title>Make an offer</Modal.Title>
+                        <Modal.Title>
+                            {translateLang("btn_makeoffer")}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <span className="spacer-single"></span>
                         <p className="text-center">
-                            To be recommended, it must be higher than the
-                            previous bid price.
+                            {translateLang("bidnote")}
                         </p>
-                        <h5>Price</h5>
+                        <h5>{translateLang("sellprice")}</h5>
                         <div className="price">
                             <div
                                 className="form-control"
@@ -225,7 +236,7 @@ export default function BuyModal(props) {
                         </p>
                         <div className="spacer-30"></div>
 
-                        <h5>Offer Expiration</h5>
+                        <h5>{translateLang("offerexpiration")}</h5>
                         <DateTimeField
                             dateTime={date}
                             onChange={handle}
@@ -241,24 +252,22 @@ export default function BuyModal(props) {
                     </Modal.Body>
                     <Modal.Footer>
                         <div className="spacer-10"></div>
-                        {
-                            loading ? (
-                                <button className="btn-main">
-                                    <span
-                                        className="spinner-border spinner-border-sm"
-                                        aria-hidden="true"
-                                    ></span>
-                                </button>
-                            ) : (
-                                <button
-                                    className="btn-main"
-                                    onClick={handleBid}
-                                    disabled={bidBtnFlag}
-                                >
-                                    Make Offer
-                                </button>
-                            )
-                        }
+                        {loading ? (
+                            <button className="btn-main">
+                                <span
+                                    className="spinner-border spinner-border-sm"
+                                    aria-hidden="true"
+                                ></span>
+                            </button>
+                        ) : (
+                            <button
+                                className="btn-main"
+                                onClick={handleBid}
+                                disabled={bidBtnFlag}
+                            >
+                                {translateLang("makeoffer")}
+                            </button>
+                        )}
                         <div className="spacer-10"></div>
                     </Modal.Footer>
                 </>

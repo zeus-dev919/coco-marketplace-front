@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import MyNFT from "../components/mynfts";
 import Profile from "../components/profile";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import { createGlobalStyle } from "styled-components";
 import { useBlockchainContext } from "../../context";
 

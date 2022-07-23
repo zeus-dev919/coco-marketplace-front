@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import { Link } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 

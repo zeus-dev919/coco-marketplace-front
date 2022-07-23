@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import Select from "react-select";
 
 import ColumnNew from "../components/ColumnNew";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import { useBlockchainContext } from "../../context";
 
 // const customStyles = {
