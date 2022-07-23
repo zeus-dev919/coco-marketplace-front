@@ -1,5 +1,24 @@
 export const translations = {
     en: {
+        // home
+        home_txt1: "Discover, collect, and sell special NFTs",
+        home_txt2:
+            "The NFT marketplace will be linked to the entire Crypto-Coco blockchain, allowing users to trade NFTs at hyper-fast speeds and unbeatable prices that’ll put every other blockchain to shame. Since the marketplace is in our blockchain ecosystem, there’s no need to connect it to a separate wallet, apps, etc.",
+        notablecollection: "Notable Collections",
+        createandsell: "Create and sell",
+        feature_title1: "Set up your wallet",
+        feature_txt1:
+            "Once you’ve set up your wallet of choice, connect it to Crypto-Coco by clicking the wallet in the top right corner.",
+        feature_title2: "Create your collection",
+        feature_txt2:
+            "Click My Collections and set up your collection. Add social links, a description, profile & banner images, and set a secondary sales fee.",
+        feature_title3: "Add your NFTs",
+        feature_txt3:
+            "Upload your NFTs (image, video, audio, or 3D art), add a title and description.",
+        feature_title4: "List them for sale",
+        feature_txt4:
+            "Choose between auctions, fixed-price listings, and declining-price listings. You choose how you want to sell your NFTs, and we help you sell them!",
+
         // sign in adn sign up
         signin_title: "Sign In",
         signin_txt1: "Please enter your UserName",
@@ -150,6 +169,25 @@ export const translations = {
         cancelorder_error: "Failed canceled order",
     },
     jp: {
+        // home
+        home_txt1: "特別なNFTを発見、収集、販売する",
+        home_txt2:
+            "NFTマーケットプレイスは、Crypto-Cocoブロックチェーン全体にリンクされ、ユーザーがNFTを超高速で無敵の価格で取引できるようになり、他のすべてのブロックチェーンが恥ずかしい思いをします。 マーケットプレイスはブロックチェーンエコシステム内にあるため、別のウォレットやアプリなどに接続する必要はありません。",
+        notablecollection: "注目すべきコレクション",
+        createandsell: "作成して販売する",
+        feature_title1: "ウォレットをセットアップする",
+        feature_txt1:
+            "選択したウォレットを設定したら、右上隅にあるウォレットをクリックしてCrypto-Cocoに接続します。",
+        feature_title2: "コレクションを作成する",
+        feature_txt2:
+            "[マイコレクション]をクリックして、コレクションを設定します。 ソーシャルリンク、説明、プロフィール、バナー画像を追加し、二次販売手数料を設定します。",
+        feature_title3: "NFTを追加する",
+        feature_txt3:
+            "NFT（画像、ビデオ、オーディオ、または3Dアート）をアップロードし、タイトルと説明を追加します。",
+        feature_title4: "それらを売りに出す",
+        feature_txt4:
+            "オークション、固定価格リスト、および下落価格リストから選択します。 NFTの販売方法を選択すると、NFTの販売に役立ちます。",
+
         // sign in adn sign up
         signin_title: "ログイン",
         signin_txt1: "ユーザー名を入力してください",
