@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import moment from "moment";
 import { createGlobalStyle } from "styled-components";
 import M_itemdetailRedux from "../components/M_ItemdetailRedex";
@@ -18,7 +18,7 @@ const GlobalStyles = createGlobalStyle`
 export default function Colection() {
     const { id, collection } = useParams();
     const navigate = useNavigate();
-    const [state, { bidApprove, cancelOrder, getCurrency }] =
+    const [state, { bidApprove, cancelOrder, getCurrency, translateLang }] =
         useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(true);
     const [correctCollection, setCorrectCollection] = useState(null);
@@ -138,12 +138,12 @@ export default function Colection() {
                     id: id,
                     price: itemData.marketdata.bidPrice,
                 });
-                NotificationManager.success("Successfully approve");
+                NotificationManager.success(translateLang("approve_succeess"));
                 setLoading(false);
             }
         } catch (err) {
             console.log(err.message);
-            NotificationManager.error("Failed approve");
+            NotificationManager.error(translateLang("approve_error"));
         }
     };
 
@@ -155,12 +155,14 @@ export default function Colection() {
                     nftAddress: collection,
                     assetId: id,
                 });
-                NotificationManager.success("Successfully canceled order");
+                NotificationManager.success(
+                    translateLang("cancelorder_success")
+                );
 
                 setLoading(false);
             } catch (err) {
                 console.log(err.message);
-                NotificationManager.error("Failed canceled order");
+                NotificationManager.error(translateLang("cancelorder_error"));
                 setLoading(false);
             }
         }
@@ -240,7 +242,7 @@ export default function Colection() {
                                     "" ? null : (
                                         <span>
                                             <p>
-                                                Sale ends{" "}
+                                                {translateLang("saletime")}{" "}
                                                 {moment(
                                                     Number(
                                                         itemData?.marketdata
@@ -253,19 +255,35 @@ export default function Colection() {
                                                 <div>
                                                     <span>
                                                         <h3>{expireTime[0]}</h3>
-                                                        <p>Day</p>
+                                                        <p>
+                                                            {translateLang(
+                                                                "day"
+                                                            )}
+                                                        </p>
                                                     </span>
                                                     <span>
                                                         <h3>{expireTime[1]}</h3>
-                                                        <p>Hour</p>
+                                                        <p>
+                                                            {translateLang(
+                                                                "hour"
+                                                            )}
+                                                        </p>
                                                     </span>
                                                     <span>
                                                         <h3>{expireTime[2]}</h3>
-                                                        <p>Minute</p>
+                                                        <p>
+                                                            {translateLang(
+                                                                "minute"
+                                                            )}
+                                                        </p>
                                                     </span>
                                                     <span>
                                                         <h3>{expireTime[3]}</h3>
-                                                        <p>Second</p>
+                                                        <p>
+                                                            {translateLang(
+                                                                "second"
+                                                            )}
+                                                        </p>
                                                     </span>
                                                 </div>
                                             )}
@@ -303,7 +321,7 @@ export default function Colection() {
                                     </div>
                                     <p>{itemData?.metadata?.description}</p>
                                     <div className="spacer-10"></div>
-                                    <h5>Creator</h5>
+                                    <h5>{translateLang("creator")}</h5>
                                     <div className="item_author">
                                         <div className="author_list_pp">
                                             <span>
@@ -362,7 +380,9 @@ export default function Colection() {
                                                                 handleBtnClick
                                                             }
                                                         >
-                                                            Bids
+                                                            {translateLang(
+                                                                "bid"
+                                                            )}
                                                         </span>
                                                     </li>
                                                     <li
@@ -374,7 +394,9 @@ export default function Colection() {
                                                                 handleBtnClick1
                                                             }
                                                         >
-                                                            History
+                                                            {translateLang(
+                                                                "history"
+                                                            )}
                                                         </span>
                                                     </li>
                                                 </ul>
@@ -404,7 +426,9 @@ export default function Colection() {
                                                                             </span>
                                                                         </div>
                                                                         <div className="p_list_info">
-                                                                            Bid{" "}
+                                                                            {translateLang(
+                                                                                "bid"
+                                                                            )}{" "}
                                                                             <b>
                                                                                 {
                                                                                     itemData
@@ -415,13 +439,17 @@ export default function Colection() {
                                                                                 }{" "}
                                                                             </b>
                                                                             <span>
-                                                                                by{" "}
+                                                                                {translateLang(
+                                                                                    "by"
+                                                                                )}{" "}
                                                                                 <b>
                                                                                     {styledAddress(
                                                                                         bidder
                                                                                     )}
                                                                                 </b>{" "}
-                                                                                at{" "}
+                                                                                {translateLang(
+                                                                                    "at"
+                                                                                )}{" "}
                                                                                 {itemData
                                                                                     ?.marketdata
                                                                                     ?.bidTime
@@ -493,7 +521,9 @@ export default function Colection() {
                                                         className="btn-main"
                                                         onClick={handleSell}
                                                     >
-                                                        Sell
+                                                        {translateLang(
+                                                            "btn_sell"
+                                                        )}
                                                     </button>
                                                 ) : pageFlag === 2 ? (
                                                     <div>
@@ -511,7 +541,9 @@ export default function Colection() {
                                                                     handleCancel
                                                                 }
                                                             >
-                                                                Cancel
+                                                                {translateLang(
+                                                                    "btn_cancel"
+                                                                )}
                                                             </button>
                                                         )}
                                                         {loading ? (
@@ -528,7 +560,9 @@ export default function Colection() {
                                                                     handleApproveBid
                                                                 }
                                                             >
-                                                                Approve Bid
+                                                                {translateLang(
+                                                                    "btn_approvebid"
+                                                                )}
                                                             </button>
                                                         )}
                                                     </div>
@@ -538,13 +572,17 @@ export default function Colection() {
                                                             className="btn-main"
                                                             onClick={handleBuy}
                                                         >
-                                                            Buy NFT
+                                                            {translateLang(
+                                                                "btn_buynow"
+                                                            )}
                                                         </button>
                                                         <button
                                                             className="btn-main"
                                                             onClick={handleBid}
                                                         >
-                                                            Make Offer
+                                                            {translateLang(
+                                                                "btn_makeoffer"
+                                                            )}
                                                         </button>
                                                     </div>
                                                 )}

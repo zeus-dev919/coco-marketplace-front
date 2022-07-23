@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 import ColumnZero from "../components/ColumnZero";
 import CoulmnOne from "../components/CoulmnOne";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import { useBlockchainContext } from "../../context";
 import { copyToClipboard } from "../../utils";
 import { NotificationManager } from "react-notifications";
@@ -65,10 +65,12 @@ export default function Collection() {
     const handleaddressCopy = () => {
         copyToClipboard(correctItem.address)
             .then((res) => {
-                NotificationManager.success("address copied");
+                NotificationManager.success(
+                    translateLang("addresscopy_success")
+                );
             })
             .catch((err) => {
-                NotificationManager.success(err.message);
+                NotificationManager.error(translateLang("operation_error"));
             });
     };
 

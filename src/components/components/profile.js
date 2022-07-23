@@ -48,19 +48,23 @@ export default function Responsive() {
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
             .then((res) => {
-                NotificationManager.success("address copied");
+                NotificationManager.success(
+                    translateLang("addresscopy_success")
+                );
             })
             .catch((err) => {
-                NotificationManager.success(err.message);
+                NotificationManager.success(translateLang("operation_error"));
             });
     };
     const handleprivateCopy = () => {
         copyToClipboard(state.auth.privateKey)
             .then((res) => {
-                NotificationManager.success("privatekey copied");
+                NotificationManager.success(
+                    translateLang("privatekeycopy_success")
+                );
             })
             .catch((err) => {
-                NotificationManager.success(err.message);
+                NotificationManager.error(translateLang("operation_error"));
             });
     };
 
@@ -80,10 +84,10 @@ export default function Responsive() {
             var res = await axios.post("/api/user-update", formData);
             updateAuth(res.data.data);
 
-            NotificationManager.success("Update success");
+            NotificationManager.success(translateLang("update_success"));
         } catch (err) {
             console.log(err.message);
-            NotificationManager.error(err.message);
+            NotificationManager.error(translateLang("operation_error"));
             setLoadItem(false);
         }
         setLoadItem(false);
@@ -109,7 +113,7 @@ export default function Responsive() {
                 setSeletedFile(newImage);
             } catch (err) {
                 console.log(err);
-                NotificationManager.error("image loading error");
+                NotificationManager.error(translateLang("imageloading_error"));
             }
         }
     };

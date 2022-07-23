@@ -10,7 +10,8 @@ import { toBigNum } from "../../utils";
 export default function Responsive(props) {
     const navigate = useNavigate();
     const { id, collection } = props;
-    const [state, { onsaleNFT, onsaleLazyNFT }] = useBlockchainContext();
+    const [state, { onsaleNFT, onsaleLazyNFT, translateLang }] =
+        useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
     const [currency, setCurrency] = useState(state.currencies[0].value);
     const [price, setPrice] = useState("");
@@ -57,7 +58,7 @@ export default function Responsive(props) {
 
                 if (!lazyAction.success) {
                     setLoading(false);
-                    NotificationManager.error("Listing failed");
+                    NotificationManager.error(translateLang("listingerror"));
                     return;
                 }
 
@@ -82,8 +83,10 @@ export default function Responsive(props) {
                 }
 
                 if (txOnSale)
-                    NotificationManager.success("Successfully listing");
-                else NotificationManager.error("Listing failed");
+                    NotificationManager.success(
+                        translateLang("listing_success")
+                    );
+                else NotificationManager.error(translateLang("listingerror"));
                 setLoading(false);
             } else {
                 onsaleNFT({
@@ -96,9 +99,13 @@ export default function Responsive(props) {
                 })
                     .then((res) => {
                         if (res) {
-                            NotificationManager.success("Successfully listing");
+                            NotificationManager.success(
+                                translateLang("listing_success")
+                            );
                         } else {
-                            NotificationManager.error("Listing failed");
+                            NotificationManager.error(
+                                translateLang("listingerror")
+                            );
                         }
                         setLoading(false);
                     })
@@ -110,7 +117,7 @@ export default function Responsive(props) {
         } catch (err) {
             console.log(err);
             setLoading(false);
-            NotificationManager.error("Operation failed");
+            NotificationManager.error(translateLang("operation_error"));
         }
     };
 
@@ -125,7 +132,7 @@ export default function Responsive(props) {
                             <div id="form-create-item" className="form-border">
                                 <div className="field-set">
                                     <div>
-                                        <h5>Method</h5>
+                                        <h5>{translateLang("method")}</h5>
                                         <p
                                             className="form-control"
                                             style={{
@@ -142,10 +149,12 @@ export default function Responsive(props) {
                                                     fontWeight: "bolder",
                                                 }}
                                             />
-                                            <span>Sell to highest bidder</span>
+                                            <span>
+                                                {translateLang("sellnote")}
+                                            </span>
                                         </p>
                                         <div className="spacer-single"></div>
-                                        <h5>Price</h5>
+                                        <h5>{translateLang("sellprice")}</h5>
                                         <div className="price">
                                             <div
                                                 style={{
@@ -181,7 +190,9 @@ export default function Responsive(props) {
                                                 style={{
                                                     flex: "4 4 0",
                                                 }}
-                                                placeholder="Amount"
+                                                placeholder={translateLang(
+                                                    "amount"
+                                                )}
                                                 value={price}
                                                 onChange={(e) =>
                                                     setPrice(e.target.value)
@@ -189,7 +200,7 @@ export default function Responsive(props) {
                                             />
                                         </div>
                                         <div className="spacer-30"></div>
-                                        <h5>ExpiresAt</h5>
+                                        <h5>{translateLang("expiredate")}</h5>
                                         <DateTimeField
                                             dateTime={date}
                                             onChange={handle}
@@ -204,9 +215,9 @@ export default function Responsive(props) {
                                     </div>
 
                                     <hr />
-                                    <h5>Fees</h5>
+                                    <h5>{translateLang("fees")}</h5>
                                     <div className="fee">
-                                        <p>Service Fee</p>
+                                        <p>{translateLang("servicefee")}</p>
                                         <p>0.2%</p>
                                     </div>
 
@@ -229,7 +240,9 @@ export default function Responsive(props) {
                                             }
                                             onClick={handlelist}
                                         >
-                                            Complete listing
+                                            {translateLang(
+                                                "btn_completelisting"
+                                            )}
                                         </button>
                                     )}
                                 </div>
@@ -238,7 +251,7 @@ export default function Responsive(props) {
 
                         <div className="col-lg-3 col-sm-12 col-xs-12">
                             <div style={{ position: "sticky", top: "162px" }}>
-                                <h5>Preview</h5>
+                                <h5>{translateLang("previewitem")}</h5>
                                 <div className="nft__item m-0">
                                     <div className="author_list_pp">
                                         <span>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NotificationManager } from "react-notifications";
 
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 
@@ -21,19 +21,21 @@ export default function CreateCollection() {
     const handleSubmit = async () => {
         try {
             if (!selectedLogoFile) {
-                NotificationManager.error("please select logo image");
+                NotificationManager.error(translateLang("chooselogo_error"));
                 return;
             }
             if (!selectedBannerFile) {
-                NotificationManager.error("please select logo image");
+                NotificationManager.error(translateLang("choosebanner_error"));
                 return;
             }
             if (name.trim() === "") {
-                NotificationManager.error("please input collection name");
+                NotificationManager.error(
+                    translateLang("fillcollection_error")
+                );
                 return;
             }
             if (fee < 0) {
-                NotificationManager.error("fee must be integer");
+                NotificationManager.error(translateLang("fillfee_error"));
                 return;
             }
             setLoading(true);
@@ -47,16 +49,20 @@ export default function CreateCollection() {
 
             const uploadData = await Action.create_collection(formData);
             if (uploadData) {
-                NotificationManager.success("Successfully Collection Creating");
+                NotificationManager.success(
+                    translateLang("createcollection_success")
+                );
                 reset();
             } else {
-                NotificationManager.error("Creating failed");
+                NotificationManager.error(
+                    translateLang("createcollection_error")
+                );
             }
             setLoading(false);
         } catch (err) {
             setLoading(false);
             console.log(err);
-            NotificationManager.error("Collection Creating failed");
+            NotificationManager.error(translateLang("operation_error"));
         }
     };
 
@@ -83,7 +89,7 @@ export default function CreateCollection() {
                 setSeletedLogoFile(newImage);
             } catch (err) {
                 console.log(err);
-                NotificationManager.error("image loading error");
+                NotificationManager.error(translateLang("imageloading_error"));
             }
         }
     };
@@ -100,7 +106,7 @@ export default function CreateCollection() {
                 setSeletedBannerFile(newImage);
             } catch (err) {
                 console.log(err);
-                NotificationManager.error("image loading error");
+                NotificationManager.error(translateLang("imageloading_error"));
             }
         }
     };

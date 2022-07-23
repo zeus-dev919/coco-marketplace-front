@@ -13,7 +13,7 @@ const SignIn = (props) => {
     const { auth } = props;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const [state, { dispatch }] = useBlockchainContext();
+    const [state, { dispatch, translateLang }] = useBlockchainContext();
 
     const userName = (val) => {
         setName(val);
@@ -31,7 +31,7 @@ const SignIn = (props) => {
         };
         const response = await Action.user_login(user);
         if (!response) {
-            NotificationManager.error("Not find Account!");
+            NotificationManager.error(translateLang("nofoundaccount_error"));
 
             dispatch({
                 type: "auth",
@@ -55,7 +55,7 @@ const SignIn = (props) => {
                 },
             });
             axios.defaults.headers.common["Authorization"] = response.data;
-            NotificationManager.success("Signed In successfully!");
+            NotificationManager.success(translateLang("sigin_success"));
 
             const origin = location.state?.from?.pathname || "/";
             navigate(origin);
@@ -65,17 +65,17 @@ const SignIn = (props) => {
     return (
         <div className="signin">
             <img src="./img/logo.png" width={"130px"}></img>
-            <div className="signin-header">Sign In</div>
+            <div className="signin-header">{translateLang("signin_title")}</div>
             <div className="signin-body">
                 <input
-                    placeholder="Please enter your UserName"
+                    placeholder={translateLang("signin_txt1")}
                     type={"text"}
                     onChange={(e) => {
                         userName(e.target.value);
                     }}
                 ></input>
                 <input
-                    placeholder="Please enter your Password"
+                    placeholder={translateLang("signin_txt2")}
                     type="password"
                     onChange={(e) => {
                         passWord(e.target.value);
@@ -83,15 +83,15 @@ const SignIn = (props) => {
                 ></input>
             </div>
             <div className="signin-button" onClick={() => signIn()}>
-                Sign In
+                {translateLang("signin_title")}
             </div>
             <div>
-                If you don"'"t have any account{" "}
+                {translateLang("signin_txt3")}{" "}
                 <span
                     style={{ color: "black", cursor: "pointer" }}
                     onClick={toSignUp}
                 >
-                    Sign Up
+                    {translateLang("signup_title")}
                 </span>
             </div>
         </div>

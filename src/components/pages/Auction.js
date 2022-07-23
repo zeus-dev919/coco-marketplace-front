@@ -1,10 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import ColumnAuction from "../components/ColumnAuction";
-import Footer from "../components/footer";
+import Footer from "../menu/footer";
+import { useBlockchainContext } from "../../context";
 
 export default function Explore() {
     const { id, collection } = useParams();
+    const [state, { translateLang }] = useBlockchainContext();
 
     return (
         <div>
@@ -14,7 +16,7 @@ export default function Explore() {
                         <div className="row m-10-hor">
                             <div className="col-12">
                                 <h1 className="text-center">
-                                    List item for sale
+                                    {translateLang("onsale_title")}
                                 </h1>
                             </div>
                         </div>

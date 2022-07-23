@@ -1,6 +1,6 @@
 import React from 'react';
 import emailjs from 'emailjs-com';
-import Footer from '../components/footer';
+import Footer from "../menu/footer";
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`

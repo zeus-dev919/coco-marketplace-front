@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Footer from "../components/footer";
+import React, { useState } from "react";
+import Footer from "../menu/footer";
 import SignIn from "../components/signin";
 import SignUp from "../components/signup";
 

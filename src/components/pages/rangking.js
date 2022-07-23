@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select'
-import Footer from '../components/footer';
+import Footer from "../menu/footer";
 
 
 const customStyles = {
