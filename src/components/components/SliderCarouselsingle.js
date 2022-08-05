@@ -85,44 +85,6 @@ export default function SlideCarousel() {
                         </div>
                     </div>
                 </CustomSlide>
-
-                <CustomSlide className="itm" index={2}>
-                    <div className="nft_pic">
-                        <div className="nft_pic_wrap">
-                            <img
-                                src={
-                                    state.allNFT[
-                                        Math.floor(
-                                            Math.random() * state.allNFT.length
-                                        )
-                                    ]?.metadata?.image ||
-                                    "../img/collections/coll-item-3.jpg"
-                                }
-                                className="lazy img-fluid"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-                </CustomSlide>
-
-                <CustomSlide className="itm" index={3}>
-                    <div className="nft_pic">
-                        <div className="nft_pic_wrap">
-                            <img
-                                src={
-                                    state.allNFT[
-                                        Math.floor(
-                                            Math.random() * state.allNFT.length
-                                        )
-                                    ]?.metadata?.image ||
-                                    "../img/collections/coll-item-3.jpg"
-                                }
-                                className="lazy img-fluid"
-                                alt=""
-                            />
-                        </div>
-                    </div>
-                </CustomSlide>
             </Slider>
         </div>
     );

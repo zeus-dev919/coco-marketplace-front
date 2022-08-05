@@ -66,7 +66,9 @@ export default function Collections() {
                                     </p>
                                     <div className="spacer-10"></div>
                                     <p className="card-text text-center">
-                                        {item.metadata.description}
+                                        {item.metadata.description === ""
+                                            ? "No description"
+                                            : item.metadata.description}
                                     </p>
                                 </div>
                             </div>
