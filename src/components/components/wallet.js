@@ -65,6 +65,8 @@ export default function Wallet() {
         }
     };
 
+    const HandleCredit = () => {};
+
     return (
         <div className="row">
             <div className="col-lg-5 col-md-6 col-sm-6 col-xs-12">
@@ -140,13 +142,16 @@ export default function Wallet() {
                             </span>
                         </div>
                         <div className="spacer-20"></div>
-                        <span className="centered">
+                        <span className="centered sell_preview">
                             <QRCode
                                 value={state.auth.address}
                                 size={250}
                                 level={"H"}
                                 includeMargin={true}
                             />
+                            <button className="btn-main" onClick={HandleCredit}>
+                                Credit
+                            </button>
                         </span>
                         <div className="spacer-20"></div>
                         <h5>{translateLang("mybalance")}</h5>

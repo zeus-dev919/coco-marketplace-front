@@ -326,6 +326,35 @@ export default function Provider({ children }) {
         }
     };
 
+    const NFTTransfer = async (props) => {
+        try {
+            const { id, collectionAddress, toAddress } = props;
+            const NFTContract = getNFTContract(collectionAddress);
+
+            const signedNFTContract = NFTContract.connect(state.auth.signer);
+            if (id.includes("0x")) {
+                const tx = await signedNFTContract.transferFrom(
+                    state.auth.address,
+                    toAddress,
+                    id
+                );
+                await tx.wait();
+            } else {
+                const tx = await signedNFTContract.transferFrom(
+                    state.auth.address,
+                    toAddress,
+                    toBigNum(id, 0)
+                );
+                await tx.wait();
+            }
+
+            return true;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    };
+
     // NFT mint
     const mintNFT = async (url, collection) => {
         const NFTContract1 = getNFTContract(collection);
@@ -567,6 +596,7 @@ export default function Provider({ children }) {
                         setLanguage,
                         translateLang,
                         CoinTransfer,
+                        NFTTransfer,
                     },
                 ],
                 [
@@ -584,6 +614,7 @@ export default function Provider({ children }) {
                     setLanguage,
                     translateLang,
                     CoinTransfer,
+                    NFTTransfer,
                 ]
             )}
         >
