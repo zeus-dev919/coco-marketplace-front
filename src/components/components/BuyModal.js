@@ -10,12 +10,20 @@ export default function BuyModal(props) {
     const { buyFlag, show, setShow, correctItem } = props;
     const [
         state,
-        { checkBalances, buyNFT, bidNFT, getCurrency, translateLang },
+        {
+            checkBalances,
+            buyNFT,
+            bidNFT,
+            getCurrency,
+            translateLang,
+            NFTTransfer,
+        },
     ] = useBlockchainContext();
     const [price, setPrice] = useState("");
     const [currency, setCurrency] = useState("BNB");
     const [date, setDate] = useState(new Date());
     const [mybalance, setMybalances] = useState(["0", "0"]);
+    const [sendAddress, setSendAddress] = useState("");
     const [bidBtnFlag, setBidBtnFlag] = useState(true);
     const [buyBtnFlag, setBuyBtnFlag] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -114,6 +122,28 @@ export default function BuyModal(props) {
         }
     };
 
+    const HandleTransfer = async () => {
+        if (sendAddress.trim() === "") {
+            NotificationManager.error("Please enter sending address");
+            return;
+        }
+
+        setLoading(true);
+        let result = await NFTTransfer({
+            id: correctItem?.tokenID,
+            toAddress: sendAddress,
+            collectionAddress: correctItem?.collectionAddress,
+        });
+
+        if (result) {
+            NotificationManager.success("Successfully Transfer");
+            setLoading(false);
+        } else {
+            NotificationManager.error("Failed Transfer");
+            setLoading(false);
+        }
+    };
+
     return (
         <Modal
             size="lg"
@@ -188,7 +218,7 @@ export default function BuyModal(props) {
                         <div className="spacer-10"></div>
                     </Modal.Footer>
                 </>
-            ) : (
+            ) : buyFlag === 2 ? (
                 <>
                     <Modal.Header>
                         <Modal.Title>
@@ -266,6 +296,48 @@ export default function BuyModal(props) {
                                 disabled={bidBtnFlag}
                             >
                                 {translateLang("makeoffer")}
+                            </button>
+                        )}
+                        <div className="spacer-10"></div>
+                    </Modal.Footer>
+                </>
+            ) : (
+                <>
+                    <Modal.Header>
+                        <Modal.Title>{"NFT Transfer"}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <span className="spacer-single"></span>
+                        <p className="text-center">
+                            {"Please enter the sending address"}
+                        </p>
+                        <div className="price">
+                            <input
+                                type="text"
+                                className="form-control"
+                                style={{
+                                    flex: "4 4 0",
+                                }}
+                                value={sendAddress}
+                                onChange={(e) => setSendAddress(e.target.value)}
+                            />
+                        </div>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <div className="spacer-10"></div>
+                        {loading ? (
+                            <button className="btn-main">
+                                <span
+                                    className="spinner-border spinner-border-sm"
+                                    aria-hidden="true"
+                                ></span>
+                            </button>
+                        ) : (
+                            <button
+                                className="btn-main"
+                                onClick={HandleTransfer}
+                            >
+                                {"Transfer"}
                             </button>
                         )}
                         <div className="spacer-10"></div>

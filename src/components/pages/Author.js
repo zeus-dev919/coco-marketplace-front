@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import MyNFT from "../components/mynfts";
 import Profile from "../components/profile";
+import Wallet from "../components/wallet";
 import Footer from "../menu/footer";
 import { createGlobalStyle } from "styled-components";
 import { useBlockchainContext } from "../../context";
@@ -14,17 +15,25 @@ const GlobalStyles = createGlobalStyle`
 
 export default function Collection() {
     const [state, { translateLang }] = useBlockchainContext();
-    const [openMenu, setOpenMenu] = useState(true);
+    const [openMenu, setOpenMenu] = useState(0);
 
     const handleBtnClick = () => {
-        setOpenMenu(true);
-        document.getElementById("Mainbtn").classList.add("active");
+        setOpenMenu(0);
+        document.getElementById("Mainbtn0").classList.add("active");
         document.getElementById("Mainbtn1").classList.remove("active");
+        document.getElementById("Mainbtn2").classList.remove("active");
     };
     const handleBtnClick1 = () => {
-        setOpenMenu(false);
+        setOpenMenu(1);
+        document.getElementById("Mainbtn0").classList.remove("active");
         document.getElementById("Mainbtn1").classList.add("active");
-        document.getElementById("Mainbtn").classList.remove("active");
+        document.getElementById("Mainbtn2").classList.remove("active");
+    };
+    const handleBtnClick2 = () => {
+        setOpenMenu(2);
+        document.getElementById("Mainbtn0").classList.remove("active");
+        document.getElementById("Mainbtn1").classList.remove("active");
+        document.getElementById("Mainbtn2").classList.add("active");
     };
 
     return (
@@ -73,27 +82,39 @@ export default function Collection() {
                     <div className="col-lg-12">
                         <div className="items_filter">
                             <ul className="de_nav text-left">
-                                <li id="Mainbtn" className="active">
+                                <li id="Mainbtn0" className="active">
                                     <span onClick={handleBtnClick}>
                                         {translateLang("mynft")}
                                     </span>
                                 </li>
-                                <li id="Mainbtn1" className="">
+                                <li id="Mainbtn1">
                                     <span onClick={handleBtnClick1}>
                                         {translateLang("profile")}
+                                    </span>
+                                </li>
+                                <li id="Mainbtn2">
+                                    <span onClick={handleBtnClick2}>
+                                        {translateLang("wallet")}
                                     </span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                {openMenu ? (
-                    <div id="zero1" className="onStep fadeIn">
+
+                {openMenu === 0 && (
+                    <div id="zero0" className="onStep fadeIn">
                         <MyNFT />
                     </div>
-                ) : (
-                    <div id="zero2" className="onStep fadeIn">
+                )}
+                {openMenu === 1 && (
+                    <div id="zero1" className="onStep fadeIn">
                         <Profile />
+                    </div>
+                )}
+                {openMenu === 2 && (
+                    <div id="zero2" className="onStep fadeIn">
+                        <Wallet />
                     </div>
                 )}
             </section>

@@ -11,7 +11,7 @@ const settings = {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    initialSlide: 4,
+    initialSlide: 0,
     responsive: [
         {
             breakpoint: 1900,
@@ -38,7 +38,7 @@ const settings = {
             },
         },
         {
-            breakpoint: 600,
+            breakpoint: 800,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 1,
@@ -58,7 +58,7 @@ const settings = {
 
 export default function CarouselCollection() {
     const navigate = useNavigate();
-    const [state, { }] = useBlockchainContext();
+    const [state, {}] = useBlockchainContext();
 
     const NFTItem = (props) => {
         const { desc, title, coverImage, image, id, address } = props;
@@ -88,9 +88,19 @@ export default function CarouselCollection() {
                     </span>
                     <div className="nft_coll_info">
                         <span>
-                            <h4>{title}</h4>
+                            <h4>
+                                {title.length > 10
+                                    ? title.slice(0, 10) + "..."
+                                    : title}
+                            </h4>
                         </span>
-                        <span>{desc}</span>
+                        <span>
+                            {desc === ""
+                                ? "No Description"
+                                : desc.length > 50
+                                ? desc.slice(0, 45) + "..."
+                                : desc}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -98,7 +108,7 @@ export default function CarouselCollection() {
     };
 
     return (
-        <div className="nft">
+        <div>
             <Slider {...settings}>
                 {state.collectionNFT.map((item, index) => (
                     <NFTItem

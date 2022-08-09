@@ -784,6 +784,34 @@ p.lead {
     padding: 20px 50px;
 }
 
+.tokencard {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px !important;
+
+    &:hover {
+        background-color: rgb(208, 94, 60, 0.5);
+        color: white;
+    }
+}
+
+.sendmoney {
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        
+        p {
+            margin: 0;
+            min-width: 80px;
+            text-align: right;
+        }
+    }
+}
+
 /* dropdown */
 .dropdown-custom.btn {
     font-size: 14px;
@@ -3179,15 +3207,22 @@ i.font60 {
 .nft_wrap {
     position: relative;
     width: 100%;
-    height: 200%;
+    height: 100%;
     overflow: hidden;
     border-radius: 10px 10px 0 0;
     -moz-border-radius: 10px 10px 0 0;
     -webkit-border-radius: 10px 10px 0 0;
+
+    img {
+        width: 100%;
+        min-height: 150px !important;
+        max-height: 150px !important;
+    }
 }
 
 .nft_coll_pp {
     width: 60px;
+    height: 60px;
     display: block;
     margin: 0 auto;
     margin-top: -30px;
@@ -3196,8 +3231,8 @@ i.font60 {
 }
 
 .nft_coll_pp img {
-    width: 60px;
-    height: auto;
+    width: 100%;
+    height: 100%;
     border-radius: 100%;
     -moz-border-radius: 100%;
     -webkit-border-radius: 100%;
@@ -4627,13 +4662,15 @@ img.img-rounded {
         top: -35px;
         left: 50%;
         transform: translate(-50%);
-        width: 55px;
+        width: 60px;
+        height: 60px;
         background-color: $color;
         border-radius: 100%;
         z-index: 1;
 
         img {
             width: 100%;
+            height: 100%;
             border-radius: 100%;
         }
     }
@@ -4841,6 +4878,12 @@ img.img-rounded {
 .card {
     background: #00546c;
     cursor: pointer;
+
+    > div {
+        img {
+            max-height: 260px;
+        }
+    }
 }
 
 .nav-link {

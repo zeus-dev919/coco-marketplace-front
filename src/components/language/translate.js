@@ -124,7 +124,7 @@ export const translations = {
         bio: "Bio",
         emailaddress: "Email Address",
         btn_edit: "Edit",
-        btn_exportprivatekey: "Export Privatekey",
+        wallet: "Wallet",
         btn_save: "Save",
 
         // Notification
@@ -293,7 +293,7 @@ export const translations = {
         bio: "バイオ",
         emailaddress: "Eメール 住所",
         btn_edit: "編集",
-        btn_exportprivatekey: "輸出 プライベートキー",
+        wallet: "財布",
         btn_save: "セーブ",
 
         // Notification

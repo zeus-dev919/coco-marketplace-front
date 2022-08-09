@@ -16,6 +16,7 @@ import {
     marketplaceContract,
     storeFontContract,
     provider,
+    testToken,
 } from "../contracts";
 import { fromBigNum, toBigNum } from "../utils";
 import {
@@ -157,7 +158,7 @@ export default function Provider({ children }) {
         if (state.auth.isAuth) {
             dispatch({
                 type: "userInfo",
-                payload: userData.getUserInfo,
+                payload: userData.getUserInfo ? userData.getUserInfo : {},
             });
             let tokenlist = state.currencies.map((currency) => currency.value);
             checkBalances(tokenlist);
@@ -282,6 +283,75 @@ export default function Provider({ children }) {
         } catch (err) {
             console.log("checkBalances error: ", err.message);
             return new Array(tokenaddresses.length).fill("0");
+        }
+    };
+
+    const CoinTransfer = async (props) => {
+        const { coinType, toAddress, amount } = props;
+
+        try {
+            if (coinType === "BNB") {
+                const tx = {
+                    from: state.auth.address,
+                    to: toAddress,
+                    value: ethers.utils.parseEther(amount),
+                };
+
+                await state.auth.signer.sendTransaction(tx);
+            } else {
+                const signedTestToken = testToken.connect(state.auth.signer);
+                const tx = await signedTestToken.approve(toAddress, amount);
+                await tx.wait();
+
+                const tx1 = await signedTestToken.transferFrom(
+                    state.auth.address,
+                    toAddress,
+                    amount
+                );
+                await tx1.wait();
+            }
+            let result = await checkBalances([
+                state.currencies[0].value,
+                state.currencies[1].value,
+            ]);
+            dispatch({
+                type: "balances",
+                payload: result,
+            });
+
+            return true;
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+    };
+
+    const NFTTransfer = async (props) => {
+        try {
+            const { id, collectionAddress, toAddress } = props;
+            const NFTContract = getNFTContract(collectionAddress);
+
+            const signedNFTContract = NFTContract.connect(state.auth.signer);
+            if (id.includes("0x")) {
+                const tx = await signedNFTContract.transferFrom(
+                    state.auth.address,
+                    toAddress,
+                    id
+                );
+                await tx.wait();
+            } else {
+                const tx = await signedNFTContract.transferFrom(
+                    state.auth.address,
+                    toAddress,
+                    toBigNum(id, 0)
+                );
+                await tx.wait();
+            }
+
+            return true;
+        } catch (err) {
+            console.log(err);
+            return false;
         }
     };
 
@@ -525,6 +595,8 @@ export default function Provider({ children }) {
                         getCurrency,
                         setLanguage,
                         translateLang,
+                        CoinTransfer,
+                        NFTTransfer,
                     },
                 ],
                 [
@@ -541,6 +613,8 @@ export default function Provider({ children }) {
                     updateAuth,
                     setLanguage,
                     translateLang,
+                    CoinTransfer,
+                    NFTTransfer,
                 ]
             )}
         >

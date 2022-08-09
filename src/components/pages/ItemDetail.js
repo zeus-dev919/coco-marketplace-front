@@ -168,6 +168,15 @@ export default function Colection() {
         }
     };
 
+    const handleTransfer = () => {
+        if (state.userInfo.address === undefined) {
+            navigate("/signPage");
+            return;
+        }
+        setBuyFlag(3);
+        setModalShow(true);
+    };
+
     return (
         <div>
             <GlobalStyles />
@@ -472,40 +481,6 @@ export default function Colection() {
                                                             )}
                                                         </div>
                                                     )}
-
-                                                    {!openMenu && (
-                                                        <div className="tab-2 onStep fadeIn">
-                                                            {/* <div className="p_list">
-                                                                <div className="p_list_pp">
-                                                                    <span>
-                                                                        <img
-                                                                            className="lazy"
-                                                                            src="../../img/author/author-1.jpg"
-                                                                            alt=""
-                                                                        />
-                                                                        <i className="fa fa-check"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <div className="p_list_info">
-                                                                    Bid{" "}
-                                                                    <b>
-                                                                        0.005
-                                                                        ETH
-                                                                    </b>
-                                                                    <span>
-                                                                        by{" "}
-                                                                        <b>
-                                                                            Jimmy
-                                                                            Wright
-                                                                        </b>{" "}
-                                                                        at
-                                                                        6/14/2021,
-                                                                        6:40 AM
-                                                                    </span>
-                                                                </div>
-                                                            </div> */}
-                                                        </div>
-                                                    )}
                                                 </div>
                                             </>
                                         ) : null}
@@ -517,14 +492,25 @@ export default function Colection() {
                                         ) : (
                                             <div className="mainside">
                                                 {pageFlag === 1 ? (
-                                                    <button
-                                                        className="btn-main"
-                                                        onClick={handleSell}
-                                                    >
-                                                        {translateLang(
-                                                            "btn_sell"
-                                                        )}
-                                                    </button>
+                                                    <div className="attribute">
+                                                        <button
+                                                            className="btn-main"
+                                                            onClick={handleSell}
+                                                        >
+                                                            {translateLang(
+                                                                "btn_sell"
+                                                            )}
+                                                        </button>
+
+                                                        <button
+                                                            className="btn-main"
+                                                            onClick={
+                                                                handleTransfer
+                                                            }
+                                                        >
+                                                            {"Transfer"}
+                                                        </button>
+                                                    </div>
                                                 ) : pageFlag === 2 ? (
                                                     <div>
                                                         {loading ? (

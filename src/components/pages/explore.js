@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import Select from "react-select";
 
-import ColumnNew from "../components/ColumnNew";
+import NFTLists from "../components/NFTLists";
 import Footer from "../menu/footer";
 import { useBlockchainContext } from "../../context";
 
@@ -123,7 +123,7 @@ export default function Explore() {
                         </div>
                     </div>
                 </div>
-                <ColumnNew />
+                <NFTLists />
             </section>
 
             <Footer />
