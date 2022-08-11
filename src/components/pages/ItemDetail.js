@@ -65,13 +65,13 @@ export default function Colection() {
             ) {
                 // on market
                 itemData.marketdata.owner?.toLowerCase() ===
-                state.userInfo.address?.toLowerCase()
+                state.auth.address?.toLowerCase()
                     ? setPageFlag(2)
                     : setPageFlag(4);
             } else {
                 //on user
                 itemData.owner?.toLowerCase() ===
-                state.userInfo.address?.toLowerCase()
+                state.auth.address?.toLowerCase()
                     ? setPageFlag(1)
                     : setPageFlag(3);
             }
@@ -112,7 +112,7 @@ export default function Colection() {
     };
 
     const handleBid = () => {
-        if (state.userInfo.address === undefined) {
+        if (state.auth.address === undefined) {
             navigate("/signPage");
             return;
         }
@@ -121,7 +121,7 @@ export default function Colection() {
     };
 
     const handleBuy = () => {
-        if (state.userInfo.address === undefined) {
+        if (state.auth.address === undefined) {
             navigate("/signPage");
             return;
         }
@@ -169,7 +169,7 @@ export default function Colection() {
     };
 
     const handleTransfer = () => {
-        if (state.userInfo.address === undefined) {
+        if (state.auth.address === undefined) {
             navigate("/signPage");
             return;
         }

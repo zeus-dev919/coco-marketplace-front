@@ -433,7 +433,7 @@ export default function Createpage() {
                                     <img
                                         className="lazy"
                                         src={
-                                            state.userInfo?.image ||
+                                            state.auth.image ||
                                             "./../img/author/author-1.jpg"
                                         }
                                         alt=""

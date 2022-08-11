@@ -33,14 +33,14 @@ export default function NFTLists() {
             setCurrentItem(item);
             setModalShow(true);
         } else if (isClickLikeButton) {
-            if (state.userInfo.address === undefined) {
+            if (state.auth.address === undefined) {
                 navigate("/signPage");
                 return;
             }
             Action.nft_like({
                 collectAddress: item.collectionAddress,
                 tokenId: item.tokenID,
-                currentAddress: state.userInfo.address,
+                currentAddress: state.auth.address,
             })
                 .then((res) => {
                     if (res) {
@@ -52,7 +52,7 @@ export default function NFTLists() {
                 });
             return;
         } else {
-            if (state.userInfo.address === undefined) {
+            if (state.auth.address === undefined) {
                 navigate("/signPage");
                 return;
             }
@@ -142,9 +142,7 @@ export default function NFTLists() {
                                 className="nft__item_like"
                                 id={"like" + index}
                                 style={
-                                    nft.likes.indexOf(
-                                        state.userInfo.address
-                                    ) === -1
+                                    nft.likes.indexOf(state.auth.address) === -1
                                         ? null
                                         : { color: "#c5a86a" }
                                 }

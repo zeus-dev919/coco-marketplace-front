@@ -29,9 +29,9 @@ export default function Responsive() {
 
     useEffect(() => {
         init(
-            state.userInfo.name,
-            state.userInfo.bio ? state.userInfo.bio : "",
-            state.userInfo.email,
+            state.auth.name,
+            state.auth.bio ? state.auth.bio : "",
+            state.auth.email,
             null,
             null
         );
@@ -63,7 +63,7 @@ export default function Responsive() {
             }
             var formData = new FormData();
             formData.append("newimage", selectedFile);
-            formData.append("previousImage", state.userInfo.image);
+            formData.append("previousImage", state.auth.image);
             formData.append("name", newName);
             formData.append("bio", newBio);
             formData.append("email", newEmail);

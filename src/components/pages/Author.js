@@ -49,24 +49,24 @@ export default function Collection() {
                                 <div className="profile_avatar">
                                     <img
                                         src={
-                                            state.userInfo?.image ||
+                                            state.auth.image ||
                                             "img/author/author-1.jpg"
                                         }
                                         alt=""
                                     />
                                     <div className="profile_name">
                                         <h4>
-                                            {state.userInfo.name}
+                                            {state.auth.name}
                                             <span className="profile_username">
-                                                {state.userInfo.email === ""
+                                                {state.auth.email === ""
                                                     ? "unknown"
-                                                    : state.userInfo.email}
+                                                    : state.auth.email}
                                             </span>
                                             <span
                                                 id="wallet"
                                                 className="profile_wallet"
                                             >
-                                                {state.userInfo.address}
+                                                {state.auth.address}
                                             </span>
                                         </h4>
                                     </div>

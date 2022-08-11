@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { useQuery } from "@apollo/client";
 import decode from "jwt-decode";
 import axios from "axios";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import {
     getNFTContract,
     getTokenContract,
@@ -21,7 +21,6 @@ import {
 import { fromBigNum, toBigNum } from "../utils";
 import {
     GET_ALLNFTS,
-    GET_USERDATA,
     GET_USERSINFO,
     GET_COLLECTIONNFTS,
 } from "../components/gql";
@@ -57,7 +56,6 @@ const INIT_STATE = {
     allNFT: [],
     collectionNFT: [],
     provider: provider,
-    userInfo: {},
     usersInfo: {},
     balance: 0,
     addresses: addresses,
@@ -68,6 +66,7 @@ const INIT_STATE = {
         bio: "",
         signer: {},
         privateKey: "",
+        image: "",
     },
     tokenPrice: {
         BNB: 0,
@@ -79,6 +78,8 @@ const INIT_STATE = {
 };
 
 export default function Provider({ children }) {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
 
     useEffect(() => {
@@ -106,17 +107,6 @@ export default function Provider({ children }) {
         loading: nftsCollectionLoading,
         error: nftsCollectionError,
     } = useQuery(GET_COLLECTIONNFTS, {
-        pollInterval: 500,
-    });
-
-    const {
-        data: userData,
-        loading: userDataLoading,
-        error: userDataError,
-    } = useQuery(GET_USERDATA, {
-        variables: {
-            account: state.auth.address,
-        },
         pollInterval: 500,
     });
 
@@ -149,27 +139,6 @@ export default function Provider({ children }) {
         });
     }, [nftsCollectionData, nftsCollectionLoading, nftsCollectionError]);
 
-    // user info
-    useEffect(() => {
-        if (userDataLoading || userDataError) {
-            return;
-        }
-
-        if (state.auth.isAuth) {
-            dispatch({
-                type: "userInfo",
-                payload: userData.getUserInfo ? userData.getUserInfo : {},
-            });
-            let tokenlist = state.currencies.map((currency) => currency.value);
-            checkBalances(tokenlist);
-        } else {
-            dispatch({
-                type: "userInfo",
-                payload: {},
-            });
-        }
-    }, [userData, userDataLoading, userDataError, state.auth.isAuth]);
-
     // users info
     useEffect(() => {
         if (usersLoading || usersError) {
@@ -201,6 +170,14 @@ export default function Provider({ children }) {
         })();
     }, [state.auth]);
 
+    useEffect(() => {
+        const session = localStorage.getItem("marketplace_session");
+
+        if (session) {
+            updateAuth(session);
+        }
+    }, []);
+
     // set language
     const setLanguage = (props) => {
         const { newLang } = props;
@@ -230,9 +207,15 @@ export default function Provider({ children }) {
                 address: data.address,
                 privateKey: data.privateKey,
                 signer: userWallet,
+                image: data.image,
             },
         });
         axios.defaults.headers.common["Authorization"] = token;
+
+        const origin = location.state?.from?.pathname || "/";
+        navigate(origin);
+
+        localStorage.setItem("marketplace_session", token);
     };
 
     /* ------------ NFT Section ------------- */

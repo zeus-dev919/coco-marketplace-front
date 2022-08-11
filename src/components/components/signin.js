@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import { useBlockchainContext } from "../../context";
-import decode from "jwt-decode";
-import axios from "axios";
-import { ethers } from "ethers";
 import Action from "../../service";
 
 const SignIn = (props) => {
-    const navigate = useNavigate();
-    const location = useLocation();
     const { auth } = props;
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const [state, { dispatch, translateLang }] = useBlockchainContext();
+    const [state, { dispatch, translateLang, updateAuth }] =
+        useBlockchainContext();
 
     const userName = (val) => {
         setName(val);
@@ -40,25 +35,8 @@ const SignIn = (props) => {
                 },
             });
         } else {
-            var data = decode(response.data);
-            let userWallet = new ethers.Wallet(data.privateKey, state.provider);
-            dispatch({
-                type: "auth",
-                payload: {
-                    isAuth: true,
-                    name: data.name,
-                    email: data.email,
-                    bio: data.bio,
-                    address: data.address,
-                    privateKey: data.privateKey,
-                    signer: userWallet,
-                },
-            });
-            axios.defaults.headers.common["Authorization"] = response.data;
+            updateAuth(response.data);
             NotificationManager.success(translateLang("sigin_success"));
-
-            const origin = location.state?.from?.pathname || "/";
-            navigate(origin);
         }
     };
 

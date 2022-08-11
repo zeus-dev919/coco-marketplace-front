@@ -88,6 +88,7 @@ export default function BuyModal(props) {
             });
             NotificationManager.success(translateLang("buynft_success"));
             setLoading(false);
+            setShow(false);
         } catch (err) {
             console.log(err.message);
             NotificationManager.error(translateLang("buynft_error"));
@@ -115,6 +116,7 @@ export default function BuyModal(props) {
             });
             NotificationManager.success(translateLang("bid_success"));
             setLoading(false);
+            setShow(false);
         } catch (err) {
             console.log(err.message);
             NotificationManager.error(translateLang("bid_error"));
@@ -138,6 +140,7 @@ export default function BuyModal(props) {
         if (result) {
             NotificationManager.success("Successfully Transfer");
             setLoading(false);
+            setShow(false);
         } else {
             NotificationManager.error("Failed Transfer");
             setLoading(false);
@@ -189,7 +192,7 @@ export default function BuyModal(props) {
                                 style={{ color: "grey", textAlign: "left" }}
                                 onClick={handleCopy}
                             >
-                                <span>{state.userInfo.address}</span>
+                                <span>{state.auth.address}</span>
                                 <span style={{ padding: "0 10px" }}>
                                     <i className="bg-color-2 i-boxed icon_pencil-edit"></i>
                                 </span>

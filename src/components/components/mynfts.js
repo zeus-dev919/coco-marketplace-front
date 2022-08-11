@@ -23,8 +23,8 @@ export default function Responsive() {
             let bump = [];
             state.allNFT.map((item) => {
                 if (
-                    item.owner === state.userInfo.address ||
-                    item.marketdata.owner === state.userInfo.address
+                    item.owner === state.auth.address ||
+                    item.marketdata.owner === state.auth.address
                 ) {
                     bump.push(item);
                 }

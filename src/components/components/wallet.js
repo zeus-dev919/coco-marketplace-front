@@ -5,6 +5,7 @@ import { useBlockchainContext } from "../../context";
 import { copyToClipboard } from "../../utils";
 import styled from "styled-components";
 import TokenCard from "./tokenCard";
+import Action from "../../service";
 
 const Card = styled.div`
     display: flex;
@@ -19,6 +20,8 @@ export default function Wallet() {
     const [amount, setAmount] = useState(0);
     const [selectedCoin, setSelectCoin] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showCredit, setShowCredit] = useState(false);
+    const [creditAmount, setCreditAmount] = useState(0);
 
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
@@ -65,7 +68,18 @@ export default function Wallet() {
         }
     };
 
-    const HandleCredit = () => {};
+    const HandleCredit = async () => {
+        const result = await Action.buy_credit({
+            buyAmount: creditAmount,
+        });
+
+        if (result) {
+            NotificationManager.success("Successfully Buy");
+            setShowCredit(false);
+        } else {
+            NotificationManager.error("Failed Buy");
+        }
+    };
 
     return (
         <div className="row">
@@ -142,33 +156,75 @@ export default function Wallet() {
                             </span>
                         </div>
                         <div className="spacer-20"></div>
-                        <span className="centered sell_preview">
-                            <QRCode
-                                value={state.auth.address}
-                                size={250}
-                                level={"H"}
-                                includeMargin={true}
-                            />
-                            <button className="btn-main" onClick={HandleCredit}>
-                                Credit
-                            </button>
-                        </span>
-                        <div className="spacer-20"></div>
-                        <h5>{translateLang("mybalance")}</h5>
-                        <Card>
-                            {state.currencies.map((item, index) => (
-                                <div onClick={() => HandleTokenClick(item)}>
-                                    <TokenCard
-                                        key={index}
-                                        balance={Number(
-                                            state.balances[index]
-                                        ).toFixed(2)}
-                                        label={item.label}
+                        {!showCredit ? (
+                            <>
+                                <span className="centered sell_preview">
+                                    <QRCode
+                                        value={state.auth.address}
+                                        size={250}
+                                        level={"H"}
+                                        includeMargin={true}
                                     />
+                                    <button
+                                        className="btn-main"
+                                        onClick={() => setShowCredit(true)}
+                                    >
+                                        Credit
+                                    </button>
+                                </span>
+                                <div className="spacer-20"></div>
+                                <h5>{translateLang("mybalance")}</h5>
+                                <Card>
+                                    {state.currencies.map((item, index) => (
+                                        <div
+                                            onClick={() =>
+                                                HandleTokenClick(item)
+                                            }
+                                        >
+                                            <TokenCard
+                                                key={index}
+                                                balance={Number(
+                                                    state.balances[index]
+                                                ).toFixed(2)}
+                                                label={item.label}
+                                            />
+                                        </div>
+                                    ))}
+                                </Card>
+                                <div className="spacer-20"></div>
+                            </>
+                        ) : (
+                            <>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    placeholder="Please enter amount"
+                                    value={creditAmount}
+                                    onChange={(e) =>
+                                        setCreditAmount(e.target.value)
+                                    }
+                                />
+                                <dis className="spacer-single"></dis>
+                                <p className="centered">
+                                    Total Budget: 1023.34$
+                                </p>
+                                <dis className="spacer-single"></dis>
+                                <div className="attribute">
+                                    <button
+                                        className="btn-main"
+                                        onClick={() => setShowCredit(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="btn-main"
+                                        onClick={HandleCredit}
+                                    >
+                                        Buy
+                                    </button>
                                 </div>
-                            ))}
-                        </Card>
-                        <div className="spacer-20"></div>
+                            </>
+                        )}
                     </div>
                 )}
             </div>
