@@ -95,22 +95,6 @@ const GET_ALLNFTS = gql`
     }
 `; // Get All NFTs
 
-const GET_USERDATA = gql`
-    query GetUserInfo($account: String) {
-        getUserInfo(account: $account) {
-            address
-            name
-            bio
-            email
-            image
-            coverimage
-            backgroundimage
-            follow
-            description
-        }
-    }
-`;
-
 const GET_USERSINFO = gql`
     query GetUserInfo {
         getUsersInfo {
@@ -127,4 +111,14 @@ const GET_USERSINFO = gql`
     }
 `;
 
-export { GET_COLLECTIONNFTS, GET_ALLNFTS, GET_USERDATA, GET_USERSINFO };
+const GET_PRICES = gql`
+    query GetPrice {
+        getPrice {
+            ETHEURPrice
+            ETHUSDPrice
+            ETHJPYPrice
+        }
+    }
+`;
+
+export { GET_COLLECTIONNFTS, GET_ALLNFTS, GET_USERSINFO, GET_PRICES };

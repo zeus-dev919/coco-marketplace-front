@@ -63,14 +63,14 @@ export default function ColumnOne(props) {
         var isClickLikeButton = likeButton.contains(e.target);
 
         if (isClickLikeButton) {
-            if (state.userInfo.address === undefined) {
+            if (state.auth.address === undefined) {
                 navigate("/signPage");
                 return;
             }
             Action.nft_like({
                 collectAddress: item.collectionAddress,
                 tokenId: item.tokenID,
-                currentAddress: state.userInfo.address,
+                currentAddress: state.auth.address,
             })
                 .then((res) => {
                     if (res) {

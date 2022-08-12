@@ -102,6 +102,28 @@ const user_login = async (account) => {
     }
 };
 
+const buy_credit = async (param) => {
+    try {
+        var res = await axios.post("/api/payment/session-initiate", param);
+
+        return res;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+};
+
+const getRequests = async () => {
+    try {
+        var res = await axios.post("/api/payment/request");
+
+        return res;
+    } catch (err) {
+        console.log(err);
+        return [];
+    }
+};
+
 // Export Functions
 const Action = {
     create_collection,
@@ -111,6 +133,8 @@ const Action = {
     lazy_onsale,
     user_create,
     user_login,
+    buy_credit,
+    getRequests,
 };
 
 export default Action;
