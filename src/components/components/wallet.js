@@ -4,6 +4,7 @@ import QRCode from "qrcode.react";
 import { useBlockchainContext } from "../../context";
 import { copyToClipboard } from "../../utils";
 import styled from "styled-components";
+import scriptLoader from "react-async-script-loader";
 import TokenCard from "./tokenCard";
 import Action from "../../service";
 
@@ -13,7 +14,7 @@ const Card = styled.div`
     gap: 3px;
 `;
 
-export default function Wallet() {
+const Wallet = ({ isScriptLoaded, isScriptLoadSucceed }) => {
     const [state, { translateLang, CoinTransfer }] = useBlockchainContext();
     const [showSend, setShowSend] = useState(false);
     const [toAddress, setToAddress] = useState("");
@@ -22,6 +23,29 @@ export default function Wallet() {
     const [loading, setLoading] = useState(false);
     const [showCredit, setShowCredit] = useState(false);
     const [creditAmount, setCreditAmount] = useState(0);
+    const [stripe, setStripe] = useState(null);
+    const [requests, setRequests] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            var res = await Action.getRequests();
+            setRequests(res.data);
+        })();
+    }, []);
+
+    useEffect(() => {
+        console.log(requests);
+    }, [requests]);
+
+    useEffect(() => {
+        if (isScriptLoaded && isScriptLoadSucceed) {
+            setStripe(
+                window.Stripe(
+                    "pk_test_51LSOMUAWSmSN13IcFbFAuHzeHEP2XUGZGxN4juEiaK9R0neGILKvY1Bd8KUGeKgZOvRk3BK0aMBuDm56C6cnGRZE00JfRMtX7M"
+                )
+            );
+        }
+    }, [isScriptLoaded, isScriptLoadSucceed]);
 
     const handleaddressCopy = () => {
         copyToClipboard(state.auth.address)
@@ -69,15 +93,33 @@ export default function Wallet() {
     };
 
     const HandleCredit = async () => {
-        const result = await Action.buy_credit({
-            buyAmount: creditAmount,
-        });
+        try {
+            setLoading(true);
+            if (creditAmount > 1) {
+                NotificationManager.warning("Amount must be less than 1");
+                setLoading(false);
+                return;
+            }
 
-        if (result) {
-            NotificationManager.success("Successfully Buy");
-            setShowCredit(false);
-        } else {
-            NotificationManager.error("Failed Buy");
+            const session = await Action.buy_credit({
+                buyAmount: creditAmount,
+            });
+
+            const result = await stripe.redirectToCheckout({
+                sessionId: session.data.id,
+            });
+
+            if (result) {
+                NotificationManager.success("Successfully Buy");
+                setShowCredit(false);
+                setLoading(false);
+            } else {
+                NotificationManager.error("Failed Buy");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.log(err);
+            setLoading(false);
         }
     };
 
@@ -195,20 +237,24 @@ export default function Wallet() {
                             </>
                         ) : (
                             <>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    placeholder="Please enter amount"
-                                    value={creditAmount}
-                                    onChange={(e) =>
-                                        setCreditAmount(e.target.value)
-                                    }
-                                />
-                                <dis className="spacer-single"></dis>
+                                <div className="credit__set">
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="Please enter amount"
+                                        value={creditAmount}
+                                        onChange={(e) =>
+                                            setCreditAmount(e.target.value)
+                                        }
+                                    />
+                                    <div>Max: 1 ETH</div>
+                                </div>
+                                <div className="spacer-single"></div>
                                 <p className="centered">
-                                    Total Budget: 1023.34$
+                                    Checkout:{" "}
+                                    {creditAmount * state.prices.ETHJPYPrice}¥
                                 </p>
-                                <dis className="spacer-single"></dis>
+                                <div className="spacer-single"></div>
                                 <div className="attribute">
                                     <button
                                         className="btn-main"
@@ -216,12 +262,40 @@ export default function Wallet() {
                                     >
                                         Cancel
                                     </button>
-                                    <button
-                                        className="btn-main"
-                                        onClick={HandleCredit}
-                                    >
-                                        Buy
-                                    </button>
+                                    {loading ? (
+                                        <button className="btn-main">
+                                            <span
+                                                className="spinner-border spinner-border-sm"
+                                                aria-hidden="true"
+                                            ></span>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn-main"
+                                            onClick={HandleCredit}
+                                        >
+                                            Buy
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="spacer-half"></div>
+                                <div className="requests">
+                                    {requests?.map((item, index) => (
+                                        <span key={index}>
+                                            <p>
+                                                {Number(item.amount).toFixed(2)}{" "}
+                                                ETH
+                                            </p>
+                                            <p>
+                                                {Number(
+                                                    item.amount * item.price
+                                                ).toFixed(2)}
+                                            </p>
+                                            <p className="color">
+                                                {item.status}
+                                            </p>
+                                        </span>
+                                    ))}
                                 </div>
                             </>
                         )}
@@ -230,4 +304,6 @@ export default function Wallet() {
             </div>
         </div>
     );
-}
+};
+
+export default scriptLoader("https://js.stripe.com/v3/")(Wallet);

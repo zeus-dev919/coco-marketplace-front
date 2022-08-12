@@ -23,6 +23,7 @@ import {
     GET_ALLNFTS,
     GET_USERSINFO,
     GET_COLLECTIONNFTS,
+    GET_PRICES,
 } from "../components/gql";
 import addresses from "../contracts/contracts/addresses.json";
 
@@ -75,6 +76,7 @@ const INIT_STATE = {
     balances: [],
     currencies: Currency,
     lang: "en",
+    prices: {},
 };
 
 export default function Provider({ children }) {
@@ -117,6 +119,14 @@ export default function Provider({ children }) {
     } = useQuery(GET_USERSINFO, {
         pollInterval: 500,
     });
+
+    const {
+        data: priceData,
+        loading: priceLoading,
+        error: priceError,
+    } = useQuery(GET_PRICES, {
+        pollInterval: 500,
+    });
     /** End GraphQL Query */
 
     useEffect(() => {
@@ -156,6 +166,16 @@ export default function Provider({ children }) {
             payload: bump,
         });
     }, [usersData, usersLoading, usersError]);
+
+    useEffect(() => {
+        if (priceLoading || priceError) {
+            return;
+        }
+        dispatch({
+            type: "prices",
+            payload: priceData.getPrice,
+        });
+    }, [priceData, priceLoading, priceError]);
 
     useEffect(() => {
         (async () => {

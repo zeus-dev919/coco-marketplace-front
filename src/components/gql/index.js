@@ -111,4 +111,14 @@ const GET_USERSINFO = gql`
     }
 `;
 
-export { GET_COLLECTIONNFTS, GET_ALLNFTS, GET_USERSINFO };
+const GET_PRICES = gql`
+    query GetPrice {
+        getPrice {
+            ETHEURPrice
+            ETHUSDPrice
+            ETHJPYPrice
+        }
+    }
+`;
+
+export { GET_COLLECTIONNFTS, GET_ALLNFTS, GET_USERSINFO, GET_PRICES };

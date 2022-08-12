@@ -803,7 +803,7 @@ p.lead {
         justify-content: center;
         align-items: center;
         gap: 10px;
-        
+
         p {
             margin: 0;
             min-width: 80px;
@@ -4207,6 +4207,49 @@ i.font60 {
 .profile_follower {
     margin-right: 20px;
     font-weight: 600;
+}
+
+.credit__set {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px #d05e3c;
+    border-radius: 6px;
+    input {
+        border: 0;
+    }
+
+    div {
+        min-width: 100px;
+        text-align: center;
+    }
+}
+
+.requests {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 10px;
+
+    span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 10px;
+        background: #ff3c0041;
+        border-radius: 20px;
+        text-align: center;
+
+        p {
+            font-weight: bold;
+            flex: 1 1;
+            margin: 0;
+        }
+    }
 }
 
 /*** item details ***/

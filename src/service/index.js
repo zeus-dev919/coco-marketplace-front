@@ -106,14 +106,21 @@ const buy_credit = async (param) => {
     try {
         var res = await axios.post("/api/payment/session-initiate", param);
 
-        if (!res) {
-            return false;
-        }
-
-        return true;
+        return res;
     } catch (err) {
         console.log(err);
         return false;
+    }
+};
+
+const getRequests = async () => {
+    try {
+        var res = await axios.post("/api/payment/request");
+
+        return res;
+    } catch (err) {
+        console.log(err);
+        return [];
     }
 };
 
@@ -127,6 +134,7 @@ const Action = {
     user_create,
     user_login,
     buy_credit,
+    getRequests,
 };
 
 export default Action;
