@@ -298,7 +298,7 @@ export default function BuyModal(props) {
                                 onClick={handleBid}
                                 disabled={bidBtnFlag}
                             >
-                                {translateLang("makeoffer")}
+                                {translateLang("btn_makeoffer")}
                             </button>
                         )}
                         <div className="spacer-10"></div>
