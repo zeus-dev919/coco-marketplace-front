@@ -55,6 +55,7 @@ export default function Colection() {
                         setTimeFlag(false);
                     }
                 }, 1000);
+        console.log(itemData);
     }, [itemData]);
 
     useEffect(() => {
@@ -502,14 +503,16 @@ export default function Colection() {
                                                             )}
                                                         </button>
 
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={
-                                                                handleTransfer
-                                                            }
-                                                        >
-                                                            {"Transfer"}
-                                                        </button>
+                                                        {!itemData.isOffchain && (
+                                                            <button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleTransfer
+                                                                }
+                                                            >
+                                                                {"Transfer"}
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 ) : pageFlag === 2 ? (
                                                     <div>
