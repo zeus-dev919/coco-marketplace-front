@@ -24,7 +24,7 @@ export default function Colection() {
     const [correctCollection, setCorrectCollection] = useState(null);
     const [pageFlag, setPageFlag] = useState(0); // 1 is mine, 2 is saled mine, 3 is others, 4 is saled others
     const [modalShow, setModalShow] = useState(false);
-    const [buyFlag, setBuyFlag] = useState(0); // 1 is Buy, 2 is Bid
+    const [buyFlag, setBuyFlag] = useState(0); // 1 is Buy, 2 is Bid, 3 is Transfer
     const [expireTime, setExpireTime] = useState([]);
     const [timeFlag, setTimeFlag] = useState(true);
     const [loading, setLoading] = useState(false);
@@ -502,14 +502,16 @@ export default function Colection() {
                                                             )}
                                                         </button>
 
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={
-                                                                handleTransfer
-                                                            }
-                                                        >
-                                                            {"Transfer"}
-                                                        </button>
+                                                        {!itemData.isOffchain && (
+                                                            <button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleTransfer
+                                                                }
+                                                            >
+                                                                {"Transfer"}
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 ) : pageFlag === 2 ? (
                                                     <div>

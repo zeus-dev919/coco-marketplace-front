@@ -4,9 +4,11 @@ import { NotificationManager } from "react-notifications";
 import Footer from "../menu/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function CreateCollection() {
-    const [state, { translateLang }] = useBlockchainContext();
+    const [state, { translateLang, estimateMintContract }] =
+        useBlockchainContext();
 
     const [logoImage, _setLogoImage] = useState(null);
     const [selectedLogoFile, setSeletedLogoFile] = useState(null);
@@ -17,8 +19,10 @@ export default function CreateCollection() {
     const [desc, setDesc] = useState("");
     const [fee, setFee] = useState("");
     const [loading, setLoading] = useState(false);
+    const [modalShow, setModalShow] = useState(false);
 
     const handleSubmit = async () => {
+        setModalShow(false);
         try {
             if (!selectedLogoFile) {
                 NotificationManager.error(translateLang("chooselogo_error"));
@@ -302,7 +306,7 @@ export default function CreateCollection() {
                                         id="submit"
                                         className="btn-main"
                                         value={translateLang("btn_createitem")}
-                                        onClick={handleSubmit}
+                                        onClick={() => setModalShow(true)}
                                     />
                                 ) : (
                                     <button className="btn-main">
@@ -317,6 +321,13 @@ export default function CreateCollection() {
                     </div>
                 </div>
             </section>
+
+            <ConfirmModal
+                show={modalShow}
+                setShow={setModalShow}
+                actionFunc={handleSubmit}
+                estimateFunc={estimateMintContract}
+            />
 
             <Footer />
         </div>

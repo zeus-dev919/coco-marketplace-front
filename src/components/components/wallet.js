@@ -34,10 +34,6 @@ const Wallet = ({ isScriptLoaded, isScriptLoadSucceed }) => {
     }, []);
 
     useEffect(() => {
-        console.log(requests);
-    }, [requests]);
-
-    useEffect(() => {
         if (isScriptLoaded && isScriptLoadSucceed) {
             setStripe(
                 window.Stripe(
@@ -222,6 +218,7 @@ const Wallet = ({ isScriptLoaded, isScriptLoadSucceed }) => {
                                             onClick={() =>
                                                 HandleTokenClick(item)
                                             }
+                                            key={index}
                                         >
                                             <TokenCard
                                                 key={index}

@@ -13,9 +13,19 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
-export default function Collection() {
+export default function Author() {
     const [state, { translateLang }] = useBlockchainContext();
     const [openMenu, setOpenMenu] = useState(0);
+
+    useEffect(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const path = urlParams.get("path");
+
+        if (path === "wallet") {
+            setOpenMenu(2);
+        }
+    }, []);
 
     const handleBtnClick = () => {
         setOpenMenu(0);
