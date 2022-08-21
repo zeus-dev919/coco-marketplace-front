@@ -5,9 +5,11 @@ import Footer from "../menu/footer";
 import Action from "../../service";
 import { useBlockchainContext } from "../../context";
 import Addresses from "../../contracts/contracts/addresses.json";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function Createpage() {
-    const [state, { mintNFT, translateLang }] = useBlockchainContext();
+    const [state, { mintNFT, estimateMintNFT, translateLang }] =
+        useBlockchainContext();
     const [image, _setImage] = useState(null);
     const [selectedFile, setSeletedFile] = useState(null);
     const [name, setName] = useState("");
@@ -21,6 +23,7 @@ export default function Createpage() {
     const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentCollection, setCurrentCollection] = useState(Addresses.NFT1);
+    const [modalShow, setModalShow] = useState(false);
 
     useEffect(() => {
         setCollections([]);
@@ -39,6 +42,7 @@ export default function Createpage() {
     }, [state]);
 
     const handleSubmit = async () => {
+        setModalShow(false);
         try {
             if (!selectedFile) {
                 NotificationManager.error(translateLang("chooseimage_error"));
@@ -109,6 +113,11 @@ export default function Createpage() {
             }
             setLoading(false);
         }
+    };
+
+    const HandleEstimateMint = async () => {
+        let gas = await estimateMintNFT("test", currentCollection);
+        return gas;
     };
 
     const reset = () => {
@@ -411,7 +420,7 @@ export default function Createpage() {
                                         id="submit"
                                         className="btn-main"
                                         value={translateLang("btn_createitem")}
-                                        onClick={handleSubmit}
+                                        onClick={() => setModalShow(true)}
                                     />
                                 ) : (
                                     <button className="btn-main">
@@ -470,6 +479,13 @@ export default function Createpage() {
                     </div>
                 </div>
             </section>
+
+            <ConfirmModal
+                show={modalShow}
+                setShow={setModalShow}
+                actionFunc={handleSubmit}
+                estimateFunc={HandleEstimateMint}
+            />
 
             <Footer />
         </div>

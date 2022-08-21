@@ -115,9 +115,9 @@ export default function Responsive() {
                 <div className="col-lg-5 col-md-6 col-sm-6 col-xs-12">
                     <div className="field-set">
                         <h5>{translateLang("mybalance")}</h5>
-                        <select className="form-control">
+                        <select className="form-control" defaultChecked={1}>
                             {state.currencies.map((item, index) => (
-                                <option selected={index === 0 ? true : false}>
+                                <option key={index}>
                                     {Number(state.balances[index]).toFixed(2)}
                                     {"  "}
                                     {item.label}
@@ -149,19 +149,10 @@ export default function Responsive() {
                         <select
                             className="form-control"
                             onChange={(e) => setLang(e)}
+                            defaultValue={state.lang}
                         >
-                            <option
-                                value="en"
-                                selected={state.lang === "en" && true}
-                            >
-                                EN
-                            </option>
-                            <option
-                                value="jp"
-                                selected={state.lang === "jp" && true}
-                            >
-                                JP
-                            </option>
+                            <option value="en">EN</option>
+                            <option value="jp">JP</option>
                         </select>
 
                         <div className="spacer-20"></div>

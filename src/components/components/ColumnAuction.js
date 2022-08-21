@@ -6,23 +6,50 @@ import { NotificationManager } from "react-notifications";
 import { useNavigate } from "react-router-dom";
 import Action from "../../service";
 import { toBigNum } from "../../utils";
+import ConfirmModal from "./ConfirmModal";
 
 export default function Responsive(props) {
     const navigate = useNavigate();
     const { id, collection } = props;
-    const [state, { onsaleNFT, onsaleLazyNFT, translateLang }] =
-        useBlockchainContext();
+    const [
+        state,
+        {
+            onsaleNFT,
+            onsaleLazyNFT,
+            translateLang,
+            approveNFT,
+            onSaleGas,
+            ApproveNFTGas,
+            onLazySaleGas,
+            checkNFTApprove,
+        },
+    ] = useBlockchainContext();
     const [correctCollection, setCorrectCollection] = useState(null);
     const [currency, setCurrency] = useState(state.currencies[0].value);
     const [price, setPrice] = useState("");
     const [date, setDate] = useState(new Date());
+    const [modalShow, setModalShow] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [approveFlag, setApproveFlag] = useState(false);
 
     useEffect(() => {
         const initialDate = new Date();
         initialDate.setDate(initialDate.getDate() + 10);
         setDate(initialDate);
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            setApproveFlag(correctCollection?.isOffchain);
+            if (correctCollection !== null && !correctCollection.isOffchain) {
+                const validation = await checkNFTApprove({
+                    assetId: correctCollection.tokenID,
+                    nftAddress: collection,
+                });
+                setApproveFlag(validation);
+            }
+        })();
+    }, [correctCollection]);
 
     useEffect(() => {
         for (let i = 0; i < state.collectionNFT.length; i++) {
@@ -44,15 +71,31 @@ export default function Responsive(props) {
     const handlelist = async () => {
         if (price === "") return;
         if (!moment(date).isValid()) return;
+        setModalShow(false);
 
         try {
             setLoading(true);
-            if (id.includes("0x")) {
-                let priceGwei = toBigNum(price, 18);
+            if (!correctCollection.isOffchain) {
+                let txOnSale = await onsaleNFT({
+                    nftAddress: collection,
+                    assetId: correctCollection.tokenID,
+                    currency: currency,
+                    price: price,
+                    expiresAt: moment(date).valueOf(),
+                });
+
+                if (txOnSale) {
+                    NotificationManager.success(
+                        translateLang("listing_success")
+                    );
+                    navigate("/explore");
+                } else NotificationManager.error(translateLang("listingerror"));
+                setLoading(false);
+            } else {
                 const lazyAction = await Action.lazy_onsale({
                     nftAddress: collection,
                     assetId: correctCollection.tokenID,
-                    priceGwei: priceGwei,
+                    priceGwei: toBigNum(price, 18),
                     expiresAt: moment(date).valueOf(),
                 });
 
@@ -62,62 +105,82 @@ export default function Responsive(props) {
                     return;
                 }
 
-                let txOnSale = null;
-                if (correctCollection.isOffchain == true) {
-                    txOnSale = await onsaleLazyNFT({
-                        tokenId: correctCollection.tokenID,
-                        priceGwei: priceGwei,
-                        currency: currency,
-                        expiresAt: moment(date).valueOf(),
-                        singature: lazyAction.result,
-                    });
-                } else {
-                    txOnSale = await onsaleNFT({
-                        nftAddress: collection,
-                        assetId: correctCollection.tokenID,
-                        currency: currency,
-                        price: price,
-                        expiresAt: moment(date).valueOf(),
-                        flag: 2,
-                    });
-                }
+                let txOnSale = await onsaleLazyNFT({
+                    tokenId: correctCollection.tokenID,
+                    priceGwei: toBigNum(price, 18),
+                    currency: currency,
+                    expiresAt: moment(date).valueOf(),
+                    singature: lazyAction.result,
+                });
 
-                if (txOnSale)
+                if (txOnSale) {
                     NotificationManager.success(
                         translateLang("listing_success")
                     );
-                else NotificationManager.error(translateLang("listingerror"));
+                    navigate("/explore");
+                } else NotificationManager.error(translateLang("listingerror"));
                 setLoading(false);
-            } else {
-                onsaleNFT({
-                    nftAddress: collection,
-                    assetId: correctCollection.tokenID,
-                    currency: currency,
-                    price: price,
-                    expiresAt: moment(date).valueOf(),
-                    flag: 1,
-                })
-                    .then((res) => {
-                        if (res) {
-                            NotificationManager.success(
-                                translateLang("listing_success")
-                            );
-                        } else {
-                            NotificationManager.error(
-                                translateLang("listingerror")
-                            );
-                        }
-                        setLoading(false);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        setLoading(false);
-                    });
             }
         } catch (err) {
             console.log(err);
             setLoading(false);
             NotificationManager.error(translateLang("operation_error"));
+        }
+    };
+
+    const ListGas = async () => {
+        let gas = 0;
+        if (correctCollection.isOffchain) {
+            const lazyAction = await Action.lazy_onsale({
+                nftAddress: collection,
+                assetId: correctCollection.tokenID,
+                priceGwei: toBigNum(price, 18),
+                expiresAt: moment(date).valueOf(),
+            });
+
+            gas = await onLazySaleGas({
+                tokenId: correctCollection.tokenID,
+                priceGwei: toBigNum(price, 18),
+                currency: currency,
+                expiresAt: moment(date).valueOf(),
+                singature: lazyAction.result,
+            });
+        } else {
+            gas = await onSaleGas({
+                nftAddress: collection,
+                assetId: correctCollection.tokenID,
+                currency: currency,
+                price: price,
+                expiresAt: moment(date).valueOf(),
+            });
+        }
+
+        return gas;
+    };
+
+    const handleApprove = async () => {
+        setModalShow(false);
+        setLoading(true);
+        let txOnSale = await approveNFT({
+            nftAddress: collection,
+            assetId: correctCollection.tokenID,
+        });
+
+        if (txOnSale) {
+            NotificationManager.success("Successfully Approve");
+            setApproveFlag(true);
+        } else NotificationManager.error("Failed Approve");
+        setLoading(false);
+    };
+
+    const ApproveGas = async () => {
+        if (correctCollection) {
+            let gas = await ApproveNFTGas({
+                nftAddress: collection,
+                assetId: correctCollection.tokenID,
+            });
+
+            return gas;
         }
     };
 
@@ -170,11 +233,12 @@ export default function Responsive(props) {
                                                     }}
                                                 >
                                                     {state.currencies.map(
-                                                        (currency) => (
+                                                        (currency, index) => (
                                                             <option
                                                                 value={
                                                                     currency.value
                                                                 }
+                                                                key={index}
                                                             >
                                                                 {currency.label}
                                                             </option>
@@ -229,7 +293,8 @@ export default function Responsive(props) {
                                                 aria-hidden="true"
                                             ></span>
                                         </button>
-                                    ) : (
+                                    ) : approveFlag ||
+                                      correctCollection.isOffchain ? (
                                         <button
                                             className="btn-main"
                                             disabled={
@@ -238,11 +303,18 @@ export default function Responsive(props) {
                                                     ? true
                                                     : false
                                             }
-                                            onClick={handlelist}
+                                            onClick={() => setModalShow(true)}
                                         >
                                             {translateLang(
                                                 "btn_completelisting"
                                             )}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn-main"
+                                            onClick={() => setModalShow(true)}
+                                        >
+                                            {"Approve"}
                                         </button>
                                     )}
                                 </div>
@@ -305,13 +377,12 @@ export default function Responsive(props) {
                                             <div>
                                                 <p>
                                                     {price === ""
-                                                        ? "0  Crypto-Coco"
+                                                        ? "0  ETH"
                                                         : price?.length > 15
                                                         ? price.slice(0, 15) +
                                                           "..." +
-                                                          "  Crypto-Coco"
-                                                        : price +
-                                                          "  Crypto-Coco"}
+                                                          "  ETH"
+                                                        : price + "  ETH"}
                                                 </p>
                                             </div>
                                         </div>
@@ -322,6 +393,15 @@ export default function Responsive(props) {
                     </div>
                 )}
             </section>
+
+            {modalShow && (
+                <ConfirmModal
+                    show={modalShow}
+                    setShow={setModalShow}
+                    actionFunc={approveFlag ? handlelist : handleApprove}
+                    estimateFunc={approveFlag ? ListGas : ApproveGas}
+                />
+            )}
         </>
     );
 }

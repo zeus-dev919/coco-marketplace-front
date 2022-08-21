@@ -17,22 +17,45 @@ export default function BuyModal(props) {
             getCurrency,
             translateLang,
             NFTTransfer,
+            buyNFTGas,
+            bidNFTGas,
+            NFTTransferGas,
         },
     ] = useBlockchainContext();
-    const [price, setPrice] = useState("");
-    const [currency, setCurrency] = useState("BNB");
+    const [price, setPrice] = useState(0);
+    const [currency, setCurrency] = useState("ETH");
     const [date, setDate] = useState(new Date());
     const [mybalance, setMybalances] = useState(["0", "0"]);
     const [sendAddress, setSendAddress] = useState("");
     const [bidBtnFlag, setBidBtnFlag] = useState(true);
     const [buyBtnFlag, setBuyBtnFlag] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [gasFee, setGasFee] = useState(0);
 
     useEffect(() => {
+        (async () => {
+            let gas = 0;
+            switch (buyFlag) {
+                case 1:
+                    gas = await HandleBuyGas();
+                    break;
+                case 2:
+                    gas = await HandleBidGas();
+                    break;
+                case 3:
+                    gas = await HandleTransferGas();
+                    break;
+                default:
+                    break;
+            }
+
+            setGasFee(((state.gasPrice * gas) / 10 ** 9).toFixed(10));
+        })();
+
         const initialDate = new Date();
         initialDate.setDate(initialDate.getDate() + 10);
         setDate(initialDate);
-    }, []);
+    }, [buyFlag]);
 
     useEffect(() => {
         const b = async () => {
@@ -48,6 +71,7 @@ export default function BuyModal(props) {
         };
         b();
     }, [state.auth, correctItem]);
+
     useEffect(() => {
         if (correctItem) {
             if (mybalance[0] > price && price > 0 && moment(date).isValid()) {
@@ -96,6 +120,15 @@ export default function BuyModal(props) {
         }
     };
 
+    const HandleBuyGas = async () => {
+        let gas = await buyNFTGas({
+            nftAddress: correctItem?.collectionAddress,
+            assetId: correctItem?.tokenID,
+            price: correctItem?.marketdata.price,
+        });
+        return gas;
+    };
+
     const handleBid = async () => {
         try {
             if (!moment(date).isValid()) {
@@ -124,6 +157,16 @@ export default function BuyModal(props) {
         }
     };
 
+    const HandleBidGas = async () => {
+        let gas = await bidNFTGas({
+            nftAddress: correctItem?.collectionAddress,
+            assetId: correctItem?.tokenID,
+            price: 1,
+            expiresAt: moment(date).valueOf(),
+        });
+        return gas;
+    };
+
     const HandleTransfer = async () => {
         if (sendAddress.trim() === "") {
             NotificationManager.error("Please enter sending address");
@@ -147,6 +190,15 @@ export default function BuyModal(props) {
         }
     };
 
+    const HandleTransferGas = async () => {
+        let gas = await NFTTransferGas({
+            id: correctItem?.tokenID,
+            toAddress: "0x1111111111111111111111111111111111111111",
+            collectionAddress: correctItem?.collectionAddress,
+        });
+        return gas;
+    };
+
     return (
         <Modal
             size="lg"
@@ -167,7 +219,7 @@ export default function BuyModal(props) {
                         <h4 className="text-center">
                             {translateLang("youneed")}{" "}
                             {correctItem?.marketdata.price} {currency} +{" "}
-                            <Link to="">{translateLang("gasfee")}</Link>
+                            <b>{gasFee}</b> {currency}
                         </h4>
                         <span className="spacer-10"></span>
                         <p className="text-center">
@@ -184,7 +236,7 @@ export default function BuyModal(props) {
                                 </p>
                                 <p>
                                     {translateLang("mybalance")}: {mybalance[0]}{" "}
-                                    BNB
+                                    ETH
                                 </p>
                             </span>
                             <div
@@ -230,6 +282,10 @@ export default function BuyModal(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <span className="spacer-single"></span>
+                        <h4 className="text-center">
+                            {translateLang("youneed")} {price} {currency} +{" "}
+                            <b>{gasFee}</b> {currency}
+                        </h4>
                         <p className="text-center">
                             {translateLang("bidnote")}
                         </p>
@@ -311,9 +367,11 @@ export default function BuyModal(props) {
                     </Modal.Header>
                     <Modal.Body>
                         <span className="spacer-single"></span>
-                        <p className="text-center">
-                            {"Please enter the sending address"}
-                        </p>
+                        <h4 className="text-center">
+                            {"You need "}{" "}
+                            <b style={{ color: "#111" }}>{gasFee}</b> {" ETH"}
+                        </h4>
+                        <p>{"Sending Address: "}</p>
                         <div className="price">
                             <input
                                 type="text"
@@ -324,6 +382,18 @@ export default function BuyModal(props) {
                                 value={sendAddress}
                                 onChange={(e) => setSendAddress(e.target.value)}
                             />
+                        </div>
+
+                        <div className="spacer-single"></div>
+                        <div className="m-10-hor" style={{ padding: "0 30px" }}>
+                            <h5 className="jumbomain">Your ETH wallet:</h5>
+                            <h5 className="jumbomain">
+                                Balance:{" "}
+                                <b>{Number(state.balances[0]).toFixed(4)}</b>
+                            </h5>
+                            <Link to="/author?path=wallet">
+                                <button className="btn-main">Add funds</button>
+                            </Link>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
