@@ -68,10 +68,6 @@ const INIT_STATE = {
         privateKey: "",
         image: "",
     },
-    tokenPrice: {
-        ETH: 0,
-        BUSD: 0,
-    },
     balances: [],
     currencies: Currency,
     lang: "en",
@@ -85,11 +81,7 @@ export default function Provider({ children }) {
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
 
     useEffect(() => {
-        checkPrice();
         getGasPrice();
-        setTimeout(() => {
-            checkPrice();
-        }, 15000);
 
         let savedLang = localStorage.getItem("lang");
         if (savedLang) setLanguage({ newLang: savedLang });
@@ -176,6 +168,7 @@ export default function Provider({ children }) {
             type: "prices",
             payload: priceData.getPrice,
         });
+        console.log(state.prices);
     }, [priceData, priceLoading, priceError]);
 
     useEffect(() => {
@@ -252,25 +245,6 @@ export default function Provider({ children }) {
     };
 
     /* ------------ NFT Section ------------- */
-    // check Price ETH and busd
-    const checkPrice = async () => {
-        var promiseArray = [];
-        promiseArray.push(
-            axios.get("https://api.binance.com/api/v3/avgPrice?symbol=ETHEUR"),
-            axios.get("https://api.binance.com/api/v3/avgPrice?symbol=EURBUSD")
-        );
-
-        const [ETHPrice, BUSDPrice] = await Promise.all(promiseArray);
-
-        dispatch({
-            type: "tokenPrice",
-            payload: {
-                ETH: ETHPrice.data.price,
-                BUSD: BUSDPrice.data.price,
-            },
-        });
-    };
-
     // coin check
     const checkBalances = async (tokenaddresses) => {
         try {
