@@ -79,6 +79,7 @@ export default function Provider({ children }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
+    var balanceLoop = null;
 
     useEffect(() => {
         getGasPrice();
@@ -172,16 +173,17 @@ export default function Provider({ children }) {
     }, [priceData, priceLoading, priceError]);
 
     useEffect(() => {
-        (async () => {
-            let result = await checkBalances([
-                state.currencies[0].value,
-                state.currencies[1].value,
-            ]);
-            dispatch({
-                type: "balances",
-                payload: result,
-            });
-        })();
+        if (state.auth.isAuth) {
+            balanceLoop = setInterval(
+                checkBalances([
+                    state.currencies[0].value,
+                    state.currencies[1].value,
+                ]),
+                3000
+            );
+        } else {
+            clearInterval(balanceLoop);
+        }
     }, [state.auth]);
 
     useEffect(() => {
@@ -248,8 +250,8 @@ export default function Provider({ children }) {
     // coin check
     const checkBalances = async (tokenaddresses) => {
         try {
+            let balances = [];
             if (state.auth.isAuth) {
-                let balances = [];
                 for (let i = 0; i < tokenaddresses.length; i++) {
                     //native coin
                     if (
@@ -267,9 +269,18 @@ export default function Provider({ children }) {
                         balances.push(fromBigNum(balance, 18));
                     }
                 }
-                return balances;
+
+                dispatch({
+                    type: "balances",
+                    payload: balances,
+                });
             } else {
-                return new Array(tokenaddresses.length).fill("0");
+                balances.push(0);
+                balances.push(0);
+                dispatch({
+                    type: "balances",
+                    payload: balances,
+                });
             }
         } catch (err) {
             console.log("checkBalances error: ", err.message);
@@ -301,14 +312,6 @@ export default function Provider({ children }) {
                 );
                 await tx1.wait();
             }
-            let result = await checkBalances([
-                state.currencies[0].value,
-                state.currencies[1].value,
-            ]);
-            dispatch({
-                type: "balances",
-                payload: result,
-            });
 
             return true;
         } catch (err) {

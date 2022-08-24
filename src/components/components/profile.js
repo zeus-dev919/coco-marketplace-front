@@ -16,7 +16,7 @@ const Outer = styled.div`
 `;
 
 export default function Profile() {
-    const [state, { updateAuth, checkBalances, setLanguage, translateLang }] =
+    const [state, { updateAuth, setLanguage, translateLang }] =
         useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
@@ -35,8 +35,6 @@ export default function Profile() {
             null,
             null
         );
-        let tokenlist = state.currencies.map((currency) => currency.value);
-        checkBalances(tokenlist);
     }, []);
 
     const setLang = (e) => {
