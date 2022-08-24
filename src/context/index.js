@@ -174,13 +174,12 @@ export default function Provider({ children }) {
 
     useEffect(() => {
         if (state.auth.isAuth) {
-            balanceLoop = setInterval(
+            balanceLoop = setInterval(() => {
                 checkBalances([
                     state.currencies[0].value,
                     state.currencies[1].value,
-                ]),
-                3000
-            );
+                ]);
+            }, 5000);
         } else {
             clearInterval(balanceLoop);
         }
