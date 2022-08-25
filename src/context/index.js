@@ -68,7 +68,7 @@ const INIT_STATE = {
         privateKey: "",
         image: "",
     },
-    balances: [],
+    balances: [0, 0],
     currencies: Currency,
     lang: "en",
     prices: {},
