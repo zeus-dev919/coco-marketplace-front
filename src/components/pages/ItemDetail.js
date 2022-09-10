@@ -93,7 +93,7 @@ export default function Colection() {
                 break;
             }
         }
-    }, [state.collectionNFT]);
+    }, [state.collectionNFT, id, collection]);
 
     const handleBtnClick = () => {
         setOpenMenu(true);
