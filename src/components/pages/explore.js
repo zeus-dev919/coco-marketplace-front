@@ -78,7 +78,7 @@ export default function Explore() {
                                 name="form_quick_search"
                             >
                                 <div className="col">
-                                    <input
+                                    {/* <input
                                         type="text"
                                         className="form-control"
                                         id="name_1"
@@ -92,7 +92,7 @@ export default function Explore() {
                                     <button id="btn-submit">
                                         <i className="fa fa-search bg-color-secondary"></i>
                                     </button>
-                                    <div className="clearfix"></div>
+                                    <div className="clearfix"></div> */}
                                 </div>
                             </form>
                             {/* <div className="dropdownSelect one">
