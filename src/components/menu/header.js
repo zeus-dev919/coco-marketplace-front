@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Breakpoint, {
     BreakpointProvider,
     setDefaultBreakpoints,
@@ -6,6 +6,7 @@ import Breakpoint, {
 import { useNavigate, Link } from "react-router-dom";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { useBlockchainContext } from "../../context";
+import SearchModal from "../components/searchModal";
 
 setDefaultBreakpoints([{ xs: 0 }, { l: 1199 }, { xl: 1200 }]);
 
@@ -27,6 +28,82 @@ export default function Header() {
     const [openMenu1, setOpenMenu1] = useState(false);
     const [openMenu2, setOpenMenu2] = useState(false);
     const [openMenu3, setOpenMenu3] = useState(false);
+    const [searchModal, setSearchModal] = useState(false);
+    const [searchKey, setSearchKey] = useState("");
+    const [focused, setFocused] = useState(false);
+
+    useEffect(() => {
+        if (searchKey.trim() !== "" && focused) {
+            setSearchModal(true);
+        } else {
+            setTimeout(() => {
+                setSearchModal(false);
+            }, 200);
+        }
+    }, [searchKey, focused]);
+
+    const collectionFilter = useCallback(
+        (item) => {
+            const searchParams = ["address", "name", "description"];
+            return searchParams.some((newItem) => {
+                try {
+                    return (
+                        item["metadata"][newItem]
+                            ?.toString()
+                            .toLowerCase()
+                            .indexOf(searchKey.toLowerCase()) > -1
+                    );
+                } catch (err) {
+                    return false;
+                }
+            });
+        },
+        [searchKey]
+    );
+
+    const nftFilter = useCallback(
+        (item) => {
+            const searchParams = [
+                "owner",
+                "name",
+                "description",
+                "collectionAddress",
+            ];
+            return searchParams.some((newItem) => {
+                try {
+                    return (
+                        item[newItem]
+                            ?.toString()
+                            .toLowerCase()
+                            .indexOf(searchKey.toLowerCase()) > -1 ||
+                        item["metadata"][newItem]
+                            ?.toString()
+                            .toLowerCase()
+                            .indexOf(searchKey.toLowerCase()) > -1
+                    );
+                } catch (err) {
+                    return false;
+                }
+            });
+        },
+        [searchKey]
+    );
+
+    const collectionDatas = useMemo(() => {
+        try {
+            return state.collectionNFT.filter(collectionFilter).splice(0, 20);
+        } catch (err) {
+            return [];
+        }
+    }, [state.collectionNFT, collectionFilter]);
+
+    const nftDatas = useMemo(() => {
+        try {
+            return state.allNFT.filter(nftFilter).splice(0, 20);
+        } catch (err) {
+            return [];
+        }
+    }, [state.allNFT, nftFilter]);
 
     const handleBtnClick1 = () => {
         setOpenMenu1(!openMenu1);
@@ -116,12 +193,25 @@ export default function Header() {
 
                     <div className="search">
                         <input
+                            type="text"
                             id="quick_search"
                             className="xs-hide"
-                            name="quick_search"
                             placeholder={translateLang("seachtext")}
-                            type="text"
+                            value={searchKey}
+                            onChange={(e) =>
+                                setSearchKey(e.target.value.trim())
+                            }
+                            onFocus={() => setFocused(true)}
+                            onBlur={() => setFocused(false)}
                         />
+
+                        {searchModal && (
+                            <SearchModal
+                                className="xs-hide"
+                                collectionDatas={collectionDatas}
+                                nftDatas={nftDatas}
+                            />
+                        )}
                     </div>
 
                     <BreakpointProvider>
@@ -237,6 +327,34 @@ export default function Header() {
                                             <span className="lines"></span>
                                         </NavLink>
                                     </div>
+                                    <div className="spacer-half"></div>
+                                    <div className="search">
+                                        <input
+                                            type="text"
+                                            id="quick_search"
+                                            className="lg-hide"
+                                            placeholder={translateLang(
+                                                "seachtext"
+                                            )}
+                                            value={searchKey}
+                                            onChange={(e) =>
+                                                setSearchKey(
+                                                    e.target.value.trim()
+                                                )
+                                            }
+                                            onFocus={() => setFocused(true)}
+                                            onBlur={() => setFocused(false)}
+                                        />
+                                        {searchModal && (
+                                            <SearchModal
+                                                collectionDatas={
+                                                    collectionDatas
+                                                }
+                                                nftDatas={nftDatas}
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="spacer-single"></div>
                                 </div>
                             )}
                         </Breakpoint>

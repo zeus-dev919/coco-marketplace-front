@@ -11,7 +11,6 @@ export default function BuyModal(props) {
     const [
         state,
         {
-            checkBalances,
             buyNFT,
             bidNFT,
             getCurrency,
@@ -25,7 +24,6 @@ export default function BuyModal(props) {
     const [price, setPrice] = useState(0);
     const [currency, setCurrency] = useState("ETH");
     const [date, setDate] = useState(new Date());
-    const [mybalance, setMybalances] = useState(["0", "0"]);
     const [sendAddress, setSendAddress] = useState("");
     const [bidBtnFlag, setBidBtnFlag] = useState(true);
     const [buyBtnFlag, setBuyBtnFlag] = useState(true);
@@ -63,30 +61,29 @@ export default function BuyModal(props) {
                 correctItem.marketdata?.acceptedToken
             );
             setCurrency(accpetedCurrency.label);
-            let result = await checkBalances([
-                state.currencies[0].value,
-                accpetedCurrency.value,
-            ]);
-            setMybalances(result);
         };
         b();
     }, [state.auth, correctItem]);
 
     useEffect(() => {
         if (correctItem) {
-            if (mybalance[0] > price && price > 0 && moment(date).isValid()) {
+            if (
+                state.balances[0] > price &&
+                price > 0 &&
+                moment(date).isValid()
+            ) {
                 setBidBtnFlag(false);
             } else {
                 setBidBtnFlag(true);
             }
 
-            if (mybalance[0] > Number(correctItem.marketdata.price)) {
+            if (state.balances[0] > Number(correctItem.marketdata.price)) {
                 setBuyBtnFlag(false);
             } else {
                 setBuyBtnFlag(true);
             }
         }
-    }, [mybalance, date, price]);
+    }, [state, date, price]);
 
     const handle = (newDate) => {
         setDate(newDate);
@@ -100,7 +97,7 @@ export default function BuyModal(props) {
     const handleBuy = async () => {
         try {
             setLoading(true);
-            if (mybalance[0] < Number(correctItem?.marketdata.price)) {
+            if (state.balances[0] < Number(correctItem?.marketdata.price)) {
                 return;
             }
 
@@ -231,12 +228,12 @@ export default function BuyModal(props) {
                             <span style={{ justifyContent: "space-between" }}>
                                 <h5>{translateLang("walletaddress")}</h5>
                                 <p>
-                                    {translateLang("mybalance")}: {mybalance[1]}{" "}
-                                    {currency}
+                                    {translateLang("mybalance")}:{" "}
+                                    {state.balances[1]} {currency}
                                 </p>
                                 <p>
-                                    {translateLang("mybalance")}: {mybalance[0]}{" "}
-                                    ETH
+                                    {translateLang("mybalance")}:{" "}
+                                    {state.balances[0]} ETH
                                 </p>
                             </span>
                             <div
@@ -321,7 +318,7 @@ export default function BuyModal(props) {
                         </div>
                         <p style={{ float: "right" }}>
                             {"Available Price: "}
-                            {mybalance[0] + " " + currency}
+                            {state.balances[0] + " " + currency}
                         </p>
                         <div className="spacer-30"></div>
 

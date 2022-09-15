@@ -15,8 +15,8 @@ const Outer = styled.div`
     border-radius: 8px;
 `;
 
-export default function Responsive() {
-    const [state, { updateAuth, checkBalances, setLanguage, translateLang }] =
+export default function Profile() {
+    const [state, { updateAuth, setLanguage, translateLang }] =
         useBlockchainContext();
     const [newName, setNewName] = useState("");
     const [newBio, setNewBio] = useState("");
@@ -35,8 +35,6 @@ export default function Responsive() {
             null,
             null
         );
-        let tokenlist = state.currencies.map((currency) => currency.value);
-        checkBalances(tokenlist);
     }, []);
 
     const setLang = (e) => {
@@ -122,10 +120,12 @@ export default function Responsive() {
                                     {"  "}
                                     {item.label}
                                     {"   "}(
-                                    {Number(
-                                        state.balances[index] *
-                                            state.tokenPrice[item.label]
-                                    ).toFixed(2) + "$"}
+                                    {index === 0
+                                        ? Number(
+                                              state.balances[index] *
+                                                  state.prices["ETHEURPrice"]
+                                          ).toFixed(2) + "$"
+                                        : state.balances[index] + "$"}
                                     )
                                 </option>
                             ))}
