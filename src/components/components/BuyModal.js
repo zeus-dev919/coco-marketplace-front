@@ -11,7 +11,6 @@ export default function BuyModal(props) {
     const [
         state,
         {
-            checkBalances,
             buyNFT,
             bidNFT,
             getCurrency,

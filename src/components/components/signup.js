@@ -28,10 +28,10 @@ const SignUp = (props) => {
     };
     const SignUp = async () => {
         if (
-            name != "" &&
-            email != "" &&
+            name !== "" &&
+            email !== "" &&
             password == passConfirm &&
-            password != ""
+            password !== ""
         ) {
             var info = {
                 name: name,

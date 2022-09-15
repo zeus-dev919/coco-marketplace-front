@@ -133,7 +133,7 @@ export default function Colection() {
         try {
             if (itemData !== null) {
                 setLoading(true);
-                bidApprove({
+                await bidApprove({
                     address: collection,
                     id: id,
                     price: itemData.marketdata.bidPrice,
@@ -197,7 +197,7 @@ export default function Colection() {
                                     alt=""
                                 />
                                 <div className="social-link">
-                                    {itemData?.metadata?.external_url1 !=
+                                    {itemData?.metadata?.external_url1 !==
                                         "" && (
                                         <a
                                             href={
@@ -208,7 +208,7 @@ export default function Colection() {
                                             <i className="fa fa-twitter-square"></i>
                                         </a>
                                     )}
-                                    {itemData?.metadata?.external_url2 !=
+                                    {itemData?.metadata?.external_url2 !==
                                         "" && (
                                         <a
                                             href={
@@ -219,7 +219,7 @@ export default function Colection() {
                                             <i className="fa fa-facebook-square"></i>
                                         </a>
                                     )}
-                                    {itemData?.metadata?.external_url3 !=
+                                    {itemData?.metadata?.external_url3 !==
                                         "" && (
                                         <a
                                             href={
@@ -230,7 +230,7 @@ export default function Colection() {
                                             <i className="fa fa-instagram"></i>
                                         </a>
                                     )}
-                                    {itemData?.metadata?.external_url4 !=
+                                    {itemData?.metadata?.external_url4 !==
                                         "" && (
                                         <a
                                             href={
