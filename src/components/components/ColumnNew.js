@@ -4,6 +4,7 @@ import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";
 import { fromBigNum } from "../../utils";
+import { ethers } from "ethers";
 
 export default function Responsive() {
     const navigate = useNavigate();
@@ -127,7 +128,9 @@ export default function Responsive() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : nft.marketdata.price +
+                                    : nft.marketdata.price.length > 30
+                                    ? "Auction"
+                                    : Number(nft.marketdata.price).toFixed(2) +
                                       getCurrency(nft.marketdata.acceptedToken)
                                           ?.label}
                                 <span>
@@ -146,9 +149,7 @@ export default function Responsive() {
                                 className="nft__item_like"
                                 id={"like" + index}
                                 style={
-                                    nft.likes.indexOf(
-                                        state.auth.address
-                                    ) === -1
+                                    nft.likes.indexOf(state.auth.address) === -1
                                         ? null
                                         : { color: "#c5a86a" }
                                 }

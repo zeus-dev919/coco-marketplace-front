@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DateTimeField from "@1stquad/react-bootstrap-datetimepicker";
+import { Row, Col, Nav, Tab } from "react-bootstrap";
 import moment from "moment";
 import { useBlockchainContext } from "../../context";
 import { NotificationManager } from "react-notifications";
@@ -7,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import Action from "../../service";
 import { toBigNum } from "../../utils";
 import ConfirmModal from "./ConfirmModal";
+import { ethers } from "ethers";
 
-export default function Responsive(props) {
+export default function OnSale(props) {
     const navigate = useNavigate();
     const { id, collection } = props;
     const [
@@ -31,6 +33,7 @@ export default function Responsive(props) {
     const [modalShow, setModalShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [approveFlag, setApproveFlag] = useState(false);
+    const [autionFlag, setAuctionFlag] = useState(false);
 
     useEffect(() => {
         const initialDate = new Date();
@@ -69,57 +72,133 @@ export default function Responsive(props) {
     };
 
     const handlelist = async () => {
-        if (price === "") return;
-        if (!moment(date).isValid()) return;
-        setModalShow(false);
-
         try {
-            setLoading(true);
-            if (!correctCollection.isOffchain) {
-                let txOnSale = await onsaleNFT({
-                    nftAddress: collection,
-                    assetId: correctCollection.tokenID,
-                    currency: currency,
-                    price: price,
-                    expiresAt: moment(date).valueOf(),
-                });
-
-                if (txOnSale) {
-                    NotificationManager.success(
-                        translateLang("listing_success")
-                    );
-                    navigate("/explore");
-                } else NotificationManager.error(translateLang("listingerror"));
-                setLoading(false);
-            } else {
-                const lazyAction = await Action.lazy_onsale({
-                    nftAddress: collection,
-                    assetId: correctCollection.tokenID,
-                    priceGwei: toBigNum(price, 18),
-                    expiresAt: moment(date).valueOf(),
-                });
-
-                if (!lazyAction.success) {
-                    setLoading(false);
-                    NotificationManager.error(translateLang("listingerror"));
+            if (autionFlag) {
+                if (!moment(date).isValid()) {
+                    NotificationManager.warning("Check Expired Date");
                     return;
                 }
+                setModalShow(false);
+                setLoading(true);
+                if (!correctCollection.isOffchain) {
+                    let txOnSale = await onsaleNFT({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        currency: currency,
+                        price: ethers.constants.MaxUint256,
+                        expiresAt: moment(date).valueOf(),
+                    });
 
-                let txOnSale = await onsaleLazyNFT({
-                    tokenId: correctCollection.tokenID,
-                    priceGwei: toBigNum(price, 18),
-                    currency: currency,
-                    expiresAt: moment(date).valueOf(),
-                    singature: lazyAction.result,
-                });
+                    if (txOnSale) {
+                        NotificationManager.success(
+                            translateLang("listing_success")
+                        );
+                        navigate("/explore");
+                    } else
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                    setLoading(false);
+                } else {
+                    const lazyAction = await Action.lazy_onsale({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        priceGwei: ethers.constants.MaxUint256,
+                        expiresAt: moment(date).valueOf(),
+                    });
 
-                if (txOnSale) {
-                    NotificationManager.success(
-                        translateLang("listing_success")
-                    );
-                    navigate("/explore");
-                } else NotificationManager.error(translateLang("listingerror"));
-                setLoading(false);
+                    if (!lazyAction.success) {
+                        setLoading(false);
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                        return;
+                    }
+
+                    let txOnSale = await onsaleLazyNFT({
+                        tokenId: correctCollection.tokenID,
+                        priceGwei: ethers.constants.MaxUint256,
+                        currency: currency,
+                        expiresAt: moment(date).valueOf(),
+                        singature: lazyAction.result,
+                    });
+
+                    if (txOnSale) {
+                        NotificationManager.success(
+                            translateLang("listing_success")
+                        );
+                        navigate("/explore");
+                    } else
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                    setLoading(false);
+                }
+            } else {
+                if (price === "") {
+                    NotificationManager.warning("Enter the price");
+                    return;
+                }
+                if (!moment(date).isValid()) {
+                    NotificationManager.warning("Check Expired Date");
+                    return;
+                }
+                setModalShow(false);
+                setLoading(true);
+                if (!correctCollection.isOffchain) {
+                    let txOnSale = await onsaleNFT({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        currency: currency,
+                        price: toBigNum(price, 18),
+                        expiresAt: moment(date).valueOf(),
+                    });
+
+                    if (txOnSale) {
+                        NotificationManager.success(
+                            translateLang("listing_success")
+                        );
+                        navigate("/explore");
+                    } else
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                    setLoading(false);
+                } else {
+                    const lazyAction = await Action.lazy_onsale({
+                        nftAddress: collection,
+                        assetId: correctCollection.tokenID,
+                        priceGwei: toBigNum(price, 18),
+                        expiresAt: moment(date).valueOf(),
+                    });
+
+                    if (!lazyAction.success) {
+                        setLoading(false);
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                        return;
+                    }
+
+                    let txOnSale = await onsaleLazyNFT({
+                        tokenId: correctCollection.tokenID,
+                        priceGwei: toBigNum(price, 18),
+                        currency: currency,
+                        expiresAt: moment(date).valueOf(),
+                        singature: lazyAction.result,
+                    });
+
+                    if (txOnSale) {
+                        NotificationManager.success(
+                            translateLang("listing_success")
+                        );
+                        navigate("/explore");
+                    } else
+                        NotificationManager.error(
+                            translateLang("listingerror")
+                        );
+                    setLoading(false);
+                }
             }
         } catch (err) {
             console.log(err);
@@ -134,13 +213,13 @@ export default function Responsive(props) {
             const lazyAction = await Action.lazy_onsale({
                 nftAddress: collection,
                 assetId: correctCollection.tokenID,
-                priceGwei: toBigNum(price, 18),
+                priceGwei: toBigNum("1", 18),
                 expiresAt: moment(date).valueOf(),
             });
 
             gas = await onLazySaleGas({
                 tokenId: correctCollection.tokenID,
-                priceGwei: toBigNum(price, 18),
+                priceGwei: toBigNum("1", 18),
                 currency: currency,
                 expiresAt: moment(date).valueOf(),
                 singature: lazyAction.result,
@@ -150,7 +229,7 @@ export default function Responsive(props) {
                 nftAddress: collection,
                 assetId: correctCollection.tokenID,
                 currency: currency,
-                price: price,
+                price: "1",
                 expiresAt: moment(date).valueOf(),
             });
         }
@@ -186,7 +265,7 @@ export default function Responsive(props) {
 
     return (
         <>
-            <section className="container" style={{ paddingTop: "20px" }}>
+            <div>
                 {correctCollection === null ? (
                     "Loading..."
                 ) : (
@@ -194,129 +273,323 @@ export default function Responsive(props) {
                         <div className="col-lg-7 offset-lg-1 mb-5">
                             <div id="form-create-item" className="form-border">
                                 <div className="field-set">
-                                    <div>
-                                        <h5>{translateLang("method")}</h5>
-                                        <p
-                                            className="form-control"
-                                            style={{
-                                                backgroundColor: "#ffc0c0",
-                                                boxShadow: "0 0 5 0 #d05e3c",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: "10px",
-                                            }}
-                                        >
-                                            <i
-                                                className="arrow_right-up"
-                                                style={{
-                                                    fontWeight: "bolder",
-                                                }}
-                                            />
-                                            <span>
-                                                {translateLang("sellnote")}
-                                            </span>
-                                        </p>
-                                        <div className="spacer-single"></div>
-                                        <h5>{translateLang("sellprice")}</h5>
-                                        <div className="price">
-                                            <div
-                                                style={{
-                                                    flex: "1 1 0",
-                                                }}
-                                            >
-                                                <select
-                                                    className="form-control"
-                                                    onChange={(e) => {
-                                                        setCurrency(
-                                                            e.target.value
-                                                        );
-                                                    }}
-                                                >
-                                                    {state.currencies.map(
-                                                        (currency, index) => (
-                                                            <option
-                                                                value={
-                                                                    currency.value
-                                                                }
-                                                                key={index}
+                                    <Tab.Container
+                                        id="left-tabs-example"
+                                        defaultActiveKey="first"
+                                    >
+                                        <Row>
+                                            <Col sm={12}>
+                                                <Nav variant="pills" fill>
+                                                    <Nav.Item>
+                                                        <Nav.Link
+                                                            eventKey="first"
+                                                            onClick={() =>
+                                                                setAuctionFlag(
+                                                                    false
+                                                                )
+                                                            }
+                                                        >
+                                                            Fixed Price
+                                                        </Nav.Link>
+                                                    </Nav.Item>
+                                                    <Nav.Item>
+                                                        <Nav.Link
+                                                            eventKey="second"
+                                                            onClick={() =>
+                                                                setAuctionFlag(
+                                                                    true
+                                                                )
+                                                            }
+                                                        >
+                                                            Auction
+                                                        </Nav.Link>
+                                                    </Nav.Item>
+                                                </Nav>
+                                            </Col>
+                                            <Col sm={12}>
+                                                <br />
+                                                <Tab.Content>
+                                                    <Tab.Pane eventKey="first">
+                                                        <div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "method"
+                                                                )}
+                                                            </h5>
+                                                            <p
+                                                                className="form-control"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        "#ffc0c0",
+                                                                    boxShadow:
+                                                                        "0 0 5 0 #d05e3c",
+                                                                    display:
+                                                                        "flex",
+                                                                    alignItems:
+                                                                        "center",
+                                                                    gap: "10px",
+                                                                }}
                                                             >
-                                                                {currency.label}
-                                                            </option>
-                                                        )
-                                                    )}
-                                                </select>
-                                            </div>
-                                            <input
-                                                type="number"
-                                                name="item_price"
-                                                id="item_price"
-                                                className="form-control"
-                                                style={{
-                                                    flex: "4 4 0",
-                                                }}
-                                                placeholder={translateLang(
-                                                    "amount"
-                                                )}
-                                                value={price}
-                                                onChange={(e) =>
-                                                    setPrice(e.target.value)
+                                                                <i
+                                                                    className="arrow_right-up"
+                                                                    style={{
+                                                                        fontWeight:
+                                                                            "bolder",
+                                                                    }}
+                                                                />
+                                                                <span>
+                                                                    {translateLang(
+                                                                        "sellnote"
+                                                                    )}
+                                                                </span>
+                                                            </p>
+                                                            <div className="spacer-single"></div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "sellprice"
+                                                                )}
+                                                            </h5>
+                                                            <div className="price">
+                                                                <div
+                                                                    style={{
+                                                                        flex: "1 1 0",
+                                                                    }}
+                                                                >
+                                                                    <select
+                                                                        className="form-control"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            setCurrency(
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {state.currencies.map(
+                                                                            (
+                                                                                currency,
+                                                                                index
+                                                                            ) => (
+                                                                                <option
+                                                                                    value={
+                                                                                        currency.value
+                                                                                    }
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        currency.label
+                                                                                    }
+                                                                                </option>
+                                                                            )
+                                                                        )}
+                                                                    </select>
+                                                                </div>
+                                                                <input
+                                                                    type="number"
+                                                                    name="item_price"
+                                                                    id="item_price"
+                                                                    className="form-control"
+                                                                    style={{
+                                                                        flex: "4 4 0",
+                                                                    }}
+                                                                    placeholder={translateLang(
+                                                                        "amount"
+                                                                    )}
+                                                                    value={
+                                                                        price
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
+                                                                        setPrice(
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            <div className="spacer-single"></div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "expiredate"
+                                                                )}
+                                                            </h5>
+                                                            <DateTimeField
+                                                                dateTime={date}
+                                                                onChange={
+                                                                    handle
+                                                                }
+                                                                mode={
+                                                                    "datetime"
+                                                                }
+                                                                format={
+                                                                    "MM/DD/YYYY hh:mm A"
+                                                                }
+                                                                inputFormat={
+                                                                    "DD/MM/YYYY hh:mm A"
+                                                                }
+                                                                minDate={
+                                                                    new Date()
+                                                                }
+                                                                showToday={true}
+                                                                startOfWeek={
+                                                                    "week"
+                                                                }
+                                                                readonly
+                                                            />
+                                                        </div>
+                                                    </Tab.Pane>
+                                                    <Tab.Pane eventKey="second">
+                                                        <div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "method"
+                                                                )}
+                                                            </h5>
+                                                            <p
+                                                                className="form-control"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        "#ffc0c0",
+                                                                    boxShadow:
+                                                                        "0 0 5 0 #d05e3c",
+                                                                    display:
+                                                                        "flex",
+                                                                    alignItems:
+                                                                        "center",
+                                                                    gap: "10px",
+                                                                }}
+                                                            >
+                                                                <i
+                                                                    className="arrow_right-up"
+                                                                    style={{
+                                                                        fontWeight:
+                                                                            "bolder",
+                                                                    }}
+                                                                />
+                                                                <span>
+                                                                    {translateLang(
+                                                                        "sellnote"
+                                                                    )}
+                                                                </span>
+                                                            </p>
+                                                            <div className="spacer-single"></div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "sellprice"
+                                                                )}
+                                                            </h5>
+                                                            <div className="price">
+                                                                <div
+                                                                    style={{
+                                                                        flex: "1 1 0",
+                                                                    }}
+                                                                >
+                                                                    <select
+                                                                        className="form-control"
+                                                                        onChange={(
+                                                                            e
+                                                                        ) => {
+                                                                            setCurrency(
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        {state.currencies.map(
+                                                                            (
+                                                                                currency,
+                                                                                index
+                                                                            ) => (
+                                                                                <option
+                                                                                    value={
+                                                                                        currency.value
+                                                                                    }
+                                                                                    key={
+                                                                                        index
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        currency.label
+                                                                                    }
+                                                                                </option>
+                                                                            )
+                                                                        )}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className="spacer-30"></div>
+                                                            <h5>
+                                                                {translateLang(
+                                                                    "expiredate"
+                                                                )}
+                                                            </h5>
+                                                            <DateTimeField
+                                                                dateTime={date}
+                                                                onChange={
+                                                                    handle
+                                                                }
+                                                                mode={
+                                                                    "datetime"
+                                                                }
+                                                                format={
+                                                                    "MM/DD/YYYY hh:mm A"
+                                                                }
+                                                                inputFormat={
+                                                                    "DD/MM/YYYY hh:mm A"
+                                                                }
+                                                                minDate={
+                                                                    new Date()
+                                                                }
+                                                                showToday={true}
+                                                                startOfWeek={
+                                                                    "week"
+                                                                }
+                                                                readonly
+                                                            />
+                                                        </div>
+                                                    </Tab.Pane>
+                                                </Tab.Content>
+                                            </Col>
+                                        </Row>
+                                        <hr />
+                                        <div className="spacer-40"></div>
+                                        {loading ? (
+                                            <button className="btn-main">
+                                                <span
+                                                    className="spinner-border spinner-border-sm"
+                                                    aria-hidden="true"
+                                                ></span>
+                                            </button>
+                                        ) : approveFlag ||
+                                          correctCollection.isOffchain ? (
+                                            <button
+                                                className="btn-main"
+                                                onClick={() =>
+                                                    setModalShow(true)
                                                 }
-                                            />
-                                        </div>
-                                        <div className="spacer-30"></div>
-                                        <h5>{translateLang("expiredate")}</h5>
-                                        <DateTimeField
-                                            dateTime={date}
-                                            onChange={handle}
-                                            mode={"datetime"}
-                                            format={"MM/DD/YYYY hh:mm A"}
-                                            inputFormat={"DD/MM/YYYY hh:mm A"}
-                                            minDate={new Date()}
-                                            showToday={true}
-                                            startOfWeek={"week"}
-                                            readonly
-                                        />
-                                    </div>
-
-                                    <hr />
-                                    <h5>{translateLang("fees")}</h5>
-                                    <div className="fee">
-                                        <p>{translateLang("servicefee")}</p>
-                                        <p>0.2%</p>
-                                    </div>
-
-                                    <div className="spacer-40"></div>
-                                    {loading ? (
-                                        <button className="btn-main">
-                                            <span
-                                                className="spinner-border spinner-border-sm"
-                                                aria-hidden="true"
-                                            ></span>
-                                        </button>
-                                    ) : approveFlag ||
-                                      correctCollection.isOffchain ? (
-                                        <button
-                                            className="btn-main"
-                                            disabled={
-                                                price === "" ||
-                                                !moment(date).isValid()
-                                                    ? true
-                                                    : false
-                                            }
-                                            onClick={() => setModalShow(true)}
-                                        >
-                                            {translateLang(
-                                                "btn_completelisting"
-                                            )}
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className="btn-main"
-                                            onClick={() => setModalShow(true)}
-                                        >
-                                            {"Approve"}
-                                        </button>
-                                    )}
+                                            >
+                                                {translateLang(
+                                                    "btn_completelisting"
+                                                )}
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="btn-main"
+                                                onClick={() =>
+                                                    setModalShow(true)
+                                                }
+                                            >
+                                                {"Approve"}
+                                            </button>
+                                        )}
+                                    </Tab.Container>
                                 </div>
                             </div>
                         </div>
@@ -392,7 +665,7 @@ export default function Responsive(props) {
                         </div>
                     </div>
                 )}
-            </section>
+            </div>
 
             {modalShow && (
                 <ConfirmModal

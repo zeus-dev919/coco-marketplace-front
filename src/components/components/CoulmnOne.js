@@ -124,7 +124,14 @@ export default function ColumnOne(props) {
                                 <div className="nft__item_price">
                                     {nft.marketdata.price === ""
                                         ? null
-                                        : nft.marketdata.price + " " + getCurrency(nft.marketdata?.acceptedToken)?.label}
+                                        : nft.marketdata.price.length > 30
+                                        ? "Auction"
+                                        : Number(nft.marketdata.price).toFixed(
+                                              2
+                                          ) +
+                                          getCurrency(
+                                              nft.marketdata.acceptedToken
+                                          )?.label}
                                     <span>
                                         {nft.marketdata.bidders.length} bids
                                     </span>

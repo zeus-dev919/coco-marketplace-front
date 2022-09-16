@@ -418,7 +418,7 @@ export default function Provider({ children }) {
                 state.auth.address,
                 assetId,
                 currency,
-                toBigNum(price, 18),
+                price,
                 expiresAt
             );
             await tx.wait();
@@ -473,7 +473,11 @@ export default function Provider({ children }) {
 
             const NFTContract = getNFTContract(nftAddress);
             const signedNFTContract1 = NFTContract.connect(state.auth.signer);
-
+            console.log(
+                "addresses.Marketplace",
+                state.auth.address,
+                addresses.Marketplace
+            );
             const gas = await signedNFTContract1.estimateGas.approve(
                 addresses.Marketplace,
                 assetId

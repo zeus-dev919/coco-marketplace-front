@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import ColumnAuction from "../components/ColumnAuction";
+import OnSale from "../components/ColumnAuction";
 import Footer from "../menu/footer";
 import { useBlockchainContext } from "../../context";
 
@@ -25,7 +25,7 @@ export default function Auction() {
             </section>
 
             <section className="container">
-                <ColumnAuction collection={collection} id={id} />
+                <OnSale collection={collection} id={id} />
             </section>
 
             <Footer />

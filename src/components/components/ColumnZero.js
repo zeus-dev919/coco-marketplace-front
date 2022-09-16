@@ -139,10 +139,13 @@ export default function ColumnZero(props) {
                                 <div className="nft__item_price">
                                     {nft.marketdata.price === ""
                                         ? null
-                                        : nft.marketdata.price +
-                                          " " +
+                                        : nft.marketdata.price.length > 30
+                                        ? "Auction"
+                                        : Number(nft.marketdata.price).toFixed(
+                                              2
+                                          ) +
                                           getCurrency(
-                                              nft.marketdata?.acceptedToken
+                                              nft.marketdata.acceptedToken
                                           )?.label}
                                     <span>
                                         {nft.marketdata.bidders.length} bids

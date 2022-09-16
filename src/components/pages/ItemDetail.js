@@ -298,15 +298,19 @@ export default function Colection() {
                                             )}
                                             <div className="spacer-10"></div>
                                             <h3 style={{ color: "#a48b57" }}>
-                                                {itemData?.marketdata?.price ===
+                                                {itemData.marketdata.price ===
                                                 ""
                                                     ? null
-                                                    : itemData?.marketdata
-                                                          ?.price +
-                                                      " " +
+                                                    : itemData.marketdata.price
+                                                          .length > 30
+                                                    ? "Auction"
+                                                    : Number(
+                                                          itemData.marketdata
+                                                              .price
+                                                      ).toFixed(2) +
                                                       getCurrency(
                                                           itemData.marketdata
-                                                              ?.acceptedToken
+                                                              .acceptedToken
                                                       )?.label}
                                             </h3>
                                             <hr />
@@ -360,6 +364,38 @@ export default function Colection() {
                                                 {styledAddress(
                                                     itemData?.creator
                                                 )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="spacer-40"></div>
+                                    <h5>{"Owner"}</h5>
+                                    <div className="item_author">
+                                        <div className="author_list_pp">
+                                            <span>
+                                                <img
+                                                    className="lazy"
+                                                    src={
+                                                        state.usersInfo[
+                                                            itemData?.owner
+                                                        ]?.image === undefined
+                                                            ? state
+                                                                  .collectionNFT[0]
+                                                                  .metadata
+                                                                  .image
+                                                            : state.usersInfo[
+                                                                  itemData
+                                                                      ?.owner
+                                                              ].image ||
+                                                              "../../img/author/author-1.jpg"
+                                                    }
+                                                    alt=""
+                                                />
+                                                <i className="fa fa-check"></i>
+                                            </span>
+                                        </div>
+                                        <div className="author_list_info">
+                                            <span>
+                                                {styledAddress(itemData?.owner)}
                                             </span>
                                         </div>
                                     </div>
@@ -542,36 +578,53 @@ export default function Colection() {
                                                                 ></span>
                                                             </button>
                                                         ) : (
-                                                            <button
-                                                                className="btn-main"
-                                                                onClick={
-                                                                    handleApproveBid
-                                                                }
-                                                            >
-                                                                {translateLang(
-                                                                    "btn_approvebid"
-                                                                )}
-                                                            </button>
+                                                            itemData.marketdata
+                                                                .price.length >
+                                                                40 && (
+                                                                <button
+                                                                    className="btn-main"
+                                                                    onClick={
+                                                                        handleApproveBid
+                                                                    }
+                                                                >
+                                                                    {translateLang(
+                                                                        "btn_approvebid"
+                                                                    )}
+                                                                </button>
+                                                            )
                                                         )}
                                                     </div>
                                                 ) : pageFlag === 3 ? null : (
                                                     <div>
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={handleBuy}
-                                                        >
-                                                            {translateLang(
-                                                                "btn_buynow"
-                                                            )}
-                                                        </button>
-                                                        <button
-                                                            className="btn-main"
-                                                            onClick={handleBid}
-                                                        >
-                                                            {translateLang(
-                                                                "btn_makeoffer"
-                                                            )}
-                                                        </button>
+                                                        {itemData.marketdata
+                                                            .price.length <
+                                                            40 && (
+                                                            <button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleBuy
+                                                                }
+                                                            >
+                                                                {translateLang(
+                                                                    "btn_buynow"
+                                                                )}
+                                                            </button>
+                                                        )}
+
+                                                        {itemData.marketdata
+                                                            .price.length >
+                                                            40 && (
+                                                            <button
+                                                                className="btn-main"
+                                                                onClick={
+                                                                    handleBid
+                                                                }
+                                                            >
+                                                                {translateLang(
+                                                                    "btn_makeoffer"
+                                                                )}
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 )}
                                             </div>

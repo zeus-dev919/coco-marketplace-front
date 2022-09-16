@@ -4,6 +4,7 @@ import { useBlockchainContext } from "../../context";
 import Action from "../../service";
 import BuyModal from "./BuyModal";
 import { fromBigNum } from "../../utils";
+import { ethers } from "ethers";
 
 export default function NFTLists() {
     const navigate = useNavigate();
@@ -62,8 +63,7 @@ export default function NFTLists() {
     };
 
     const NFTs = useMemo(() => {
-        if (!filter)
-            return state.allNFT;
+        if (!filter) return state.allNFT;
         else {
             return state.allNFT.filter(
                 (item) =>
@@ -123,7 +123,9 @@ export default function NFTLists() {
                             <div className="nft__item_price">
                                 {nft.marketdata.price === ""
                                     ? null
-                                    : nft.marketdata.price +
+                                    : nft.marketdata.price.length > 30
+                                    ? "Auction"
+                                    : Number(nft.marketdata.price).toFixed(2) +
                                       getCurrency(nft.marketdata.acceptedToken)
                                           ?.label}
                                 <span>
